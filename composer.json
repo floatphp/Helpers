@@ -1,0 +1,30 @@
+{
+  "name": "floatphp/helpers",
+  "version" : "1.0.0",
+  "type": "library",
+  "description": "Helpers for floatPHP",
+  "keywords": ["floatphp","micro-framework","framework","PSR","ORM","jakiboy"],
+  "homepage": "https://www.floatphp.com/",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Jihad Sinnaour",
+      "email": "mail@jihadsinnaour.com",
+      "role": "Founder"
+    },
+    {
+      "name": "Softgine",
+      "email": "e-mailing@soft-gine.com",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=7.4",
+    "floatphp/kernel": "1.0.0"
+  },
+  "autoload": {
+    "psr-4" : {
+      "FloatPHP\\Helpers\\" : "src/"
+    }
+  }
+}
