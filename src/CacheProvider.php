@@ -18,13 +18,19 @@ abstract class CacheProvider
 {
 	/**
 	 * @access protected
+	 * @var mixed $data
+	 */
+	protected $data;
+
+	/**
+	 * @access protected
 	 * @param string $name
 	 * @param mixed $data
 	 * @param string $group
 	 * @param int $expire
 	 * @return mixed
 	 */
-	abstract protected function set($name, $data, $group) {}
+	abstract protected function setData($data);
 
 	/**
 	 * @access protected
@@ -48,7 +54,7 @@ abstract class CacheProvider
 		$cache = $this->initCache();
 		$value = $cache->get($name);
 		if ( !$cache->isCached() ) {
-			$value = $this->set($name,$data,$group);
+			$value = $this->set($name,$this->data,$group);
 			$cache->set($value);
 		}
 		return $value;
