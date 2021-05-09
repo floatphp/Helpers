@@ -22,15 +22,6 @@ use FloatPHP\Classes\Filesystem\Json;
 final class Configurator extends BaseOptions
 {
 	/**
-	 * @param void
-	 */
-	public function __construct()
-	{
-		// Init configuration
-		$this->initConfig();
-	}
-
-	/**
 	 * Setup application
 	 *
 	 * @access public
@@ -67,17 +58,24 @@ final class Configurator extends BaseOptions
 	{
 		$parse['--disable-setup'] = isset($config['--disable-setup'])
 		? isset($config['--disable-setup']) : false;
+
 		$parse['--disable-powered-by'] = isset($config['--disable-powered-by'])
 		? isset($config['--disable-powered-by']) : false;
+
 		$parse['--disable-session'] = isset($config['--disable-session'])
 		? isset($config['--disable-session']) : false;
+
 		$parse['--default-lang'] = isset($config['--default-lang'])
 		? isset($config['--default-lang']) : 'en';
+
+		$parse['--default-timezone'] = isset($config['--default-timezone'])
+		? isset($config['--default-timezone']) : 'Europe/Paris';
+
 		return $parse;
 	}
 
 	/**
-	 * Create app database
+	 * Migrate application database
 	 *
 	 * @access private
 	 * @param void
@@ -85,14 +83,19 @@ final class Configurator extends BaseOptions
 	 */
 	private function migrate()
 	{
-		$tables = array_diff(scandir($this->getMigratePath()),['.','..','migrate.lock']);
+		$orm = new Orm();
+
+		// Create database
+		$orm->createDatabase();
+
+		// Create tables
+		$tables = array_diff(scandir($this->getMigratePath()),['.','..']);
 		if ( !$tables ) {
 			return;
 		}
 		foreach ($tables as $table) {
 			$sql = File::r("{$this->getMigratePath()}/{$table}");
 			if ( !empty($sql) ) {
-				$orm = new Orm();
 				$orm->init();
 				$orm->query($sql);
 			}
@@ -100,7 +103,7 @@ final class Configurator extends BaseOptions
 	}
 
 	/**
-	 * Create app rewrite
+	 * Create application rewrite
 	 *
 	 * @access private
 	 * @param void
@@ -113,7 +116,7 @@ final class Configurator extends BaseOptions
 	}
 
 	/**
-	 * Create app config
+	 * Create application config
 	 *
 	 * @access private
 	 * @param void
