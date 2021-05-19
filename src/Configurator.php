@@ -30,20 +30,56 @@ final class Configurator extends BaseOptions
 	 */
 	public function setup()
 	{
-		// Setup database
-		if ( $this->getDatabaseFile() && $this->getMigratePath() ) {
-			$this->migrate();
+		$transient = new Transient();
+		if ( !$transient->getBaseTemp('--installed') ) {
+			// Setup database
+			if ( $this->getDatabaseFile() && $this->getMigratePath() ) {
+				$this->migrate();
+			}
+			// Setup rewrite
+			if ( !File::exists("{$this->getRoot()}/.htaccess") ) {
+				$this->rewrite();
+			}
+			if ( !File::exists("{$this->getAppDir()}/.htaccess") ) {
+				File::w("{$this->getAppDir()}/.htaccess",'deny from all');
+			}
+			// Setup config
+			if ( !File::exists($this->getConfigFile()) ) {
+				$this->config();
+			}
+			$transient->setBaseTemp('--installed',true,0);
 		}
-		// Setup rewrite
-		if ( !File::exists("{$this->getRoot()}/.htaccess") ) {
-			$this->rewrite();
+	}
+
+	/**
+	 * Migrate application database
+	 *
+	 * @access public
+	 * @param string $path
+	 * @return void
+	 */
+	public function migrate($path = null)
+	{
+		if ( !$path ) {
+			$path = $this->getMigratePath();
 		}
-		if ( !File::exists("{$this->getAppDir()}/.htaccess") ) {
-			File::w("{$this->getAppDir()}/.htaccess",'deny from all');
+
+		$orm = new Orm();
+
+		// Create database
+		$orm->createDatabase();
+
+		// Create tables
+		$tables = glob("{$path}/*.{sql}", GLOB_BRACE);
+		if ( !$tables ) {
+			return;
 		}
-		// Setup config
-		if ( !File::exists($this->getConfigFile()) ) {
-			$this->config();
+		foreach ($tables as $table) {
+			$sql = File::r("{$table}");
+			if ( !empty($sql) ) {
+				$orm->init();
+				$orm->query($sql);
+			}
 		}
 	}
 
@@ -75,30 +111,19 @@ final class Configurator extends BaseOptions
 	}
 
 	/**
-	 * Migrate application database
+	 * Reset application config
 	 *
-	 * @access private
-	 * @param void
+	 * @access public
+	 * @param bool $all
 	 * @return void
 	 */
-	private function migrate()
+	public static function reset($all = false)
 	{
-		$orm = new Orm();
-
-		// Create database
-		$orm->createDatabase();
-
-		// Create tables
-		$tables = array_diff(scandir($this->getMigratePath()),['.','..']);
-		if ( !$tables ) {
-			return;
-		}
-		foreach ($tables as $table) {
-			$sql = File::r("{$this->getMigratePath()}/{$table}");
-			if ( !empty($sql) ) {
-				$orm->init();
-				$orm->query($sql);
-			}
+		$transient = new Transient();
+		if ( $all ) {
+			$transient->resetTemp();
+		} else {
+			$transient->setBaseTemp('--installed',false,0);
 		}
 	}
 
@@ -112,7 +137,7 @@ final class Configurator extends BaseOptions
 	private function rewrite()
 	{
 		$htaccess = File::r(dirname(__FILE__).'/bin/.htaccess');
-		File::w("{$this->getRoot()}/.htaccess",$htaccess);
+		File::w("{$path}/.htaccess",$htaccess);
 	}
 
 	/**
