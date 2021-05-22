@@ -2,7 +2,7 @@
 /**
  * @author    : JIHAD SINNAOUR
  * @package   : FloatPHP
- * @subpackage: Kernel Component
+ * @subpackage: Helpers Component
  * @version   : 1.0.0
  * @category  : PHP framework
  * @copyright : (c) 2017 - 2021 JIHAD SINNAOUR <mail@jihadsinnaour.com>
@@ -31,7 +31,7 @@ final class Configurator extends BaseOptions
 	public function setup()
 	{
 		$transient = new Transient();
-		if ( !$transient->getBaseTemp('--installed') ) {
+		if ( !$transient->getTemp('--installed') ) {
 			// Setup database
 			if ( $this->getDatabaseFile() && $this->getMigratePath() ) {
 				$this->migrate();
@@ -47,7 +47,7 @@ final class Configurator extends BaseOptions
 			if ( !File::exists($this->getConfigFile()) ) {
 				$this->config();
 			}
-			$transient->setBaseTemp('--installed',true,0);
+			$transient->setTemp('--installed',true,0);
 		}
 	}
 
@@ -121,7 +121,7 @@ final class Configurator extends BaseOptions
 	{
 		$transient = new Transient();
 		if ( $all ) {
-			$transient->resetTemp();
+			$transient->resetBaseTemp();
 		} else {
 			$transient->setBaseTemp('--installed',false,0);
 		}

@@ -2,7 +2,7 @@
 /**
  * @author    : JIHAD SINNAOUR
  * @package   : FloatPHP
- * @subpackage: Kernel Component
+ * @subpackage: Helpers Component
  * @version   : 1.0.0
  * @category  : PHP framework
  * @copyright : (c) 2017 - 2021 JIHAD SINNAOUR <mail@jihadsinnaour.com>
@@ -68,9 +68,9 @@ class Transient extends ConfigProvider
 	 * @param void
 	 * @return void
 	 */
-	public function resetTemp()
+	public function resetBaseTemp()
 	{
-		$this->deleteBaseOptions('temp');
+		$this->deleteBase('temp');
 	}
 
 	/**
@@ -82,7 +82,7 @@ class Transient extends ConfigProvider
 	 */
 	public function setBaseTemp($name, $value = true, $expire = 300)
 	{
-		$temp = $this->getBaseOptions('temp');
+		$temp = $this->getBase('temp');
 		if ( empty($temp) ) {
 			$temp = [];
 		} else {
@@ -94,7 +94,7 @@ class Transient extends ConfigProvider
 			$temp[$name]['created'] = Date::newTime(0, 0, $expire);
 		}
 		$temp = Stringify::serialize($temp);
-		return $this->setBaseOptions('temp',$temp);
+		return $this->setBase('temp',$temp);
 	}
 
 	/**
@@ -104,7 +104,7 @@ class Transient extends ConfigProvider
 	 */
 	public function getBaseTemp($name)
 	{
-		$temp = $this->getBaseOptions('temp');
+		$temp = $this->getBase('temp');
 		if ( empty($temp) ) {
 			return null;
 		} else {
@@ -115,7 +115,7 @@ class Transient extends ConfigProvider
 		        if ( $temp[$name]['created'] < Date::timeNow() ) {
 		        	unset($temp[$name]);
 		        	$temp = Stringify::serialize($temp);
-		        	$this->setBaseOptions('temp',$temp);
+		        	$this->setBase('temp',$temp);
 		            return null;
 		        }
 			}

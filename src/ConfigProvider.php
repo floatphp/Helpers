@@ -2,7 +2,7 @@
 /**
  * @author    : JIHAD SINNAOUR
  * @package   : FloatPHP
- * @subpackage: Kernel Component
+ * @subpackage: Helpers Component
  * @version   : 1.0.0
  * @category  : PHP framework
  * @copyright : (c) 2017 - 2021 JIHAD SINNAOUR <mail@jihadsinnaour.com>
@@ -26,7 +26,7 @@ class ConfigProvider
 	 * @param bool $purge
 	 * @return mixed
 	 */
-	public function getOptions($name, $purge = false)
+	public function get($name, $purge = false)
 	{
 		$cache = $this->initCache(false);
 		$key = Stringify::formatKey($name);
@@ -35,7 +35,7 @@ class ConfigProvider
 		}
 		$value = $cache->get($key);
 		if ( !$cache->isCached() ) {
-			$value = $this->getBaseOptions($name);
+			$value = $this->getBase($name);
 			$value = Stringify::unserialize($value);
 			$cache->set($value,$key);
 		}
@@ -46,29 +46,28 @@ class ConfigProvider
 	 * @access public
 	 * @param string $name
 	 * @param mixed $value
-	 * @param int $expire
-	 * @return mixed
+	 * @return bool
 	 */
-	public function updateOptions($name, $value)
+	public function update($name = '', $value = '') : bool
 	{
 		$cache = $this->initCache(false);
 		$key = Stringify::formatKey($name);
 		$cache->deleteByTag($key);
 		$value = Stringify::serialize($value);
-		return $this->setBaseOptions($name,$value);
+		return $this->setBase($name,$value);
 	}
 
 	/**
 	 * @access public
 	 * @param string $name
-	 * @return mixed
+	 * @return bool
 	 */
-	public function deleteOptions($name)
+	public function delete($name = '') : bool
 	{
 		$cache = $this->initCache(false);
 		$key = Stringify::formatKey($name);
 		$cache->deleteByTag($key);
-		return $this->deleteBaseOptions($name);
+		return $this->deleteBase($name);
 	}
 
 	/**
@@ -76,12 +75,12 @@ class ConfigProvider
 	 * @param string $name
 	 * @return string
 	 */
-	protected function getBaseOptions($name) : string
+	protected function getBase($name) : string
 	{
 		$orm = new Orm();
 		$orm->init();
 		$bind = ['name' => $name];
-		$sql = "SELECT `options` FROM `config` WHERE `configName` LIKE :name;";
+		$sql = "SELECT `options` FROM `config` WHERE `name` LIKE :name;";
 		return $orm->query($sql,$bind,['isSingle' => true]);
 	}
 
@@ -91,12 +90,12 @@ class ConfigProvider
 	 * @param mixed $value
 	 * @return bool
 	 */
-	protected function updateBaseOptions($name, $value = '') : bool
+	protected function updateBase($name, $value = '') : bool
 	{
 		$orm = new Orm();
 		$orm->init();
 		$bind = ['name' => $name, 'value' => $value];
-		$sql = "UPDATE `config` SET `options` = :value WHERE `configName` LIKE :name;";
+		$sql = "UPDATE `config` SET `options` = :value WHERE `name` LIKE :name;";
 		return $orm->query($sql,$bind);
 	}
 
@@ -106,15 +105,15 @@ class ConfigProvider
 	 * @param mixed $value
 	 * @return bool
 	 */
-	protected function setBaseOptions($name, $value = '') : bool
+	protected function setBase($name, $value = '') : bool
 	{
 		$orm = new Orm();
 		$orm->init();
 		$bind = ['name' => $name, 'value' => $value];
 		if ( $this->exists($name) ) {
-			return $this->updateBaseOptions($name,$value);
+			return $this->updateBase($name,$value);
 		} else {
-			$sql = "INSERT INTO `config` (`configName`,`options`) VALUES(:name,:value);";
+			$sql = "INSERT INTO `config` (`name`,`options`) VALUES(:name,:value);";
 			return $orm->query($sql,$bind);
 		}
 	}
@@ -124,12 +123,12 @@ class ConfigProvider
 	 * @param string $name
 	 * @return bool
 	 */
-	protected function deleteBaseOptions($name) : bool
+	protected function deleteBase($name) : bool
 	{
 		$orm = new Orm();
 		$orm->init();
 		$bind = ['name' => $name];
-		$sql = "DELETE FROM `config` WHERE `configName` LIKE :name;";
+		$sql = "DELETE FROM `config` WHERE `name` LIKE :name;";
 		return $orm->query($sql,$bind);
 	}
 
@@ -156,7 +155,7 @@ class ConfigProvider
 		$orm = new Orm();
 		$orm->init();
 		$bind = ['name' => $name];
-		$sql = "SELECT COUNT('configName') FROM `config` WHERE `configName` LIKE :name;";
+		$sql = "SELECT COUNT('name') FROM `config` WHERE `name` LIKE :name;";
 		return (int) $orm->query($sql,$bind,['isSingle' => true]);
 	}
 }
