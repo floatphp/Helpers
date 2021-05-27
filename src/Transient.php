@@ -14,7 +14,6 @@
 
 namespace FloatPHP\Helpers;
 
-use FloatPHP\Kernel\Cache;
 use FloatPHP\Classes\Filesystem\Stringify;
 use FloatPHP\Classes\Server\Date;
 
@@ -33,7 +32,7 @@ class Transient extends ConfigProvider
 		$key = Stringify::formatKey($name);
 		$cache->get($key);
 		if ( !$cache->isCached() ) {
-			$cache->set($value);
+			$cache->set($value,'--temp');
 		} else {
 			$this->updateTemp($name,$value,$expire);
 		}
@@ -70,7 +69,7 @@ class Transient extends ConfigProvider
 	 */
 	public function resetBaseTemp()
 	{
-		$this->deleteBase('temp');
+		$this->deleteBase('--temp');
 	}
 
 	/**
@@ -82,7 +81,7 @@ class Transient extends ConfigProvider
 	 */
 	public function setBaseTemp($name, $value = true, $expire = 300)
 	{
-		$temp = $this->getBase('temp');
+		$temp = $this->getBase('--temp');
 		if ( empty($temp) ) {
 			$temp = [];
 		} else {
@@ -94,7 +93,7 @@ class Transient extends ConfigProvider
 			$temp[$name]['created'] = Date::newTime(0, 0, $expire);
 		}
 		$temp = Stringify::serialize($temp);
-		return $this->setBase('temp',$temp);
+		return $this->setBase('--temp',$temp);
 	}
 
 	/**
@@ -104,7 +103,7 @@ class Transient extends ConfigProvider
 	 */
 	public function getBaseTemp($name)
 	{
-		$temp = $this->getBase('temp');
+		$temp = $this->getBase('--temp');
 		if ( empty($temp) ) {
 			return null;
 		} else {
@@ -115,7 +114,7 @@ class Transient extends ConfigProvider
 		        if ( $temp[$name]['created'] < Date::timeNow() ) {
 		        	unset($temp[$name]);
 		        	$temp = Stringify::serialize($temp);
-		        	$this->setBase('temp',$temp);
+		        	$this->setBase('--temp',$temp);
 		            return null;
 		        }
 			}

@@ -14,7 +14,6 @@
 
 namespace FloatPHP\Helpers;
 
-use FloatPHP\Kernel\Cache;
 use FloatPHP\Kernel\Orm;
 use FloatPHP\Classes\Filesystem\Stringify;
 
@@ -23,10 +22,11 @@ class ConfigProvider
 	/**
 	 * @access public
 	 * @param string $name
+	 * @param bool $default
 	 * @param bool $purge
 	 * @return mixed
 	 */
-	public function get($name, $purge = false)
+	public function get($name, $default = false, $purge = false)
 	{
 		$cache = $this->initCache(false);
 		$key = Stringify::formatKey($name);
@@ -38,6 +38,9 @@ class ConfigProvider
 			$value = $this->getBase($name);
 			$value = Stringify::unserialize($value);
 			$cache->set($value,$key);
+		}
+		if ( $default !== false && empty($value) ) {
+			$value = $default;
 		}
 		return $value;
 	}

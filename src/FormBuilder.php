@@ -14,14 +14,14 @@
 
 namespace FloatPHP\Helpers;
 
-use FloatPHP\Kernel\BaseOptions;
+use FloatPHP\Kernel\Base;
 use FloatPHP\Classes\Html\Form;
 use FloatPHP\Classes\Filesystem\Stringify;
 use FloatPHP\Classes\Filesystem\TypeCheck;
 use FloatPHP\Classes\Filesystem\Json;
 use FloatPHP\Classes\Filesystem\File;
 
-class FormBuilder extends BaseOptions
+class FormBuilder extends Base
 {
 	/**
 	 * @access private

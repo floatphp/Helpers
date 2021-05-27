@@ -14,12 +14,12 @@
 
 namespace FloatPHP\Helpers;
 
-use FloatPHP\Kernel\BaseOptions;
+use FloatPHP\Kernel\Base;
 use FloatPHP\Kernel\Orm;
 use FloatPHP\Classes\Filesystem\File;
 use FloatPHP\Classes\Filesystem\Json;
 
-final class Configurator extends BaseOptions
+final class Configurator extends Base
 {
 	/**
 	 * Setup application
@@ -92,20 +92,21 @@ final class Configurator extends BaseOptions
 	 */
 	public static function parse($config = [])
 	{
+		$parse = [];
 		$parse['--disable-setup'] = isset($config['--disable-setup'])
-		? isset($config['--disable-setup']) : false;
+		? $config['--disable-setup'] : false;
 
 		$parse['--disable-powered-by'] = isset($config['--disable-powered-by'])
-		? isset($config['--disable-powered-by']) : false;
+		? $config['--disable-powered-by'] : false;
 
 		$parse['--disable-session'] = isset($config['--disable-session'])
-		? isset($config['--disable-session']) : false;
+		? $config['--disable-session'] : false;
 
 		$parse['--default-lang'] = isset($config['--default-lang'])
-		? isset($config['--default-lang']) : 'en';
+		? $config['--default-lang'] : 'en';
 
 		$parse['--default-timezone'] = isset($config['--default-timezone'])
-		? isset($config['--default-timezone']) : 'Europe/Paris';
+		? $config['--default-timezone'] : 'Europe/Paris';
 
 		return $parse;
 	}
