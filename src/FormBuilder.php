@@ -121,14 +121,12 @@ class FormBuilder extends Base
 			foreach ($attributes as $key => $value) {
 				$this->form->setAttribute($key,$value);
 			}
-
 			// Import options
 			$options = isset($data['form']['options'])
 			? (array) $data['form']['options'] : [];
 			foreach ($options as $key => $value) {
 				$this->form->setOptions($key,$value);
 			}
-
 			// Import inputs
 			$inputs = isset($data['form']['inputs'])
 			? (array) $data['form']['inputs'] : [];

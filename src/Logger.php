@@ -14,13 +14,13 @@
 
 namespace FloatPHP\Helpers;
 
-use FloatPHP\Kernel\Configuration;
+use FloatPHP\Kernel\TraitConfiguration;
 use FloatPHP\Classes\Filesystem\Stringify;
 use FloatPHP\Classes\Filesystem\Logger as ParentLogger;
 
 class Logger extends ParentLogger
 {
-    use Configuration;
+    use TraitConfiguration;
 
     /**
      * @param string $path
@@ -32,6 +32,7 @@ class Logger extends ParentLogger
         // Init configuration
         $this->initConfig();
 
+        // Override
         $path = "{$this->getLoggerPath()}/{$path}";
         $this->setPath(Stringify::formatPath($path,1));
         $this->setFilename($filename);

@@ -142,10 +142,11 @@ class ConfigProvider
 	 */
 	protected function initCache($expire = 0)
 	{
+		$cache = new Cache();
 		if ( $expire !== false ) {
-			Cache::expireIn($expire);
+			$cache->setTTL($expire);
 		}
-		return new Cache();
+		return $cache;
 	}
 
 	/**

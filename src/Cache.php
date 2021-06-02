@@ -14,35 +14,36 @@
 
 namespace FloatPHP\Helpers;
 
-use FloatPHP\Kernel\Configuration;
+use FloatPHP\Kernel\TraitConfiguration;
 use FloatPHP\Classes\Filesystem\FileCache;
-use FloatPHP\Classes\Filesystem\TypeCheck;
 
 class Cache extends FileCache
 {
-	use Configuration;
+	use TraitConfiguration;
 
 	/**
-	 * @param void
+	 * @param string $path
+	 * @param int|string $ttl
 	 */
-	public function __construct()
+	public function __construct($path = 'temp', $ttl = null)
 	{
 		// Init configuration
 		$this->initConfig();
-
-		// Set cache configuration
-		if ( TypeCheck::isNull(self::$config) ) {
-
-			self::setConfig([
-				'path' => "{$this->getCachePath()}/temp"
-			]);
-		}
 		// Set cache TTL
-		if ( TypeCheck::isNull(self::$ttl) ) {
-			self::expireIn($this->getExpireIn());
-		}
-		
+		$ttl = ($ttl) ? (int)$ttl : $this->getCacheTTL();
 		// Instance cache
-		parent::__construct();
+		parent::__construct(['path' => "{$this->getCachePath()}/{$path}"], $ttl);
+	}
+
+	/**
+	 * Clear adapter instances
+	 *
+	 * @access public
+	 * @param void
+	 * @return void
+	 */
+	public function __destruct()
+	{
+		parent::__destruct();
 	}
 }
