@@ -1,0 +1,21 @@
+[
+   {
+      "name":"Administrator",
+      "slug":"administrator",
+      "capability":[
+         "read",
+         "create",
+         "write",
+         "delete"
+      ]
+   },
+   {
+      "name":"Editor",
+      "slug":"editor",
+      "capability":[
+         "read",
+         "create",
+         "write"
+      ]
+   }
+]

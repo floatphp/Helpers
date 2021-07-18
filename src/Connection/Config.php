@@ -2,7 +2,7 @@
 /**
  * @author    : JIHAD SINNAOUR
  * @package   : FloatPHP
- * @subpackage: Helpers Component
+ * @subpackage: Helpers Connection Component
  * @version   : 1.0.0
  * @category  : PHP framework
  * @copyright : (c) 2017 - 2021 JIHAD SINNAOUR <mail@jihadsinnaour.com>
@@ -12,21 +12,23 @@
  * This file if a part of FloatPHP Framework
  */
 
-namespace FloatPHP\Helpers;
+namespace FloatPHP\Helpers\Connection;
 
+use FloatPHP\Helpers\Filesystem\Cache;
 use FloatPHP\Kernel\Orm;
 use FloatPHP\Classes\Filesystem\Stringify;
+use FloatPHP\Classes\Filesystem\TypeCheck;
 
-class ConfigProvider
+class Config
 {
 	/**
 	 * @access public
 	 * @param string $name
-	 * @param bool $default
+	 * @param mixed $default
 	 * @param bool $purge
 	 * @return mixed
 	 */
-	public function get($name, $default = false, $purge = false)
+	public function get($name, $default = null, $purge = false)
 	{
 		$cache = $this->initCache(false);
 		$key = Stringify::formatKey($name);
@@ -39,7 +41,7 @@ class ConfigProvider
 			$value = Stringify::unserialize($value);
 			$cache->set($value,$key);
 		}
-		if ( $default !== false && empty($value) ) {
+		if ( !TypeCheck::isNull($default) && empty($value) ) {
 			$value = $default;
 		}
 		return $value;

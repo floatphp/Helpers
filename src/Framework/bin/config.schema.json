@@ -52,11 +52,8 @@
     },
     "url": {
       "type": "object",
-      "required": ["base","admin","login"],
+      "required": ["admin","login"],
       "properties":{
-        "base":{
-          "type": "string"
-        },
         "admin":{
           "type": "string"
         },
@@ -79,12 +76,15 @@
     },
     "api": {
       "type": "object",
-      "required": ["username","password"],
+      "required": ["username","password","secret"],
       "properties":{
         "username":{
           "type": "string"
         },
         "password":{
+          "type": "string"
+        },
+        "secret":{
           "type": "string"
         }
       }
@@ -110,8 +110,11 @@
     },
     "access": {
       "type": "object",
-      "required": ["allowed","denied","sessionId","secret","expire"],
+      "required": ["permissions","allowed","denied","sessionId","secret","expire"],
       "properties":{
+        "permissions":{
+          "type": "boolean"
+        },
         "allowed":{
           "type": "object",
           "required": ["ip"],

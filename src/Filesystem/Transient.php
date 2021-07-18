@@ -2,7 +2,7 @@
 /**
  * @author    : JIHAD SINNAOUR
  * @package   : FloatPHP
- * @subpackage: Helpers Component
+ * @subpackage: Helpers Filesystem Component
  * @version   : 1.0.0
  * @category  : PHP framework
  * @copyright : (c) 2017 - 2021 JIHAD SINNAOUR <mail@jihadsinnaour.com>
@@ -12,12 +12,14 @@
  * This file if a part of FloatPHP Framework
  */
 
-namespace FloatPHP\Helpers;
+namespace FloatPHP\Helpers\Filesystem;
 
+use FloatPHP\Helpers\Connection\Config;
 use FloatPHP\Classes\Filesystem\Stringify;
+use FloatPHP\Classes\Filesystem\TypeCheck;
 use FloatPHP\Classes\Server\Date;
 
-class Transient extends ConfigProvider
+class Transient extends Config
 {
 	/**
 	 * @access public
@@ -41,13 +43,18 @@ class Transient extends ConfigProvider
 	/**
 	 * @access public
 	 * @param string $name
+	 * @param mixed $default
 	 * @return mixed
 	 */
-	public function getTemp($name)
+	public function getTemp($name, $default = null)
 	{
 		$cache = $this->initCache(false);
 		$key = Stringify::formatKey($name);
-		return $cache->get($key);
+		$value = $cache->get($key);
+		if ( !TypeCheck::isNull($default) && TypeCheck::isNull($value) ) {
+			$value = $default;
+		}
+		return $value;
 	}
 
 	/**

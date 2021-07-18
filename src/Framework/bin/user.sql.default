@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS `user` (
+  `userId` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(64) NOT NULL,
+  `email` varchar(64) NOT NULL,
+  `name` varchar(64) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `roleId` int(11) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`userId`),
+  KEY `idue` (`email`) USING BTREE,
+  KEY `idun` (`username`) USING BTREE,
+  KEY `idur` (`roleId`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;

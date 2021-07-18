@@ -2,7 +2,7 @@
 /**
  * @author    : JIHAD SINNAOUR
  * @package   : FloatPHP
- * @subpackage: Helpers Component
+ * @subpackage: Helpers Filesystem Component
  * @version   : 1.0.0
  * @category  : PHP framework
  * @copyright : (c) 2017 - 2021 JIHAD SINNAOUR <mail@jihadsinnaour.com>
@@ -12,7 +12,7 @@
  * This file if a part of FloatPHP Framework
  */
 
-namespace FloatPHP\Helpers;
+namespace FloatPHP\Helpers\Filesystem;
 
 use FloatPHP\Kernel\TraitConfiguration;
 use FloatPHP\Classes\Filesystem\Stringify;

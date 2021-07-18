@@ -16,7 +16,6 @@
       "routes":"/App/Storage/config/routes.json"
    },
    "url":{
-      "base":"",
       "admin":"/admin/dashboard/",
       "login":"/admin/login/"
    },
@@ -26,7 +25,8 @@
    },
    "api":{
       "username":"",
-      "password":""
+      "password":"",
+      "secret":""
    },
    "options":{
       "view":{
@@ -36,6 +36,7 @@
       "ttl":30
    },
    "access":{
+      "permissions":true,
       "allowed":{
          "ip":[]
       },

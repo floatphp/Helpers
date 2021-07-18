@@ -2,7 +2,7 @@
 /**
  * @author    : JIHAD SINNAOUR
  * @package   : FloatPHP
- * @subpackage: Helpers Component
+ * @subpackage: Helpers Framework Component
  * @version   : 1.0.0
  * @category  : PHP framework
  * @copyright : (c) 2017 - 2021 JIHAD SINNAOUR <mail@jihadsinnaour.com>
@@ -12,12 +12,16 @@
  * This file if a part of FloatPHP Framework
  */
 
-namespace FloatPHP\Helpers;
+namespace FloatPHP\Helpers\Framework;
 
+use FloatPHP\Helpers\Filesystem\Transient;
+use FloatPHP\Helpers\Connection\Role;
 use FloatPHP\Kernel\Base;
 use FloatPHP\Kernel\Orm;
 use FloatPHP\Classes\Filesystem\File;
 use FloatPHP\Classes\Filesystem\Json;
+use FloatPHP\Classes\Filesystem\Stringify;
+use FloatPHP\Classes\Http\Server;
 
 final class Configurator extends Base
 {
@@ -32,20 +36,25 @@ final class Configurator extends Base
 	{
 		$transient = new Transient();
 		if ( !$transient->getTemp('--installed') ) {
-			// Setup database
-			if ( $this->getDatabaseFile() && $this->getMigratePath() ) {
-				$this->migrate();
-			}
-			// Setup rewrite
-			if ( !File::exists("{$this->getRoot()}/.htaccess") ) {
-				$this->rewrite();
-			}
-			if ( !File::exists("{$this->getAppDir()}/.htaccess") ) {
-				File::w("{$this->getAppDir()}/.htaccess",'deny from all');
-			}
 			// Setup config
 			if ( !File::exists($this->getConfigFile()) ) {
 				$this->config();
+			}
+			// Setup database
+			if ( $this->getDatabaseFile() && $this->getMigratePath() ) {
+				$this->setBuiltinTables();
+				$this->migrate();
+				$this->importBuiltinTables();
+			}
+			if ( !$transient->getBaseTemp('--installed') ) {
+				// Setup rewrite
+				if ( !File::exists("{$this->getRoot()}/.htaccess") ) {
+					$this->rewrite();
+				}
+				if ( !File::exists("{$this->getAppDir()}/.htaccess") ) {
+					File::w("{$this->getAppDir()}/.htaccess",'deny from all');
+				}
+				$transient->setBaseTemp('--installed',true,0);
 			}
 			$transient->setTemp('--installed',true,0);
 		}
@@ -64,9 +73,8 @@ final class Configurator extends Base
 			$path = $this->getMigratePath();
 		}
 
-		$orm = new Orm();
-
 		// Create database
+		$orm = new Orm();
 		$orm->createDatabase();
 
 		// Create tables
@@ -80,6 +88,48 @@ final class Configurator extends Base
 				$orm->init();
 				$orm->query($sql);
 			}
+		}
+	}
+
+	/**
+	 * Set builtin database tables
+	 *
+	 * @access private
+	 * @param void
+	 * @return void
+	 */
+	private function setBuiltinTables()
+	{
+		$path = $this->getMigratePath();
+		if ( !File::exists("{$path}/config.sql") ) {
+			File::cp(dirname(__FILE__).'/bin/config.sql.default',"{$path}/config.sql");
+		}
+		if ( !File::exists("{$path}/user.sql") ) {
+			File::cp(dirname(__FILE__).'/bin/user.sql.default',"{$path}/user.sql");
+		}
+		if ( !File::exists("{$path}/role.sql") ) {
+			File::cp(dirname(__FILE__).'/bin/role.sql.default',"{$path}/role.sql");
+		}
+	}
+
+	/**
+	 * Import builtin data
+	 *
+	 * @access private
+	 * @param void
+	 * @return void
+	 */
+	private function importBuiltinTables()
+	{
+		$roles = Json::decode(File::r(dirname(__FILE__).'/bin/role.default.json'),true);
+		$item = new Role();
+		$item->deleteAll();
+		$item->resetId();
+		foreach ($roles as $role) {
+			$item->name = $role['name'];
+			$item->slug = $role['slug'];
+			$item->capability = Json::encode($role['capability']);
+			$item->create();
 		}
 	}
 
@@ -107,6 +157,9 @@ final class Configurator extends Base
 
 		$parse['--default-timezone'] = isset($config['--default-timezone'])
 		? $config['--default-timezone'] : 'Europe/Paris';
+		
+		$parse['--enable-maintenance'] = isset($config['--enable-maintenance'])
+		? $config['--enable-maintenance'] : false;
 
 		return $parse;
 	}
@@ -138,7 +191,24 @@ final class Configurator extends Base
 	private function rewrite()
 	{
 		$htaccess = File::r(dirname(__FILE__).'/bin/.htaccess');
-		File::w("{$path}/.htaccess",$htaccess);
+		$base = $this->getBaseRoute(false);
+		$base = Stringify::replace('//','/',"/{$base}/");
+		$domain = Server::get('server-name');
+		$domain = Stringify::replace('www.','',$domain);
+		$file = basename(Server::get('script-filename'));
+		$file = Stringify::replace('.php','',$file);
+		$htaccess = Stringify::replaceArray([
+			'/__BASE__/' => $base,
+			'__FILE__'   => $file,
+			'__DOMAIN__' => $domain
+		],$htaccess);
+		if ( Server::isHttps() ) {
+			$htaccess = Stringify::replaceArray([
+				'# RewriteCond %{HTTPS} off'  => 'RewriteCond %{HTTPS} off',
+				'# RewriteRule (.*) https://' => 'RewriteRule (.*) https://'
+			],$htaccess);
+		}
+		File::w("{$this->getRoot()}/.htaccess",$htaccess);
 	}
 
 	/**
