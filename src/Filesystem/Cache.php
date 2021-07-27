@@ -33,7 +33,10 @@ class Cache extends FileCache
 		// Set cache TTL
 		$ttl = (TypeCheck::isNull($ttl)) ? $this->getCacheTTL() : (int)$ttl;
 		// Instance cache
-		parent::__construct(['path' => "{$this->getCachePath()}/{$path}"], $ttl);
+		parent::__construct([
+			'path'        => "{$this->getCachePath()}/{$path}",
+			'securityKey' => 'private'
+		], $ttl);
 	}
 
 	/**
