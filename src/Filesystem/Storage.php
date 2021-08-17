@@ -17,7 +17,7 @@ namespace FloatPHP\Helpers\Filesystem;
 use FloatPHP\Kernel\TraitConfiguration;
 use FloatPHP\Classes\Filesystem\Storage as ParentStorage;
 
-class Storage extends ParentStorage
+final class Storage extends ParentStorage
 {
 	use TraitConfiguration;
 

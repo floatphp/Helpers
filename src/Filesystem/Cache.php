@@ -18,7 +18,7 @@ use FloatPHP\Kernel\TraitConfiguration;
 use FloatPHP\Classes\Filesystem\FileCache;
 use FloatPHP\Classes\Filesystem\TypeCheck;
 
-class Cache extends FileCache
+final class Cache extends FileCache
 {
 	use TraitConfiguration;
 

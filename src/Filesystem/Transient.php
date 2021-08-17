@@ -19,7 +19,7 @@ use FloatPHP\Classes\Filesystem\Stringify;
 use FloatPHP\Classes\Filesystem\TypeCheck;
 use FloatPHP\Classes\Server\Date;
 
-class Transient extends Config
+final class Transient extends Config
 {
 	/**
 	 * @access public

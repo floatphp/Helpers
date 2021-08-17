@@ -18,7 +18,7 @@ use FloatPHP\Kernel\TraitConfiguration;
 use FloatPHP\Classes\Filesystem\Stringify;
 use FloatPHP\Classes\Filesystem\Logger as ParentLogger;
 
-class Logger extends ParentLogger
+final class Logger extends ParentLogger
 {
     use TraitConfiguration;
 

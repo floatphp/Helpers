@@ -18,7 +18,7 @@ use FloatPHP\Kernel\TraitConfiguration;
 use FloatPHP\Classes\Http\Session;
 use FloatPHP\Classes\Filesystem\Translation;
 
-class Translator extends Translation
+final class Translator extends Translation
 {
     use TraitConfiguration;
 

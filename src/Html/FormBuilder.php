@@ -21,7 +21,7 @@ use FloatPHP\Classes\Filesystem\TypeCheck;
 use FloatPHP\Classes\Filesystem\Json;
 use FloatPHP\Classes\Filesystem\File;
 
-class FormBuilder extends Base
+final class FormBuilder extends Base
 {
 	/**
 	 * @access private
