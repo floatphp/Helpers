@@ -15,6 +15,7 @@
 namespace FloatPHP\Helpers\Framework;
 
 use FloatPHP\Kernel\TraitConfiguration;
+use FloatPHP\Classes\Filesystem\Stringify;
 
 final class Configuration
 {
@@ -29,5 +30,17 @@ final class Configuration
 	{
 		$this->initConfig();
 		return $this->getConfig();
+	}
+
+	/**
+	 * @access public
+	 * @param string $path
+	 * @return string
+	 */
+	public function getRoot($path = '') : string
+	{
+		global $appDir;
+		$root = dirname($appDir);
+		return Stringify::formatPath("{$root}/{$path}",true);
 	}
 }
