@@ -23,9 +23,9 @@ final class Dump
 
 	/**
 	 * @access private
-	 * @var object $this->connectionnection
+	 * @var object $connection
 	 */
-	private $this->connectionnection = false;
+	private $connection = false;
 
 	/**
 	 * @param void
@@ -54,7 +54,7 @@ final class Dump
 		// Temporary variable, store current query
 		$temp = '';
 		// Read in entire file
-		$lines = file($filename);
+		$lines = file($file);
 		// Loop through each line
 		foreach ($lines as $line) {
 			// Skip it if it's a comment
@@ -90,15 +90,15 @@ final class Dump
 		$mysqlHostName ='dbxxx.hosting-data.io';
 		$mysqlExportPath ='nom-du-fichier-dexport.sql';
 
-		$command='mysqldump --opt -h' .$mysqlHostName .' -u' .$mysqlUserName .' -p' .$mysqlPassword .' ' .$mysqlDatabaseName .' > ' .$mysqlExportPath;
+		$command = 'mysqldump --opt -h' .$mysqlHostName .' -u' .$mysqlUserName .' -p' .$mysqlPassword .' ' .$mysqlDatabaseName .' > ' .$mysqlExportPath;
 		exec($command,$output,$worked);
 		switch($worked){
-		case 0:
-		break;
-		case 1:
-		break;
-		case 2:
-		break;
+			case 0:
+			break;
+			case 1:
+			break;
+			case 2:
+			break;
 		}
 	}
 
