@@ -195,7 +195,7 @@ abstract class AbstractDataTable extends Orm
 	 * @param array $data
 	 * @return string
 	 */
-	protected static function format($data) : string
+	protected static function format($data = []) : string
 	{
 		$json = Json::format($data);
 		$prefix = '"data": ';
