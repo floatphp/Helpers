@@ -1,2 +1,2 @@
 # Helpers
-Framework Helpers Component
+Framework Helper Components
