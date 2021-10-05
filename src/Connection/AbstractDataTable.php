@@ -75,7 +75,11 @@ abstract class AbstractDataTable extends Orm
 		}
 
 		// Set rows
-		$rows = implode(',',$columns);
+		$fields = [];
+		foreach ($columns as $key => $value) {
+			$fields[$key] = "`{$value}`";
+		}
+		$rows = implode(',',$fields);
 		if ( empty($rows) ) {
 			$rows = '*';
 		}
@@ -116,7 +120,7 @@ abstract class AbstractDataTable extends Orm
 			    			if ( isset($option['searchable']) ) {
 			    				if ( $option['searchable'] == 'true' ) {
 						    		$bind[$column] = "%{$search}%";
-						    		$where .= "({$column} LIKE :{$column}) OR ";
+						    		$where .= "(`{$column}` LIKE :{$column}) OR ";
 			    				}
 			    			}
 			    		}
@@ -129,7 +133,7 @@ abstract class AbstractDataTable extends Orm
 		    		$sql .= $where;
 		    	}
 				// Get filtered count
-		    	$count = "SELECT COUNT({$this->key}) FROM `{$this->table}` {$where}";
+		    	$count = "SELECT COUNT(`{$this->key}`) FROM `{$this->table}` {$where}";
     			$filtered = $this->db->single($count,$bind);
 			}
 		}
