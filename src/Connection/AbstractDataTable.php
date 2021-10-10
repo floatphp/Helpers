@@ -150,7 +150,7 @@ abstract class AbstractDataTable extends Orm
 			$data = $this->db->query($sql,$bind);
 			// Format server data
 			$data = static::serverPreRender($data);
-			$cache->set($data,$this->table);
+			$cache->set($data,[$this->table,'data']);
 		}
 
 		// Format server data output
