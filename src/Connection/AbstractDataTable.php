@@ -43,7 +43,7 @@ abstract class AbstractDataTable extends Orm
 	 * @param int $ttl
 	 * @return string
 	 */
-	public function serverRender($table, $primaryKey, $columns = [], $ttl = 0) : string
+	public function serverRender($table, $primaryKey, $columns = [], $ttl = 3600) : string
 	{
 		// Init database
 		$this->init();

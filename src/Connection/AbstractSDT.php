@@ -35,7 +35,7 @@ abstract class AbstractSDT extends AbstractDataTable
 	 * @param int $ttl
 	 * @return string
 	 */
-	public function serverRender($table, $primaryKey = '_id', $columns = [], $ttl = 0) : string
+	public function serverRender($table, $primaryKey = '_id', $columns = [], $ttl = 3600) : string
 	{
 		// Catch request
 		$request = Request::get();
