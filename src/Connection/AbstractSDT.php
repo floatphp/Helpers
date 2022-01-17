@@ -32,9 +32,10 @@ abstract class AbstractSDT extends AbstractDataTable
 	 * @param string $table
 	 * @param string $primaryKey
 	 * @param array $columns
+	 * @param int $ttl
 	 * @return string
 	 */
-	public function serverRender($table, $primaryKey = '_id', $columns = []) : string
+	public function serverRender($table, $primaryKey = '_id', $columns = [], $ttl = 0) : string
 	{
 		// Catch request
 		$request = Request::get();
@@ -82,7 +83,7 @@ abstract class AbstractSDT extends AbstractDataTable
 		}
 
 		// Begin select query
-		$query = $storage->getAdapter()->createQueryBuilder()
+		$query = $storage->getAdapter()->createQueryBuilder()->useCache($ttl)
 		->select($columns);
 
 		// Check search request
