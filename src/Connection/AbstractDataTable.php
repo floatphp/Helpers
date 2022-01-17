@@ -25,6 +25,12 @@ use FloatPHP\Classes\Http\Request;
 abstract class AbstractDataTable extends Orm
 {
 	/**
+	 * @access protected
+	 * @var int $ttl
+	 */
+	protected $ttl = 0;
+
+	/**
 	 * Data render
 	 *
 	 * @access public
@@ -100,7 +106,7 @@ abstract class AbstractDataTable extends Orm
 		}
 
 		// Init cache
-		$cache = new Cache('temp',0);
+		$cache = new Cache('temp',$this->ttl);
 		$cacheId  = "datatable-{$this->table}-{$this->key}-{$start}-{$length}-";
 		$cacheId .= "{$orderBy}-{$order}";
 
