@@ -1,13 +1,13 @@
 <?php
 /**
- * @author    : JIHAD SINNAOUR
- * @package   : FloatPHP
- * @subpackage: Helpers Connection Component
- * @version   : 1.0.0
- * @category  : PHP framework
- * @copyright : (c) 2017 - 2021 JIHAD SINNAOUR <mail@jihadsinnaour.com>
- * @link      : https://www.floatphp.com
- * @license   : MIT License
+ * @author     : JIHAD SINNAOUR
+ * @package    : FloatPHP
+ * @subpackage : Helpers Connection Component
+ * @version    : 1.0.0
+ * @category   : PHP framework
+ * @copyright  : (c) 2017 - 2021 JIHAD SINNAOUR <mail@jihadsinnaour.com>
+ * @link       : https://www.floatphp.com
+ * @license    : MIT License
  *
  * This file if a part of FloatPHP Framework
  */
@@ -20,6 +20,8 @@ class User extends Model
 {
 	/**
 	 * @access protected
+	 * @var string $table
+	 * @var string $key
 	 */
 	protected $table = 'user';
 	protected $key = 'userId';
