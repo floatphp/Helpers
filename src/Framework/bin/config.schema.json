@@ -59,6 +59,9 @@
         },
         "login":{
           "type": "string"
+        },
+        "verify":{
+          "type": "string"
         }
       }
     },

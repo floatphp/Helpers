@@ -17,7 +17,8 @@
    },
    "url":{
       "admin":"/admin/dashboard/",
-      "login":"/admin/login/"
+      "login":"/admin/login/",
+      "verify":"/admin/verify/"
    },
    "namespace":{
       "controller":"/App/Controllers/",
