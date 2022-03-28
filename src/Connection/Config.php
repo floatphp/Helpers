@@ -83,7 +83,6 @@ class Config
 	protected function getBase($name) : string
 	{
 		$orm = new Orm();
-		$orm->init();
 		$bind = ['name' => $name];
 		$sql = "SELECT `options` FROM `config` WHERE `name` LIKE :name;";
 		return $orm->query($sql,$bind,['isSingle' => true]);
@@ -98,7 +97,6 @@ class Config
 	protected function updateBase($name, $value = '') : bool
 	{
 		$orm = new Orm();
-		$orm->init();
 		$bind = ['name' => $name, 'value' => $value];
 		$sql = "UPDATE `config` SET `options` = :value WHERE `name` LIKE :name;";
 		return $orm->query($sql,$bind);
@@ -113,7 +111,6 @@ class Config
 	protected function setBase($name, $value = '') : bool
 	{
 		$orm = new Orm();
-		$orm->init();
 		$bind = ['name' => $name, 'value' => $value];
 		if ( $this->exists($name) ) {
 			return $this->updateBase($name,$value);
@@ -131,7 +128,6 @@ class Config
 	protected function deleteBase($name) : bool
 	{
 		$orm = new Orm();
-		$orm->init();
 		$bind = ['name' => $name];
 		$sql = "DELETE FROM `config` WHERE `name` LIKE :name;";
 		return $orm->query($sql,$bind);
@@ -159,7 +155,6 @@ class Config
 	private function exists($name) : int
 	{
 		$orm = new Orm();
-		$orm->init();
 		$bind = ['name' => $name];
 		$sql = "SELECT COUNT('name') FROM `config` WHERE `name` LIKE :name;";
 		return (int) $orm->query($sql,$bind,['isSingle' => true]);

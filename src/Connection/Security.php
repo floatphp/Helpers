@@ -15,6 +15,7 @@
 namespace FloatPHP\Helpers\Connection;
 
 use FloatPHP\Kernel\BaseController;
+use FloatPHP\Classes\Filesystem\Arrayify;
 use FloatPHP\Helpers\Filesystem\Transient;
 
 class Security extends BaseController
@@ -40,7 +41,7 @@ class Security extends BaseController
 	 * @param int $max
 	 * @return void
 	 */
-	public function limitAttempts($max = 3)
+	public function useLimitedAttempt($max = 3)
 	{
 		// Log failed authentication
 		$this->addAction('authenticate-failed',function($username){
@@ -66,6 +67,47 @@ class Security extends BaseController
 					$msg = $this->translate($msg);
 					$this->setResponse($msg,[],'error',401);
 				}
+			}
+		});
+	}
+
+	/**
+	 * API Authentication protection.
+	 *
+	 * @access public
+	 * @param int $max
+	 * @param int $seconds
+	 * @param bool $address
+	 * @param bool $method
+	 * @return void
+	 */
+	public function useAccessProtection($max = 120, $seconds = 60, $address = true, $method = true)
+	{
+		$this->addAction('api-authenticate',function($args = []) use ($max,$seconds,$address,$method){
+			// Exception
+			$exception = (array)$this->applyFilter('api-exception',[]);
+			if ( Arrayify::inArray($args['username'],$exception) ) {
+				return;
+			}
+			// Authentication
+			$transient = new Transient();
+			$key = "api-authenticate-{$args['username']}";
+			if ( $address ) {
+				$key = "{$key}-{$args['address']}";
+			}
+			if ( $method ) {
+				$key = "{$key}-{$args['method']}";
+			}
+			$attempts = 0;
+			if ( !($attempts = $transient->getTemp($key)) ) {
+				$transient->setTemp($key,1,$seconds);
+			} else {
+				$transient->setTemp($key,$attempts + 1,$seconds);
+			}
+			$max = (int)$max;
+			if ( $attempts >= $max && $max !== 0 ) {
+				$msg = $this->applyFilter('api-authenticate-attempt-message','Access forbidden');
+				$this->setHttpResponse($msg,[],'error',429);
 			}
 		});
 	}

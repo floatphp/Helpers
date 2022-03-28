@@ -46,7 +46,7 @@ abstract class AbstractDataTable extends Orm
 	public function serverRender($table, $primaryKey, $columns = [], $ttl = 3600) : string
 	{
 		// Init database
-		$this->init();
+		parent::__construct();
 		$this->table = $table;
 		$this->key = $primaryKey;
 		$bind = [];

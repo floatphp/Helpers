@@ -85,7 +85,6 @@ final class Configurator extends Base
 		foreach ($tables as $table) {
 			$sql = File::r("{$table}");
 			if ( !empty($sql) ) {
-				$orm->init();
 				$orm->query($sql);
 			}
 		}

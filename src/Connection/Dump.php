@@ -100,6 +100,7 @@ final class Dump
 			case 2:
 			break;
 		}
+		return true;
 	}
 
 	/**
