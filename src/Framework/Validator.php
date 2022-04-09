@@ -23,65 +23,65 @@ final class Validator
 {
 	/**
 	 * @access public
-	 * @var mixed $json
-	 * @return mixed
+	 * @var mixed $config
+	 * @return void
 	 * @throws ConfigException
 	 */
-	public static function checkConfig($json)
+	public static function checkConfig($config)
 	{
 		try {
-			$error = self::isValidConfig($json,'config.schema.json');
+			$error = self::isValidConfig($config,'config.schema.json');
 			if ( TypeCheck::isString($error) ) {
 				throw new ConfigException($error);
+				
 			} elseif ( $error === false ) {
 				throw new ConfigException();
 			}
 		} catch (ConfigException $e) {
 			die($e->get(1));
 		}
-		return $json;
 	}
 
 	/**
 	 * @access public
-	 * @var mixed $json
-	 * @return mixed
+	 * @var mixed $config
+	 * @return void
 	 * @throws ConfigException
 	 */
-	public static function checkModuleConfig($json)
+	public static function checkModuleConfig($config)
 	{
 		try {
-			$error = self::isValidConfig($json,'module.schema.json');
+			$error = self::isValidConfig($config,'module.schema.json');
 			if ( TypeCheck::isString($error) ) {
 				throw new ConfigException($error);
+
 			} elseif ( $error === false ) {
 				throw new ConfigException();
 			}
 		} catch (ConfigException $e) {
 			die($e->get(2));
 		}
-		return $json;
 	}
 
 	/**
 	 * @access public
-	 * @var mixed $json
-	 * @return mixed
+	 * @var mixed $config
+	 * @return void
 	 * @throws ConfigException
 	 */
-	public static function checkRouteConfig($json)
+	public static function checkRouteConfig($config)
 	{
 		try {
-			$error = self::isValidConfig($json,'route.schema.json');
+			$error = self::isValidConfig($config,'route.schema.json');
 			if ( TypeCheck::isString($error) ) {
 				throw new ConfigException($error);
+
 			} elseif ( $error === false ) {
 				throw new ConfigException();
 			}
 		} catch (ConfigException $e) {
 			die($e->get(3));
 		}
-		return $json;
 	}
 
 	/**
@@ -106,23 +106,21 @@ final class Validator
 	 * @var mixed $config
 	 * @return mixed
 	 */
-	private static function isValidConfig(Json $config, $schema)
+	private static function isValidConfig($config, $schema)
 	{
-		if ( $config->parse() && !empty($config->parse()) ) {
-			$validator = new JsonValidator;
-			$json = $config->parse();
-			$validator->validate($json, (object)[
-				'$ref' => 'file://' . dirname(__FILE__). '/bin/' . $schema
-			]);
-			if ( $validator->isValid() ) {
-				return true;
-			} else {
-				$errors = [];
-			    foreach ($validator->getErrors() as $error) {
-			        $errors[] = sprintf("[%s] %s",$error['property'],$error['message']);
-			    }
-			    return implode("\n", $errors);
-			}
+		$validator = new JsonValidator;
+		$validator->validate($config, (object)[
+			'$ref' => 'file://' . dirname(__FILE__). '/bin/' . $schema
+		]);
+		if ( $validator->isValid() ) {
+			return true;
+
+		} else {
+			$errors = [];
+		    foreach ($validator->getErrors() as $error) {
+		        $errors[] = sprintf("[%s] %s",$error['property'],$error['message']);
+		    }
+		    return implode("\n",$errors);
 		}
 		return false;
 	}
