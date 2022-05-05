@@ -46,7 +46,7 @@ class Infile
             'truncate'  => false,
             'table'     => '',
             'file'      => '',
-            'action'    => 'REPLACE', // IGNORE
+            'action'    => 'IGNORE', // REPLACE
             'delimiter' => ';',
             'enclosed'  => '\"',
             'line'      => '\n',
