@@ -107,7 +107,10 @@ class Infile
     private function buildQuery()
     {
         $query  = "LOAD DATA INFILE '{$this->config['file']}' ";
-        $query .= "IGNORE INTO TABLE `{$this->config['table']}` ";
+        if ( $this->config['action'] ) {
+            $query .= "{$this->config['action']} ";
+        }
+        $query .= "INTO TABLE `{$this->config['table']}` ";
         if ( $this->config['charset'] ) {
             $query .= "CHARACTER SET {$this->config['charset']} ";
         }
