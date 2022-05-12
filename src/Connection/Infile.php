@@ -41,16 +41,16 @@ class Infile
             'port'      => 3306,
             'user'      => 'root',
             'pswd'      => '',
-            'charset'   => 'utf8mb4',
+            'charset'   => false,
             'debug'     => false,
             'truncate'  => false,
             'table'     => '',
             'file'      => '',
-            'action'    => 'IGNORE', // REPLACE
+            'action'    => 'REPLACE', // IGNORE
             'delimiter' => ';',
             'enclosed'  => '\"',
             'line'      => '\n',
-            'ignore'    => 1
+            'ignore'    => false
         ],$config);
     }
 
