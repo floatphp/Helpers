@@ -201,7 +201,7 @@ final class Configurator extends Base
 			'__FILE__'   => $file,
 			'__DOMAIN__' => $domain
 		],$htaccess);
-		if ( Server::isHttps() ) {
+		if ( Server::isSSL() ) {
 			$htaccess = Stringify::replaceArray([
 				'# RewriteCond %{HTTPS} off'  => 'RewriteCond %{HTTPS} off',
 				'# RewriteRule (.*) https://' => 'RewriteRule (.*) https://'
