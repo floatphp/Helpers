@@ -5,12 +5,14 @@
  * @subpackage : Helpers Framework Component
  * @version    : 1.0.0
  * @category   : PHP framework
- * @copyright  : (c) 2017 - 2021 JIHAD SINNAOUR <mail@jihadsinnaour.com>
+ * @copyright  : (c) 2017 - 2022 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://www.floatphp.com
- * @license    : MIT License
+ * @license    : MIT
  *
- * This file if a part of FloatPHP Framework
+ * This file if a part of FloatPHP Framework.
  */
+
+declare(strict_types=1);
 
 namespace FloatPHP\Helpers\Framework;
 
@@ -18,10 +20,10 @@ use FloatPHP\Helpers\Filesystem\Transient;
 use FloatPHP\Helpers\Connection\Role;
 use FloatPHP\Kernel\Base;
 use FloatPHP\Kernel\Orm;
-use FloatPHP\Classes\Filesystem\File;
-use FloatPHP\Classes\Filesystem\Json;
-use FloatPHP\Classes\Filesystem\Stringify;
 use FloatPHP\Classes\Http\Server;
+use FloatPHP\Classes\Filesystem\{
+    Stringify, File, Json
+};
 
 final class Configurator extends Base
 {
@@ -201,7 +203,7 @@ final class Configurator extends Base
 			'__FILE__'   => $file,
 			'__DOMAIN__' => $domain
 		],$htaccess);
-		if ( Server::isSSL() ) {
+		if ( Server::isHttps() ) {
 			$htaccess = Stringify::replaceArray([
 				'# RewriteCond %{HTTPS} off'  => 'RewriteCond %{HTTPS} off',
 				'# RewriteRule (.*) https://' => 'RewriteRule (.*) https://'

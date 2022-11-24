@@ -5,19 +5,22 @@
  * @subpackage : Helpers Connection Component
  * @version    : 1.0.0
  * @category   : PHP framework
- * @copyright  : (c) 2017 - 2021 JIHAD SINNAOUR <mail@jihadsinnaour.com>
+ * @copyright  : (c) 2017 - 2022 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://www.floatphp.com
- * @license    : MIT License
+ * @license    : MIT
  *
- * This file if a part of FloatPHP Framework
+ * This file if a part of FloatPHP Framework.
  */
+
+declare(strict_types=1);
 
 namespace FloatPHP\Helpers\Connection;
 
 use FloatPHP\Helpers\Filesystem\Cache;
 use FloatPHP\Kernel\Orm;
-use FloatPHP\Classes\Filesystem\Stringify;
-use FloatPHP\Classes\Filesystem\TypeCheck;
+use FloatPHP\Classes\Filesystem\{
+    TypeCheck, Stringify
+};
 
 class Config
 {
@@ -99,7 +102,7 @@ class Config
 		$orm = new Orm();
 		$bind = ['name' => $name, 'value' => $value];
 		$sql = "UPDATE `config` SET `options` = :value WHERE `name` LIKE :name;";
-		return $orm->query($sql,$bind);
+		return (bool)$orm->query($sql,$bind);
 	}
 
 	/**
