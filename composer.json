@@ -2,7 +2,7 @@
   "name": "floatphp/helpers",
   "version" : "1.0.1",
   "type": "library",
-  "description": "Framework Helpers Components",
+  "description": "FloatPHP Helpers Components",
   "keywords": ["floatphp","micro-framework","framework","PSR","ORM","jakiboy"],
   "homepage": "https://www.floatphp.com/",
   "license": "MIT",
