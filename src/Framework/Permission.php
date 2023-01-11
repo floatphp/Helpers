@@ -3,9 +3,9 @@
  * @author     : JIHAD SINNAOUR
  * @package    : FloatPHP
  * @subpackage : Helpers Framework Component
- * @version    : 1.0.0
+ * @version    : 1.0.1
  * @category   : PHP framework
- * @copyright  : (c) 2017 - 2022 Jihad Sinnaour <mail@jihadsinnaour.com>
+ * @copyright  : (c) 2017 - 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://www.floatphp.com
  * @license    : MIT
  *
@@ -16,11 +16,12 @@ declare(strict_types=1);
 
 namespace FloatPHP\Helpers\Framework;
 
-use FloatPHP\Helpers\Connection\User;
-use FloatPHP\Helpers\Connection\Role;
-use FloatPHP\Classes\Http\Session;
-use FloatPHP\Classes\Filesystem\{
-    TypeCheck, Stringify, Json
+use FloatPHP\Classes\{
+    Filesystem\TypeCheck, Filesystem\Stringify, Filesystem\Json,
+    Http\Session
+};
+use FloatPHP\Helpers\Connection\{
+	User, Role
 };
 
 final class Permission

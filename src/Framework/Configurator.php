@@ -3,9 +3,9 @@
  * @author     : JIHAD SINNAOUR
  * @package    : FloatPHP
  * @subpackage : Helpers Framework Component
- * @version    : 1.0.0
+ * @version    : 1.0.1
  * @category   : PHP framework
- * @copyright  : (c) 2017 - 2022 Jihad Sinnaour <mail@jihadsinnaour.com>
+ * @copyright  : (c) 2017 - 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://www.floatphp.com
  * @license    : MIT
  *
@@ -16,13 +16,16 @@ declare(strict_types=1);
 
 namespace FloatPHP\Helpers\Framework;
 
-use FloatPHP\Helpers\Filesystem\Transient;
-use FloatPHP\Helpers\Connection\Role;
-use FloatPHP\Kernel\Base;
-use FloatPHP\Kernel\Orm;
-use FloatPHP\Classes\Http\Server;
-use FloatPHP\Classes\Filesystem\{
-    Stringify, File, Json
+use FloatPHP\Kernel\{
+	Base, Orm
+};
+use FloatPHP\Classes\{
+    Filesystem\Stringify, Filesystem\File, Filesystem\Json,
+    Http\Server
+};
+use FloatPHP\Helpers\{
+	Filesystem\Transient,
+	Connection\Role
 };
 
 final class Configurator extends Base

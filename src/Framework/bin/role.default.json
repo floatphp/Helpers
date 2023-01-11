@@ -10,6 +10,15 @@
       ]
    },
    {
+      "name":"Developer",
+      "slug":"developer",
+      "capability":[
+         "read",
+         "create",
+         "write"
+      ]
+   },
+   {
       "name":"Editor",
       "slug":"editor",
       "capability":[

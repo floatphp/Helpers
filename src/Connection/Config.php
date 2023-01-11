@@ -3,9 +3,9 @@
  * @author     : JIHAD SINNAOUR
  * @package    : FloatPHP
  * @subpackage : Helpers Connection Component
- * @version    : 1.0.0
+ * @version    : 1.0.1
  * @category   : PHP framework
- * @copyright  : (c) 2017 - 2022 Jihad Sinnaour <mail@jihadsinnaour.com>
+ * @copyright  : (c) 2017 - 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://www.floatphp.com
  * @license    : MIT
  *
@@ -16,11 +16,11 @@ declare(strict_types=1);
 
 namespace FloatPHP\Helpers\Connection;
 
-use FloatPHP\Helpers\Filesystem\Cache;
 use FloatPHP\Kernel\Orm;
 use FloatPHP\Classes\Filesystem\{
     TypeCheck, Stringify
 };
+use FloatPHP\Helpers\Filesystem\Cache;
 
 class Config
 {

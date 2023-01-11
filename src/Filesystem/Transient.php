@@ -3,9 +3,9 @@
  * @author     : JIHAD SINNAOUR
  * @package    : FloatPHP
  * @subpackage : Helpers Filesystem Component
- * @version    : 1.0.0
+ * @version    : 1.0.1
  * @category   : PHP framework
- * @copyright  : (c) 2017 - 2022 Jihad Sinnaour <mail@jihadsinnaour.com>
+ * @copyright  : (c) 2017 - 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://www.floatphp.com
  * @license    : MIT
  *
@@ -16,11 +16,11 @@ declare(strict_types=1);
 
 namespace FloatPHP\Helpers\Filesystem;
 
-use FloatPHP\Helpers\Connection\Config;
-use FloatPHP\Classes\Server\Date;
-use FloatPHP\Classes\Filesystem\{
-    TypeCheck, Stringify
+use FloatPHP\Classes\{
+    Filesystem\TypeCheck, Filesystem\Stringify,
+    Server\Date
 };
+use FloatPHP\Helpers\Connection\Config;
 
 final class Transient extends Config
 {
@@ -37,9 +37,9 @@ final class Transient extends Config
 		$key = Stringify::formatKey($name);
 		$cache->get($key);
 		if ( !$cache->isCached() ) {
-			$cache->set($value,'--temp');
+			$cache->set($value, '--temp');
 		} else {
-			$this->updateTemp($name,$value,$expire);
+			$this->updateTemp($name, $value, $expire);
 		}
 	}
 
@@ -103,7 +103,7 @@ final class Transient extends Config
 			$temp[$name]['created'] = Date::newTime(0, 0, $expire);
 		}
 		$temp = Stringify::serialize($temp);
-		return $this->setBase('--temp',$temp);
+		return $this->setBase('--temp', $temp);
 	}
 
 	/**
@@ -124,7 +124,7 @@ final class Transient extends Config
 		        if ( $temp[$name]['created'] < Date::timeNow() ) {
 		        	unset($temp[$name]);
 		        	$temp = Stringify::serialize($temp);
-		        	$this->setBase('--temp',$temp);
+		        	$this->setBase('--temp', $temp);
 		            return null;
 		        }
 			}
@@ -145,7 +145,7 @@ final class Transient extends Config
 		$key = Stringify::formatKey($name);
 		$cache->get($key);
 		if ( $cache->isCached() ) {
-			$cache->update($key,$value);
+			$cache->update($key, $value);
 		}
 	}
 }
