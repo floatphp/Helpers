@@ -17,7 +17,8 @@ declare(strict_types=1);
 namespace FloatPHP\Helpers\Filesystem;
 
 use FloatPHP\Classes\Filesystem\{
-	TypeCheck, Stringify, Arrayify, Exception as ErrorHandler
+	TypeCheck, Stringify, Arrayify, File,
+	Exception as ErrorHandler
 };
 use Phpfastcache\{
 	CacheManager,
@@ -25,7 +26,6 @@ use Phpfastcache\{
 	Exceptions\PhpfastcacheIOException
 };
 use \Exception;
-use \FilesystemIterator;
 
 /**
  * Wrapper class for external FileCache.
@@ -57,13 +57,14 @@ class FileCache
 
 		// Set cache config
 		$this->config = Arrayify::merge([
-			'path'               => 'cache',
-			'autoTmpFallback'    => true,
-			'compressData'       => true,
-			'preventCacheSlams'  => true,
-			'defaultChmod'       => 0755,
-			'securityKey'        => 'private',
-			'cacheFileExtension' => 'db'
+			'path'                   => 'cache',
+			'secureFileManipulation' => false,
+			'autoTmpFallback'        => true,
+			'compressData'           => true,
+			'preventCacheSlams'      => true,
+			'defaultChmod'           => 0755,
+			'securityKey'            => 'private',
+			'cacheFileExtension'     => 'db'
 		], $config);
 
 		// Set adapter default config
@@ -75,8 +76,13 @@ class FileCache
 		$this->reset();
 
 		try {
+			
 			$this->adapter = CacheManager::getInstance('Files');
+
 		} catch (Exception $e) {
+			ErrorHandler::clearLastError();
+
+		} catch (PhpfastcacheIOException $e) {
 			ErrorHandler::clearLastError();
 		}
 	}
@@ -110,9 +116,6 @@ class FileCache
 			ErrorHandler::clearLastError();
 
 		} catch (PhpfastcacheIOException $e) {
-			ErrorHandler::clearLastError();
-
-		} catch (FilesystemIterator $e) {
 			ErrorHandler::clearLastError();
 		}
 
@@ -153,9 +156,6 @@ class FileCache
 
 		} catch (PhpfastcacheIOException $e) {
 			ErrorHandler::clearLastError();
-
-		} catch (FilesystemIterator $e) {
-			ErrorHandler::clearLastError();
 		}
 
 		return false;
@@ -186,9 +186,6 @@ class FileCache
 
 		} catch (PhpfastcacheIOException $e) {
 			ErrorHandler::clearLastError();
-
-		} catch (FilesystemIterator $e) {
-			ErrorHandler::clearLastError();
 		}
 
 		return false;
@@ -214,9 +211,6 @@ class FileCache
 			ErrorHandler::clearLastError();
 
 		} catch (PhpfastcacheIOException $e) {
-			ErrorHandler::clearLastError();
-
-		} catch (FilesystemIterator $e) {
 			ErrorHandler::clearLastError();
 		}
 		
@@ -250,9 +244,6 @@ class FileCache
 			ErrorHandler::clearLastError();
 
 		} catch (PhpfastcacheIOException $e) {
-			ErrorHandler::clearLastError();
-
-		} catch (FilesystemIterator $e) {
 			ErrorHandler::clearLastError();
 		}
 
@@ -290,7 +281,7 @@ class FileCache
 	}
 	
 	/**
-	 * Set filecache TTL
+	 * Set filecache TTL.
 	 *
 	 * @access public
 	 * @param int
@@ -317,7 +308,7 @@ class FileCache
 	}
 
 	/**
-	 * Purge filecache
+	 * Purge filecache.
 	 *
 	 * @access public
 	 * @param void
