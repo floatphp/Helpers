@@ -88,7 +88,7 @@ class Config
 		$orm = new Orm();
 		$bind = ['name' => $name];
 		$sql = "SELECT `options` FROM `config` WHERE `name` LIKE :name;";
-		return $orm->query($sql,$bind,['isSingle' => true]);
+		return (string)$orm->query($sql, $bind, ['isSingle' => true]);
 	}
 
 	/**
@@ -102,7 +102,7 @@ class Config
 		$orm = new Orm();
 		$bind = ['name' => $name, 'value' => $value];
 		$sql = "UPDATE `config` SET `options` = :value WHERE `name` LIKE :name;";
-		return (bool)$orm->query($sql,$bind);
+		return (bool)$orm->query($sql, $bind);
 	}
 
 	/**
@@ -116,11 +116,10 @@ class Config
 		$orm = new Orm();
 		$bind = ['name' => $name, 'value' => $value];
 		if ( $this->exists($name) ) {
-			return $this->updateBase($name,$value);
-		} else {
-			$sql = "INSERT INTO `config` (`name`,`options`) VALUES(:name,:value);";
-			return $orm->query($sql,$bind);
+			return $this->updateBase($name, $value);
 		}
+		$sql = "INSERT INTO `config` (`name`,`options`) VALUES(:name,:value);";
+		return (bool)$orm->query($sql, $bind);
 	}
 
 	/**
@@ -133,7 +132,7 @@ class Config
 		$orm = new Orm();
 		$bind = ['name' => $name];
 		$sql = "DELETE FROM `config` WHERE `name` LIKE :name;";
-		return $orm->query($sql,$bind);
+		return (bool)$orm->query($sql, $bind);
 	}
 
 	/**
@@ -160,6 +159,6 @@ class Config
 		$orm = new Orm();
 		$bind = ['name' => $name];
 		$sql = "SELECT COUNT('name') FROM `config` WHERE `name` LIKE :name;";
-		return (int) $orm->query($sql,$bind,['isSingle' => true]);
+		return (int)$orm->query($sql, $bind, ['isSingle' => true]);
 	}
 }
