@@ -3,7 +3,7 @@
  * @author     : JIHAD SINNAOUR
  * @package    : FloatPHP
  * @subpackage : Helpers Connection Component
- * @version    : 1.0.1
+ * @version    : 1.0.2
  * @category   : PHP framework
  * @copyright  : (c) 2017 - 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://www.floatphp.com
@@ -17,7 +17,14 @@ declare(strict_types=1);
 namespace FloatPHP\Helpers\Connection;
 
 use FloatPHP\Kernel\TraitConfiguration;
+use FloatPHP\Classes\{
+	Filesystem\Arrayify,
+	Server\System
+};
 use \mysqli;
+
+System::setTimeLimit(0);
+System::setMemoryLimit('-1');
 
 final class Dump
 {
@@ -25,23 +32,30 @@ final class Dump
 
 	/**
 	 * @access private
-	 * @var object $connection
+	 * @var array $access
 	 */
-	private $connection = false;
+	private $access = [];
 
 	/**
-	 * @param void
+	 * @param array $config
 	 */
-	public function __construct()
+	public function __construct($config = [])
 	{
 		// Init configuration
 		$this->initConfig();
-		// Init connection
-		$this->init();
+
+		// Init access
+		$this->access = Arrayify::merge(
+			$this->getDatabaseAccess(),
+			$config
+		);
+		
+		// Reset configuration
+		$this->resetConfig();
 	}
 
 	/**
-	 * Import dump file
+	 * Import dump file.
 	 *
 	 * @access public
 	 * @param string $file
@@ -49,71 +63,79 @@ final class Dump
 	 */
 	public function import($file = '') : bool
 	{
+		// Init connection
+		$connection = @new mysqli(
+			$this->access['host'],
+			$this->access['user'],
+			$this->access['pswd'],
+			$this->access['db']
+		);
+
 		// Check connection
-		if ( $this->connection->connect_errno ) {
+		if ( $connection->connect_errno ) {
 			return false;
 		}
+
+		$status = 0;
+
 		// Temporary variable, store current query
 		$temp = '';
-		// Read in entire file
+
+		// Read file
 		$lines = file($file);
+
 		// Loop through each line
 		foreach ($lines as $line) {
-			// Skip it if it's a comment
+
+			// Skip comment
 			if ( substr($line, 0, 2) == '--' || $line == '' ) {
 				continue;
 			}
+
 			// Add line to current segment
 			$temp .= $line;
+
 			// End of query
 			if ( substr(trim($line), -1, 1) == ';' ) {
+
 			    // Perform query
-			    $this->connection->query($temp) or die();
+			    $i = (int)$connection->query($temp);
+			    $status += $i;
+			    if ( !$i ) {
+			    	break;
+			    }
+
 			    // Reset temp
 			    $temp = '';
 			}
 		}
-		$this->connection->close($this->connection);
-		return true;
+
+		$connection->close($connection);
+		return (bool)$status;
 	}
 
 	/**
-	 * Export dump file
+	 * Export dump file.
 	 *
 	 * @access public
 	 * @param string $file
 	 * @return bool
 	 */
-	public function export($file = '') : bool
+	public function export($file = 'dump.sql') : bool
 	{
-		$mysqlDatabaseName ='nom de la base de données';
-		$mysqlUserName ='Nom dutilisateur';
-		$mysqlPassword ='Mot de passe';
-		$mysqlHostName ='dbxxx.hosting-data.io';
-		$mysqlExportPath ='nom-du-fichier-dexport.sql';
+		$command  = 'mysqldump --opt';
+		$command .= " -u {$this->access['user']}";
 
-		$command = 'mysqldump --opt -h' .$mysqlHostName .' -u' .$mysqlUserName .' -p' .$mysqlPassword .' ' .$mysqlDatabaseName .' > ' .$mysqlExportPath;
-		exec($command,$output,$worked);
-		switch($worked){
-			case 0:
-			break;
-			case 1:
-			break;
-			case 2:
-			break;
+		if ( $this->access['host'] ) {
+			$command .= " -h {$this->access['host']}";
 		}
-		return true;
-	}
+		if ( $this->access['pswd'] ) {
+			$command .= " -p {$this->access['pswd']}";
+		}
+		
+		$command .= " {$this->access['db']} > {$file}";
 
-	/**
-	 * @access private
-	 * @param void
-	 * @return void
-	 */
-	private function init()
-	{
-		// Connect to MySQL server
-		$access = $this->getDatabaseAccess();
-		$this->connection = @new mysqli($access['host'],$access['user'],$access['pswd'],$access['db']);
+		exec($command, $output, $status);
+		return ($status === 0);
 	}
 }

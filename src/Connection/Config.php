@@ -3,7 +3,7 @@
  * @author     : JIHAD SINNAOUR
  * @package    : FloatPHP
  * @subpackage : Helpers Connection Component
- * @version    : 1.0.1
+ * @version    : 1.0.2
  * @category   : PHP framework
  * @copyright  : (c) 2017 - 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://www.floatphp.com
@@ -22,27 +22,51 @@ use FloatPHP\Classes\Filesystem\{
 };
 use FloatPHP\Helpers\Filesystem\Cache;
 
+/**
+ * Wrapper class for database config (serialized).
+ * @see Heavily inspired by WordPress kernel https://make.wordpress.org
+ */
 class Config
 {
 	/**
+	 * @access private
+	 * @var string $table
+	 */
+	private $table = 'config';
+
+	/**
+	 * Get config through cache.
+	 * 
 	 * @access public
-	 * @param string $name
+	 * @param string $table
+	 * @return void
+	 */
+	public function setTable($table)
+	{
+		$this->table = $table;
+	}
+
+	/**
+	 * Get config through cache.
+	 * 
+	 * @access public
+	 * @param string $key
 	 * @param mixed $default
 	 * @param bool $purge
 	 * @return mixed
 	 */
-	public function get($name, $default = null, $purge = false)
+	public function get($key, $default = null, $purge = false)
 	{
-		$cache = $this->initCache(false);
-		$key = Stringify::formatKey($name);
+		$cache = new Cache();
+		$key = $this->formatKey($key);
+		$value = $cache->get($key); // Set cache key
 		if ( $purge ) {
 			$cache->deleteByTag($key);
 		}
-		$value = $cache->get($key);
 		if ( !$cache->isCached() ) {
-			$value = $this->getBase($name);
-			$value = Stringify::unserialize($value);
-			$cache->set($value,$key);
+			$value = $this->getBase($key);
+			$value = $this->unserialize($value);
+			$cache->set($value, $key);
 		}
 		if ( !TypeCheck::isNull($default) && empty($value) ) {
 			$value = $default;
@@ -51,114 +75,152 @@ class Config
 	}
 
 	/**
+	 * Update config through cache.
+	 * 
 	 * @access public
-	 * @param string $name
+	 * @param string $key
 	 * @param mixed $value
 	 * @return bool
 	 */
-	public function update($name = '', $value = '') : bool
+	public function update($key, $value = '') : bool
 	{
-		$cache = $this->initCache(false);
-		$key = Stringify::formatKey($name);
+		$cache = new Cache();
+		$key = $this->formatKey($key);
+		$cache->get($key); // Set cache key
 		$cache->deleteByTag($key);
-		$value = Stringify::serialize($value);
-		return $this->setBase($name,$value);
+		$value = $this->serialize($value);
+		return $this->setBase($key, $value);
 	}
 
 	/**
+	 * Delete config through cache.
+	 * 
 	 * @access public
-	 * @param string $name
+	 * @param string $key
 	 * @return bool
 	 */
-	public function delete($name = '') : bool
+	public function delete($key) : bool
 	{
-		$cache = $this->initCache(false);
-		$key = Stringify::formatKey($name);
+		$cache = new Cache();
+		$key = $this->formatKey($key);
+		$cache->get($key); // Set cache key
 		$cache->deleteByTag($key);
-		return $this->deleteBase($name);
+		return $this->deleteBase($key);
 	}
 
 	/**
+	 * Get database config.
+	 * 
 	 * @access protected
-	 * @param string $name
+	 * @param string $key
 	 * @return string
 	 */
-	protected function getBase($name) : string
+	protected function getBase($key) : string
 	{
 		$orm = new Orm();
-		$bind = ['name' => $name];
-		$sql = "SELECT `options` FROM `config` WHERE `name` LIKE :name;";
+		$bind = ['name' => $key];
+		$sql = "SELECT `options` FROM `{$this->table}` WHERE `name` LIKE :name;";
 		return (string)$orm->query($sql, $bind, ['isSingle' => true]);
 	}
 
 	/**
+	 * Set database config.
+	 * 
 	 * @access protected
-	 * @param string $name
+	 * @param string $key
 	 * @param mixed $value
 	 * @return bool
 	 */
-	protected function updateBase($name, $value = '') : bool
+	protected function setBase($key, $value = '') : bool
 	{
 		$orm = new Orm();
-		$bind = ['name' => $name, 'value' => $value];
-		$sql = "UPDATE `config` SET `options` = :value WHERE `name` LIKE :name;";
+		$bind = ['name' => $key, 'value' => $value];
+		if ( $this->exists($key) ) {
+			return $this->updateBase($key, $value);
+		}
+		$sql = "INSERT INTO `{$this->table}` (`name`,`options`) VALUES(:name, :value);";
 		return (bool)$orm->query($sql, $bind);
 	}
 
 	/**
+	 * Update database config.
+	 * 
 	 * @access protected
-	 * @param string $name
+	 * @param string $key
 	 * @param mixed $value
 	 * @return bool
 	 */
-	protected function setBase($name, $value = '') : bool
+	protected function updateBase($key, $value = '') : bool
 	{
 		$orm = new Orm();
-		$bind = ['name' => $name, 'value' => $value];
-		if ( $this->exists($name) ) {
-			return $this->updateBase($name, $value);
-		}
-		$sql = "INSERT INTO `config` (`name`,`options`) VALUES(:name,:value);";
+		$bind = ['name' => $key, 'value' => $value];
+		$sql = "UPDATE `{$this->table}` SET `options` = :value WHERE `name` LIKE :name;";
 		return (bool)$orm->query($sql, $bind);
 	}
 
 	/**
+	 * Delete database config.
+	 * 
 	 * @access protected
-	 * @param string $name
+	 * @param string $key
 	 * @return bool
 	 */
-	protected function deleteBase($name) : bool
+	protected function deleteBase($key) : bool
 	{
 		$orm = new Orm();
-		$bind = ['name' => $name];
-		$sql = "DELETE FROM `config` WHERE `name` LIKE :name;";
+		$bind = ['name' => $key];
+		$sql = "DELETE FROM `{$this->table}` WHERE `name` LIKE :name;";
 		return (bool)$orm->query($sql, $bind);
 	}
 
 	/**
+	 * Check database config.
+	 * 
 	 * @access protected
-	 * @param int $expire
-	 * @return object
+	 * @param string $key
+	 * @return bool
 	 */
-	protected function initCache($expire = 0)
+	protected function exists($key) : bool
 	{
-		$cache = new Cache();
-		if ( $expire !== false ) {
-			$cache->setTTL($expire);
-		}
-		return $cache;
+		$orm = new Orm();
+		$bind = ['name' => $key];
+		$sql = "SELECT COUNT('name') FROM `{$this->table}` WHERE `name` LIKE :name;";
+		return (bool)$orm->query($sql, $bind, ['isSingle' => true]);
 	}
 
 	/**
-	 * @access private
-	 * @param string $name
-	 * @return int
+	 * Format key.
+	 * 
+	 * @access protected
+	 * @param string $key
+	 * @return string
 	 */
-	private function exists($name) : int
+	protected function formatKey($key) : string
 	{
-		$orm = new Orm();
-		$bind = ['name' => $name];
-		$sql = "SELECT COUNT('name') FROM `config` WHERE `name` LIKE :name;";
-		return (int)$orm->query($sql, $bind, ['isSingle' => true]);
+		return Stringify::formatKey((string)$key);
+	}
+
+	/**
+	 * Serialize value.
+	 * 
+	 * @access protected
+	 * @param string $value
+	 * @return mixed
+	 */
+	protected function serialize($value)
+	{
+		return Stringify::serialize($value);
+	}
+
+	/**
+	 * Unserialize value.
+	 * 
+	 * @access protected
+	 * @param string $value
+	 * @return mixed
+	 */
+	protected function unserialize($value)
+	{
+		return Stringify::unserialize($value);
 	}
 }

@@ -3,7 +3,7 @@
  * @author     : JIHAD SINNAOUR
  * @package    : FloatPHP
  * @subpackage : Helpers Filesystem Component
- * @version    : 1.0.1
+ * @version    : 1.0.2
  * @category   : PHP framework
  * @copyright  : (c) 2017 - 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://www.floatphp.com
@@ -54,6 +54,9 @@ final class Logger extends ParentLogger
         $this->setPath(Stringify::formatPath($path,true));
         $this->setFilename($filename);
         $this->setExtension($extension);
+
+        // Reset configuration
+        $this->resetConfig();
     }
 
     /**

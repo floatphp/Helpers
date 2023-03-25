@@ -4,7 +4,7 @@
   "properties": {
     "path": {
       "type": "object",
-      "required": ["base","modules","view","logs","assets","migrate","cache","upload","translate","db","routes"],
+      "required": ["base","modules","view","logs","assets","migrate","cache","upload","translation","db","routes"],
       "properties":{
         "base":{
           "type": "string"
@@ -39,7 +39,7 @@
             }
           }
         },
-        "translate":{
+        "translation":{
           "type": "string"
         },
         "db":{
@@ -136,6 +136,18 @@
         "secret":"string",
         "expire":"string"
       }
+    },
+    "strings": {
+      "type": "object",
+      "required": ["admin","front"],
+      "properties":{
+        "admin":{
+          "type": "array"
+        },
+        "front":{
+          "type": "array"
+        }
+      }
     }
   },
   "required": [
@@ -144,6 +156,7 @@
     "namespace",
     "api",
     "options",
-    "access"
+    "access",
+    "strings"
   ]
 }

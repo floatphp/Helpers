@@ -3,7 +3,7 @@
  * @author     : JIHAD SINNAOUR
  * @package    : FloatPHP
  * @subpackage : Helpers Connection Component
- * @version    : 1.0.1
+ * @version    : 1.0.2
  * @category   : PHP framework
  * @copyright  : (c) 2017 - 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://www.floatphp.com
@@ -17,18 +17,21 @@ declare(strict_types=1);
 namespace FloatPHP\Helpers\Connection;
 
 use FloatPHP\Classes\{
-    Filesystem\TypeCheck, Filesystem\Arrayify, Filesystem\Json,
+    Filesystem\TypeCheck,
+	Filesystem\Arrayify,
+	Filesystem\Json,
     Http\Request
 };
 use FloatPHP\Helpers\Filesystem\Storage;
 
 /**
- * Storage DataTable
+ * Storage DataTable.
+ * @see https://datatables.net
  */
 abstract class AbstractSDT extends AbstractDataTable
 {
 	/**
-	 * Server render
+	 * Server render.
 	 *
 	 * @access public
 	 * @param string $table
@@ -136,6 +139,7 @@ abstract class AbstractSDT extends AbstractDataTable
 					foreach ($request['customColumn'] as $key => $value) {
 						$column["custom-col-{$key}"] = $value;
 					}
+
 				} else {
 					$column['custom-col'] = $request['customColumn'];
 				}

@@ -3,7 +3,7 @@
  * @author     : JIHAD SINNAOUR
  * @package    : FloatPHP
  * @subpackage : Helpers Connection Component
- * @version    : 1.0.1
+ * @version    : 1.0.2
  * @category   : PHP framework
  * @copyright  : (c) 2017 - 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://www.floatphp.com
@@ -16,11 +16,12 @@ declare(strict_types=1);
 
 namespace FloatPHP\Helpers\Connection;
 
+use FloatPHP\Classes\Server\System;
 use \PDOException;
 use \PDO;
 
-ini_set('memory_limit',-1);
-set_time_limit(0);
+System::setTimeLimit(0);
+System::setMemoryLimit('-1');
 
 class Infile
 {

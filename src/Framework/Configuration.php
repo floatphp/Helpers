@@ -3,7 +3,7 @@
  * @author     : JIHAD SINNAOUR
  * @package    : FloatPHP
  * @subpackage : Helpers Framework Component
- * @version    : 1.0.1
+ * @version    : 1.0.2
  * @category   : PHP framework
  * @copyright  : (c) 2017 - 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://www.floatphp.com
@@ -23,6 +23,15 @@ final class Configuration
 {
 	use TraitConfiguration;
 
+    /**
+     * @param void
+     */
+    public function __construct()
+    {
+        // Init configuration
+        $this->initConfig();
+    }
+
 	/**
 	 * @access public
 	 * @param void
@@ -30,7 +39,6 @@ final class Configuration
 	 */
 	public function reflect() : object
 	{
-		$this->initConfig();
 		return $this->getConfig();
 	}
 
@@ -43,6 +51,6 @@ final class Configuration
 	{
 		global $appDir;
 		$root = dirname($appDir);
-		return Stringify::formatPath("{$root}/{$path}",true);
+		return Stringify::formatPath("{$root}/{$path}", true);
 	}
 }

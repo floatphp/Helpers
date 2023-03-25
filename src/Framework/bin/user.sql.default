@@ -10,4 +10,4 @@ CREATE TABLE IF NOT EXISTS `user` (
   KEY `idue` (`email`) USING BTREE,
   KEY `idun` (`username`) USING BTREE,
   KEY `idur` (`roleId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

@@ -3,7 +3,7 @@
  * @author     : JIHAD SINNAOUR
  * @package    : FloatPHP
  * @subpackage : Helpers Framework Component
- * @version    : 1.0.1
+ * @version    : 1.0.2
  * @category   : PHP framework
  * @copyright  : (c) 2017 - 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://www.floatphp.com
@@ -20,7 +20,9 @@ use FloatPHP\Kernel\{
 	Base, Orm
 };
 use FloatPHP\Classes\{
-    Filesystem\Stringify, Filesystem\File, Filesystem\Json,
+    Filesystem\Stringify,
+	Filesystem\File,
+	Filesystem\Json,
     Http\Server
 };
 use FloatPHP\Helpers\{
@@ -28,10 +30,10 @@ use FloatPHP\Helpers\{
 	Connection\Role
 };
 
-final class Configurator extends Base
+final class Installer extends Base
 {
 	/**
-	 * Setup application
+	 * Setup application.
 	 *
 	 * @access public
 	 * @param void
@@ -41,32 +43,35 @@ final class Configurator extends Base
 	{
 		$transient = new Transient();
 		if ( !$transient->getTemp('--installed') ) {
+
 			// Setup config
 			if ( !File::exists($this->getConfigFile()) ) {
-				$this->config();
+				$this->setConfig();
 			}
+
 			// Setup database
 			if ( $this->getDatabaseFile() && $this->getMigratePath() ) {
 				$this->setBuiltinTables();
 				$this->migrate();
 				$this->importBuiltinTables();
 			}
+
+			// Setup rewrite
 			if ( !$transient->getBaseTemp('--installed') ) {
-				// Setup rewrite
 				if ( !File::exists("{$this->getRoot()}/.htaccess") ) {
 					$this->rewrite();
 				}
 				if ( !File::exists("{$this->getAppDir()}/.htaccess") ) {
-					File::w("{$this->getAppDir()}/.htaccess",'deny from all');
+					File::w("{$this->getAppDir()}/.htaccess", 'deny from all');
 				}
-				$transient->setBaseTemp('--installed',true,0);
+				$transient->setBaseTemp('--installed', true, 0);
 			}
-			$transient->setTemp('--installed',true,0);
+			$transient->setTemp('--installed', true, 0);
 		}
 	}
 
 	/**
-	 * Migrate application database
+	 * Migrate application database.
 	 *
 	 * @access public
 	 * @param string $path
@@ -96,7 +101,7 @@ final class Configurator extends Base
 	}
 
 	/**
-	 * Set builtin database tables
+	 * Set builtin database tables.
 	 *
 	 * @access private
 	 * @param void
@@ -106,18 +111,18 @@ final class Configurator extends Base
 	{
 		$path = $this->getMigratePath();
 		if ( !File::exists("{$path}/config.sql") ) {
-			File::cp(dirname(__FILE__).'/bin/config.sql.default',"{$path}/config.sql");
+			File::copy(dirname(__FILE__).'/bin/config.sql.default', "{$path}/config.sql");
 		}
 		if ( !File::exists("{$path}/user.sql") ) {
-			File::cp(dirname(__FILE__).'/bin/user.sql.default',"{$path}/user.sql");
+			File::copy(dirname(__FILE__).'/bin/user.sql.default', "{$path}/user.sql");
 		}
 		if ( !File::exists("{$path}/role.sql") ) {
-			File::cp(dirname(__FILE__).'/bin/role.sql.default',"{$path}/role.sql");
+			File::copy(dirname(__FILE__).'/bin/role.sql.default', "{$path}/role.sql");
 		}
 	}
 
 	/**
-	 * Import builtin data
+	 * Import builtin data.
 	 *
 	 * @access private
 	 * @param void
@@ -125,7 +130,8 @@ final class Configurator extends Base
 	 */
 	private function importBuiltinTables()
 	{
-		$roles = Json::decode(File::r(dirname(__FILE__).'/bin/role.default.json'),true);
+		$path = dirname(__FILE__);
+		$roles = Json::decode(File::r("{$path}/bin/role.default.json"), true);
 		$item = new Role();
 		$item->deleteAll();
 		$item->resetId();
@@ -138,7 +144,7 @@ final class Configurator extends Base
 	}
 
 	/**
-	 * Parse application config
+	 * Parse application config.
 	 *
 	 * @access public
 	 * @param array $config
@@ -169,7 +175,7 @@ final class Configurator extends Base
 	}
 
 	/**
-	 * Reset application config
+	 * Reset application config.
 	 *
 	 * @access public
 	 * @param bool $all
@@ -180,13 +186,14 @@ final class Configurator extends Base
 		$transient = new Transient();
 		if ( $all ) {
 			$transient->resetBaseTemp();
+
 		} else {
-			$transient->setBaseTemp('--installed',false,0);
+			$transient->setBaseTemp('--installed', false, 0);
 		}
 	}
 
 	/**
-	 * Create application rewrite
+	 * Setup application rewrite.
 	 *
 	 * @access private
 	 * @param void
@@ -196,34 +203,38 @@ final class Configurator extends Base
 	{
 		$htaccess = File::r(dirname(__FILE__).'/bin/.htaccess');
 		$base = $this->getBaseRoute(false);
-		$base = Stringify::replace('//','/',"/{$base}/");
+		$base = Stringify::replace('//', '/', "/{$base}/");
 		$domain = Server::get('server-name');
-		$domain = Stringify::replace('www.','',$domain);
+		$domain = Stringify::replace('www.', '', $domain);
 		$file = basename(Server::get('script-filename'));
-		$file = Stringify::replace('.php','',$file);
+		$file = Stringify::replace('.php', '', $file);
 		$htaccess = Stringify::replaceArray([
 			'/__BASE__/' => $base,
 			'__FILE__'   => $file,
 			'__DOMAIN__' => $domain
-		],$htaccess);
-		if ( Server::isHttps() ) {
+		], $htaccess);
+		if ( Server::isSSL() ) {
 			$htaccess = Stringify::replaceArray([
 				'# RewriteCond %{HTTPS} off'  => 'RewriteCond %{HTTPS} off',
 				'# RewriteRule (.*) https://' => 'RewriteRule (.*) https://'
-			],$htaccess);
+			], $htaccess);
 		}
-		File::w("{$this->getRoot()}/.htaccess",$htaccess);
+		File::w("{$this->getRoot()}/.htaccess", $htaccess);
 	}
 
 	/**
-	 * Create application config
+	 * Set application config file.
 	 *
 	 * @access private
 	 * @param void
 	 * @return void
 	 */
-	private function config()
+	private function setConfig()
 	{
-		File::w($this->getConfigFile(),Json::format($this->getConfig(),64|128|256));
+		File::w(
+			$this->getConfigFile(),
+			Json::format($this->getConfig(),
+			64|128|256)
+		);
 	}
 }

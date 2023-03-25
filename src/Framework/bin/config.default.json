@@ -10,7 +10,7 @@
       },
       "assets":"/public/assets/",
       "migrate":"/App/Storage/migrate/",
-      "translate":"/App/Storage/translate/",
+      "translation":"/App/Storage/translation/",
       "modules":"/App/Modules/",
       "db":"/App/Storage/config/db.ini",
       "routes":"/App/Storage/config/routes.json"
@@ -46,6 +46,10 @@
       },
       "sessionId":"",
       "secret":"",
-      "expire":60
+      "expire":30
+   },
+   "strings": {
+      "admin": [],
+      "front": []
    }
 }

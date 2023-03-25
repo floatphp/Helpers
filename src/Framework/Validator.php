@@ -3,7 +3,7 @@
  * @author     : JIHAD SINNAOUR
  * @package    : FloatPHP
  * @subpackage : Helpers Framework Component
- * @version    : 1.0.1
+ * @version    : 1.0.2
  * @category   : PHP framework
  * @copyright  : (c) 2017 - 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://www.floatphp.com
@@ -16,100 +16,97 @@ declare(strict_types=1);
 
 namespace FloatPHP\Helpers\Framework;
 
-use FloatPHP\Classes\Filesystem\{
-    TypeCheck, Json
-};
-use FloatPHP\Exceptions\Kernel\ConfigException;
+use FloatPHP\Classes\Filesystem\TypeCheck;
+use FloatPHP\Exceptions\Kernel\ConfigurationException;
 use JsonSchema\Validator as JsonValidator;
 
 final class Validator
 {
 	/**
 	 * @access public
-	 * @var mixed $config
+	 * @var object $config
 	 * @return void
-	 * @throws ConfigException
+	 * @throws ConfigurationException
 	 */
 	public static function checkConfig($config)
 	{
-		try {
-			$error = self::isValidConfig($config,'config.schema.json');
-			if ( TypeCheck::isString($error) ) {
-				throw new ConfigException($error);
-				
-			} elseif ( $error === false ) {
-				throw new ConfigException();
-			}
-		} catch (ConfigException $e) {
-			die($e->get(1));
+		$error = self::isValidConfig($config);
+		if ( TypeCheck::isString($error) ) {
+	        throw new ConfigurationException(
+	            ConfigurationException::invalidApplicationConfiguration($error)
+	        );
+
+		} elseif ( $error === false ) {
+	        throw new ConfigurationException(
+	            ConfigurationException::invalidApplicationConfigurationFile()
+	        );
 		}
 	}
 
 	/**
 	 * @access public
-	 * @var mixed $config
+	 * @var object $config
 	 * @return void
-	 * @throws ConfigException
+	 * @throws ConfigurationException
 	 */
 	public static function checkModuleConfig($config)
 	{
-		try {
-			$error = self::isValidConfig($config,'module.schema.json');
-			if ( TypeCheck::isString($error) ) {
-				throw new ConfigException($error);
+		$error = self::isValidConfig($config, 'module.schema.json');
+		if ( TypeCheck::isString($error) ) {
+	        throw new ConfigurationException(
+	            ConfigurationException::invalidModuleConfiguration($error)
+	        );
 
-			} elseif ( $error === false ) {
-				throw new ConfigException();
-			}
-		} catch (ConfigException $e) {
-			die($e->get(2));
+		} elseif ( $error === false ) {
+	        throw new ConfigurationException(
+	            ConfigurationException::invalidModuleConfigurationFile()
+	        );
 		}
 	}
 
 	/**
 	 * @access public
-	 * @var mixed $config
+	 * @var object $config
 	 * @return void
-	 * @throws ConfigException
+	 * @throws ConfigurationException
 	 */
 	public static function checkRouteConfig($config)
 	{
-		try {
-			$error = self::isValidConfig($config,'route.schema.json');
-			if ( TypeCheck::isString($error) ) {
-				throw new ConfigException($error);
+		$error = self::isValidConfig($config, 'route.schema.json');
+		if ( TypeCheck::isString($error) ) {
+	        throw new ConfigurationException(
+	            ConfigurationException::invalidRouteConfiguration($error)
+	        );
 
-			} elseif ( $error === false ) {
-				throw new ConfigException();
-			}
-		} catch (ConfigException $e) {
-			die($e->get(3));
+		} elseif ( $error === false ) {
+	        throw new ConfigurationException(
+	            ConfigurationException::invalidRouteConfigurationFile()
+	        );
 		}
 	}
 
 	/**
 	 * @access public
-	 * @var mixed $access
+	 * @var array $access
 	 * @return void
-	 * @throws ConfigException
+	 * @throws ConfigurationException
 	 */
 	public static function checkDatabaseAccess($access)
 	{
-		try {
-			if ( !isset($access['default']) || !isset($access['root']) ) {
-				throw new ConfigException();
-			}
-		} catch (ConfigException $e) {
-			die($e->get(4));
+		if ( !isset($access['default']) || !isset($access['root']) ) {
+	        throw new ConfigurationException(
+	            ConfigurationException::invalidDatabaseConfiguration()
+	        );
 		}
 	}
 
 	/**
 	 * @access private
-	 * @var mixed $config
+	 * @var object $config
+	 * @var string $schema
 	 * @return mixed
 	 */
-	private static function isValidConfig($config, $schema)
+	private static function isValidConfig($config, $schema = 'config.schema.json')
 	{
 		$validator = new JsonValidator;
 		$validator->validate($config, (object)[
@@ -121,9 +118,9 @@ final class Validator
 		} else {
 			$errors = [];
 		    foreach ($validator->getErrors() as $error) {
-		        $errors[] = sprintf("[%s] %s",$error['property'],$error['message']);
+		        $errors[] = sprintf("[%s] %s", $error['property'], $error['message']);
 		    }
-		    return implode("\n",$errors);
+		    return implode("\n", $errors);
 		}
 		return false;
 	}

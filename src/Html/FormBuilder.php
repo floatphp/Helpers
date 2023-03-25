@@ -3,7 +3,7 @@
  * @author     : JIHAD SINNAOUR
  * @package    : FloatPHP
  * @subpackage : Helpers Html Component
- * @version    : 1.0.1
+ * @version    : 1.0.2
  * @category   : PHP framework
  * @copyright  : (c) 2017 - 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://www.floatphp.com
@@ -17,9 +17,12 @@ declare(strict_types=1);
 namespace FloatPHP\Helpers\Html;
 
 use FloatPHP\Kernel\Base;
-use FloatPHP\Classes\Html\Form;
-use FloatPHP\Classes\Filesystem\{
-    TypeCheck, Stringify, File, Json
+use FloatPHP\Classes\{
+    Filesystem\TypeCheck,
+    Filesystem\Stringify,
+    Filesystem\File,
+    Filesystem\Json,
+    Html\Form
 };
 
 final class FormBuilder extends Base
@@ -27,8 +30,10 @@ final class FormBuilder extends Base
 	/**
 	 * @access private
 	 * @var object $form
+	 * @var string $path
 	 */
 	private $form;
+	private $path;
 
 	/**
 	 * @param array $options
@@ -36,10 +41,17 @@ final class FormBuilder extends Base
 	 */
 	function __construct($options = false, $attributes = false)
 	{
-		$this->form = new Form($options,$attributes);
 		// Init configuration
 		$this->initConfig();
-		$this->form->setToken($this->getToken($this->form->getSource()));
+
+		$this->path = "{$this->getAdminUploadPath()}/forms";
+		$this->form = new Form($options, $attributes);
+		$this->form->setToken(
+			$this->getToken($this->form->getSource())
+		);
+		
+        // Reset configuration
+        $this->resetConfig();
 	}
 
 	/**
@@ -63,7 +75,7 @@ final class FormBuilder extends Base
 	public function save($serialize = false, $path = '')
 	{
 		$data = $this->export($serialize);
-		$path = !empty($path) ? $path : "{$this->getAdminUploadPath()}/forms";
+		$path = !empty($path) ? $path : $this->path;
 		$source = $this->form->getSource();
 		if ( !empty($source) ) {
 			$source .= '-';
@@ -74,7 +86,7 @@ final class FormBuilder extends Base
 		} else {
 			$source .= '.json';
 		}
-		File::w("{$path}/{$source}",$data);
+		File::w("{$path}/{$source}", $data);
 	}
 
 	/**
@@ -96,7 +108,7 @@ final class FormBuilder extends Base
 		if ( $serialize ) {
 			return Stringify::serialize($data);
 		}
-		return Json::format($data,64|128|256);
+		return Json::format($data, 64|128|256);
 	}
 
 	/**
@@ -111,8 +123,9 @@ final class FormBuilder extends Base
 	{
 		if ( $serialize ) {
 			$data = Stringify::unserialize($data);
+
 		} else {
-			$data = Json::decode($data,true);
+			$data = Json::decode($data, true);
 		}
 		if ( TypeCheck::isArray($data) ) {
 

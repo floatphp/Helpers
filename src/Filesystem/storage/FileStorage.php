@@ -3,7 +3,7 @@
  * @author     : JIHAD SINNAOUR
  * @package    : FloatPHP
  * @subpackage : Helpers Filesystem Component
- * @version    : 1.0.1
+ * @version    : 1.0.2
  * @category   : PHP framework
  * @copyright  : (c) 2017 - 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://www.floatphp.com
@@ -14,13 +14,15 @@
 
 declare(strict_types=1);
 
-namespace FloatPHP\Helpers\Filesystem;
+namespace FloatPHP\Helpers\Filesystem\storage;
 
-use FloatPHP\Classes\Filesystem\File;
+use FloatPHP\Classes\Filesystem\{
+	File, Arrayify
+};
 use SleekDB\Store;
 
 /**
- * Wrapper class for external FileStorage (Database).
+ * Wrapper class for FileStorage (Database).
  * @see https://sleekdb.github.io
  */
 class FileStorage
@@ -41,6 +43,13 @@ class FileStorage
 		if ( !File::isDir($dir) ) {
 			File::addDir($dir);
 		}
+
+		// Init config
+		$config = Arrayify::merge([
+			'timeout'           => false,
+			'folderPermissions' => 777
+		], $config);
+
 		$this->adapter = new Store($table, $dir, $config);
 	}
 

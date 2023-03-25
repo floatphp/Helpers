@@ -4,4 +4,4 @@ CREATE TABLE IF NOT EXISTS `config` (
   `options` text NOT NULL,
   PRIMARY KEY (`configId`),
   KEY `idcon` (`name`) USING BTREE
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

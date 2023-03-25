@@ -3,7 +3,7 @@
  * @author     : JIHAD SINNAOUR
  * @package    : FloatPHP
  * @subpackage : Helpers Filesystem Component
- * @version    : 1.0.1
+ * @version    : 1.0.2
  * @category   : PHP framework
  * @copyright  : (c) 2017 - 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://www.floatphp.com
@@ -33,22 +33,13 @@ final class Translator extends Translation
     {
         // Init configuration
         $this->initConfig();
+        
         // Override
         $locale = !empty($locale) ? $locale : $this->getLanguage();
-        parent::__construct($locale,$this->getTranslatePath());
-    }
-
-    /**
-     * @access private
-     * @param array $strings
-     * @return array
-     */
-    public function translateArray(array $strings = []) : array
-    {
-        foreach ($strings as $key => $value) {
-            $strings[$key] = $this->translate($value);
-        }
-        return $strings;
+        parent::__construct($locale, $this->getTranslatePath());
+        
+        // Reset configuration
+        $this->resetConfig();
     }
 
     /**

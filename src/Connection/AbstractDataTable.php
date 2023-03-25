@@ -3,7 +3,7 @@
  * @author     : JIHAD SINNAOUR
  * @package    : FloatPHP
  * @subpackage : Helpers Connection Component
- * @version    : 1.0.1
+ * @version    : 1.0.2
  * @category   : PHP framework
  * @copyright  : (c) 2017 - 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://www.floatphp.com
@@ -18,15 +18,22 @@ namespace FloatPHP\Helpers\Connection;
 
 use FloatPHP\Kernel\Orm;
 use FloatPHP\Classes\{
-    Filesystem\TypeCheck, Filesystem\Stringify, Filesystem\Arrayify, Filesystem\Json,
+    Filesystem\TypeCheck,
+	Filesystem\Stringify, 
+    Filesystem\Arrayify,
+	Filesystem\Json,
     Http\Request
 };
 use FloatPHP\Helpers\Filesystem\Cache;
 
+/**
+ * FileCache DataTable.
+ * @see https://datatables.net
+ */
 abstract class AbstractDataTable extends Orm
 {
 	/**
-	 * Data render
+	 * Data render.
 	 *
 	 * @access public
 	 * @param array $data
@@ -35,7 +42,7 @@ abstract class AbstractDataTable extends Orm
 	abstract public static function render($data) : string;
 
 	/**
-	 * Server render
+	 * Server render.
 	 *
 	 * @access public
 	 * @param string $table
@@ -48,6 +55,7 @@ abstract class AbstractDataTable extends Orm
 	{
 		// Init database
 		parent::__construct();
+		
 		$this->table = $table;
 		$this->key = $primaryKey;
 		$bind = [];
@@ -81,7 +89,7 @@ abstract class AbstractDataTable extends Orm
 		foreach ($columns as $key => $value) {
 			$fields[$key] = "`{$value}`";
 		}
-		$rows = implode(',',$fields);
+		$rows = implode(',', $fields);
 		if ( empty($rows) ) {
 			$rows = '*';
 		}
@@ -102,7 +110,7 @@ abstract class AbstractDataTable extends Orm
 		}
 
 		// Init cache
-		$cache = new Cache('temp',$ttl);
+		$cache = new Cache();
 		$cacheId  = "datatable-{$this->table}-{$this->key}-{$start}-{$length}-";
 		$cacheId .= "{$orderBy}-{$order}";
 
@@ -149,10 +157,10 @@ abstract class AbstractDataTable extends Orm
 		$data = $cache->get($cacheId);
 		if ( !$cache->isCached() ) {
 			// Execute query
-			$data = $this->db->query($sql,$bind);
+			$data = $this->db->query($sql, $bind);
 			// Format server data
 			$data = static::serverPreRender($data);
-			$cache->set($data,[$this->table,'data']);
+			$cache->set($data, $this->table, $ttl);
 		}
 
 		// Format server data output
@@ -167,7 +175,7 @@ abstract class AbstractDataTable extends Orm
 					$column['custom-col'] = $request['customColumn'];
 				}
 			}
-			Arrayify::push($wrapper,Arrayify::values($column));
+			Arrayify::push($wrapper, Arrayify::values($column));
 		}
 
 		// Combine response
@@ -194,8 +202,8 @@ abstract class AbstractDataTable extends Orm
 	}
 
 	/**
-	 * Data format
-	 * '{"data":[["X","X"]]}'
+	 * Format data for datatable,
+	 * '{"data":[["XXXX"],["XXXX"]]}'.
 	 *
 	 * @access protected
 	 * @param array $data
@@ -203,8 +211,8 @@ abstract class AbstractDataTable extends Orm
 	 */
 	protected static function format($data = []) : string
 	{
-		$json = Json::format($data);
+		$json = Json::format((array)$data);
 		$prefix = '"data": ';
-		return (string)"{{$prefix}{$json}}";
+		return "{{$prefix}{$json}}";
 	}
 }
