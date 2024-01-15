@@ -1,12 +1,11 @@
 <?php
 /**
- * @author     : JIHAD SINNAOUR
+ * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Framework Component
- * @version    : 1.0.2
- * @category   : PHP framework
- * @copyright  : (c) 2017 - 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
- * @link       : https://www.floatphp.com
+ * @version    : 1.1.0
+ * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
+ * @link       : https://floatphp.com
  * @license    : MIT
  *
  * This file if a part of FloatPHP Framework.
@@ -16,58 +15,51 @@ declare(strict_types=1);
 
 namespace FloatPHP\Helpers\Framework;
 
-use FloatPHP\Kernel\{
-	Base, Orm
-};
-use FloatPHP\Classes\{
-    Filesystem\Stringify,
-	Filesystem\File,
-	Filesystem\Json,
-    Http\Server
-};
+use FloatPHP\Kernel\Orm;
 use FloatPHP\Helpers\{
-	Filesystem\Transient,
+	Connection\Transient,
 	Connection\Role
 };
 
-final class Installer extends Base
+/**
+ * Framwork application installer.
+ */
+final class Installer
 {
+	use \FloatPHP\Kernel\TraitConfiguration,
+		\FloatPHP\Helpers\Framework\inc\TraitRequestable;
+
 	/**
 	 * Setup application.
 	 *
 	 * @access public
-	 * @param void
 	 * @return void
 	 */
 	public function setup()
 	{
-		$transient = new Transient();
-		if ( !$transient->getTemp('--installed') ) {
-
-			// Setup config
-			if ( !File::exists($this->getConfigFile()) ) {
-				$this->setConfig();
-			}
-
-			// Setup database
-			if ( $this->getDatabaseFile() && $this->getMigratePath() ) {
-				$this->setBuiltinTables();
-				$this->migrate();
-				$this->importBuiltinTables();
-			}
-
-			// Setup rewrite
-			if ( !$transient->getBaseTemp('--installed') ) {
-				if ( !File::exists("{$this->getRoot()}/.htaccess") ) {
-					$this->rewrite();
-				}
-				if ( !File::exists("{$this->getAppDir()}/.htaccess") ) {
-					File::w("{$this->getAppDir()}/.htaccess", 'deny from all');
-				}
-				$transient->setBaseTemp('--installed', true, 0);
-			}
-			$transient->setTemp('--installed', true, 0);
+		// Setup config
+		if ( !$this->hasFile($this->getConfigFile()) ) {
+			$this->setConfig();
 		}
+
+		// Setup database
+		if ( $this->getDatabaseFile() && $this->getMigratePath() ) {
+			$this->setTables();
+			$this->migrate();
+			$this->importRoles();
+		}
+
+		// Setup rewrite
+		if ( !$this->hasFile("{$this->getRoot()}/.htaccess") ) {
+			$this->rewrite();
+		}
+
+		// Setup security
+		if ( !$this->hasFile("{$this->getAppDir()}/.htaccess") ) {
+			$this->writeFile("{$this->getAppDir()}/.htaccess", 'deny from all');
+		}
+
+		self::install();
 	}
 
 	/**
@@ -84,62 +76,21 @@ final class Installer extends Base
 		}
 
 		// Create database
-		$orm = new Orm();
-		$orm->createDatabase();
+		(new Orm())->noConnect()->setup();
 
-		// Create tables
+		// Import tables
 		$tables = glob("{$path}/*.{sql}", GLOB_BRACE);
 		if ( !$tables ) {
 			return;
 		}
+
+		// Create tables
+		$orm = new Orm();
 		foreach ($tables as $table) {
-			$sql = File::r("{$table}");
+			$sql = $this->readFile("{$table}");
 			if ( !empty($sql) ) {
 				$orm->query($sql);
 			}
-		}
-	}
-
-	/**
-	 * Set builtin database tables.
-	 *
-	 * @access private
-	 * @param void
-	 * @return void
-	 */
-	private function setBuiltinTables()
-	{
-		$path = $this->getMigratePath();
-		if ( !File::exists("{$path}/config.sql") ) {
-			File::copy(dirname(__FILE__).'/bin/config.sql.default', "{$path}/config.sql");
-		}
-		if ( !File::exists("{$path}/user.sql") ) {
-			File::copy(dirname(__FILE__).'/bin/user.sql.default', "{$path}/user.sql");
-		}
-		if ( !File::exists("{$path}/role.sql") ) {
-			File::copy(dirname(__FILE__).'/bin/role.sql.default', "{$path}/role.sql");
-		}
-	}
-
-	/**
-	 * Import builtin data.
-	 *
-	 * @access private
-	 * @param void
-	 * @return void
-	 */
-	private function importBuiltinTables()
-	{
-		$path = dirname(__FILE__);
-		$roles = Json::decode(File::r("{$path}/bin/role.default.json"), true);
-		$item = new Role();
-		$item->deleteAll();
-		$item->resetId();
-		foreach ($roles as $role) {
-			$item->name = $role['name'];
-			$item->slug = $role['slug'];
-			$item->capability = Json::encode($role['capability']);
-			$item->create();
 		}
 	}
 
@@ -150,91 +101,140 @@ final class Installer extends Base
 	 * @param array $config
 	 * @return array
 	 */
-	public static function parse($config = [])
+	public function parse(array $config = []) : array
 	{
-		$parse = [];
-		$parse['--disable-setup'] = isset($config['--disable-setup'])
-		? $config['--disable-setup'] : false;
-
-		$parse['--disable-powered-by'] = isset($config['--disable-powered-by'])
-		? $config['--disable-powered-by'] : false;
-
-		$parse['--disable-session'] = isset($config['--disable-session'])
-		? $config['--disable-session'] : false;
-
-		$parse['--default-lang'] = isset($config['--default-lang'])
-		? $config['--default-lang'] : 'en';
-
-		$parse['--default-timezone'] = isset($config['--default-timezone'])
-		? $config['--default-timezone'] : 'Europe/Paris';
-		
-		$parse['--enable-maintenance'] = isset($config['--enable-maintenance'])
-		? $config['--enable-maintenance'] : false;
-
-		return $parse;
+		return $this->mergeArray([
+            '--enable-maintenance' => false,
+            '--disable-setup'      => false,
+            '--disable-powered-by' => false,
+            '--disable-session'    => false,
+            '--default-lang'       => 'en',
+            '--default-timezone'   => 'Europe/Paris',
+        ], $config);
 	}
 
 	/**
-	 * Reset application config.
+	 * Check installed status.
 	 *
 	 * @access public
-	 * @param bool $all
+	 * @return bool
+	 */
+	public static function isInstalled() : bool
+	{
+		return (bool)(new Transient())->get('--installed', false);
+	}
+
+	/**
+	 * Set installed status.
+	 *
+	 * @access public
+	 * @return bool
+	 */
+	public static function install() : bool
+	{
+		return (new Transient())->set('--installed', true, 0);
+	}
+
+	/**
+	 * Reset installed status.
+	 *
+	 * @access public
+	 * @return bool
+	 */
+	public static function reset() : bool
+	{
+		return (new Transient())->delete('--installed');
+	}
+
+	/**
+	 * Set built-in database tables.
+	 *
+	 * @access private
 	 * @return void
 	 */
-	public static function reset($all = false)
+	private function setTables()
 	{
-		$transient = new Transient();
-		if ( $all ) {
-			$transient->resetBaseTemp();
-
-		} else {
-			$transient->setBaseTemp('--installed', false, 0);
+		$path = $this->getMigratePath();
+		$tables = [
+			'config.sql',
+			'user.sql',
+			'role.sql'
+		];
+		foreach ($tables as $sql) {
+			if ( !$this->hasFile("{$path}/{$sql}") ) {
+				$this->copyFile( dirname(__FILE__) . "/bin/{$sql}.default", "{$path}/{$sql}");
+			}
 		}
 	}
 
+	/**
+	 * Import built-in roles.
+	 *
+	 * @access private
+	 * @return void
+	 */
+	private function importRoles()
+	{
+		$path = dirname(__FILE__) . '/bin/role.default.json';
+		$roles = $this->decodeJson($this->readFile($path), true);
+		$r = new Role();
+		$r->clear();
+		$r->resetId();
+		foreach ($roles as $role) {
+			$r->name = $role['name'];
+			$r->slug = $role['slug'];
+			$r->capability = $this->encodeJson($role['capability']);
+			$r->create();
+		}
+	}
+	
 	/**
 	 * Setup application rewrite.
 	 *
 	 * @access private
-	 * @param void
 	 * @return void
 	 */
 	private function rewrite()
 	{
-		$htaccess = File::r(dirname(__FILE__).'/bin/.htaccess');
+		$htaccess = $this->readFile(dirname(__FILE__) . '/bin/.htaccess');
+
+		// Set base
 		$base = $this->getBaseRoute(false);
-		$base = Stringify::replace('//', '/', "/{$base}/");
-		$domain = Server::get('server-name');
-		$domain = Stringify::replace('www.', '', $domain);
-		$file = basename(Server::get('script-filename'));
-		$file = Stringify::replace('.php', '', $file);
-		$htaccess = Stringify::replaceArray([
+		$base = $this->replaceString('//', '/', "/{$base}/");
+
+		// Set domain
+		$domain = $this->getServer('server-name');
+		$domain = $this->removeString('www.', $domain);
+
+		// Set file
+		$file = basename($this->getServer('script-filename'));
+		$file = $this->removeString('.php', $file);
+
+		$htaccess = $this->replaceStringArray([
 			'/__BASE__/' => $base,
 			'__FILE__'   => $file,
 			'__DOMAIN__' => $domain
 		], $htaccess);
-		if ( Server::isSSL() ) {
-			$htaccess = Stringify::replaceArray([
+
+		if ( $this->isSsl() ) {
+			$htaccess = $this->replaceStringArray([
 				'# RewriteCond %{HTTPS} off'  => 'RewriteCond %{HTTPS} off',
 				'# RewriteRule (.*) https://' => 'RewriteRule (.*) https://'
 			], $htaccess);
 		}
-		File::w("{$this->getRoot()}/.htaccess", $htaccess);
+		
+		$this->writeFile("{$this->getRoot()}/.htaccess", $htaccess);
 	}
 
 	/**
 	 * Set application config file.
 	 *
 	 * @access private
-	 * @param void
 	 * @return void
 	 */
 	private function setConfig()
 	{
-		File::w(
-			$this->getConfigFile(),
-			Json::format($this->getConfig(),
-			64|128|256)
-		);
+		$config = $this->formatJson($this->getConfig(), 64|128|256);
+		$this->writeFile($this->getConfigFile(), $config);
 	}
 }

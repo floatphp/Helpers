@@ -1,12 +1,11 @@
 <?php
 /**
- * @author     : JIHAD SINNAOUR
+ * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Framework Component
- * @version    : 1.0.2
- * @category   : PHP framework
- * @copyright  : (c) 2017 - 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
- * @link       : https://www.floatphp.com
+ * @version    : 1.1.0
+ * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
+ * @link       : https://floatphp.com
  * @license    : MIT
  *
  * This file if a part of FloatPHP Framework.
@@ -29,40 +28,50 @@ use FloatPHP\Helpers\Connection\{
 final class Permission
 {
 	/**
+	 * Check whether user (current) has given roles.
+	 * 
 	 * @access public
-	 * @param mixed $roles
+	 * @param mixed $role
 	 * @param int $userId
 	 * @return bool
 	 */
-	public static function hasRole($roles = 'administrator', $userId = null) : bool
+	public static function hasRole($role = 'administrator', $userId = null) : bool
 	{
-		if ( !$roles ) {
+		if ( !$role ) {
 			return false;
 		}
+
 		if ( !$userId ) {
 			$userId = Session::get('userId');
 		}
+
 		$u = new User();
 		$r = new Role();
+
 		$roleId = $u->getRoleId($userId);
 		$slug = Stringify::lowercase($r->getSlug($roleId));
-		if ( TypeCheck::isArray($roles) ) {
-			foreach ($roles as $key => $value) {
-				$roles[$key] = Stringify::lowercase($value);
+
+		if ( TypeCheck::isArray($role) ) {
+			foreach ($role as $key => $value) {
+				$role[$key] = Stringify::lowercase($value);
 			}
-			if ( Stringify::contains($roles,$slug) ) {
+			if ( Stringify::contains($role, $slug) ) {
 				return true;
 			}
+
 		} else {
-			$roles = Stringify::lowercase($roles);
-			if ( $roles === $slug ) {
+			$role = Stringify::lowercase($role);
+			if ( $role === $slug ) {
 				return true;
 			}
 		}
+
 		return false;
 	}
 
 	/**
+	 * Check whether user (current) has given capability.
+	 * 
 	 * @access public
 	 * @param mixed $capability
 	 * @param int $userId
@@ -71,21 +80,26 @@ final class Permission
 	public static function hasCapability($capability = null, $userId = null) : bool
 	{
 		if ( !$capability ) {
-			$capability = ['read','create','write','delete'];
+			$capability = ['read', 'create', 'write', 'delete'];
 		}
+
 		if ( !$userId ) {
 			$userId = Session::get('userId');
 		}
+
 		$u = new User();
 		$r = new Role();
+
 		$roleId = $u->getRoleId($userId);
 		$capabilities = Json::decode($r->getCapability($roleId));
+
 		foreach ((array)$capability as $cap) {
 			$cap = Stringify::lowercase($cap);
-			if ( !Stringify::contains($capabilities,$cap) ) {
+			if ( !Stringify::contains($capabilities, $cap) ) {
 				return false;
 			}
 		}
+
 		return true;
 	}
 }

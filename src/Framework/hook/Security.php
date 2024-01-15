@@ -1,12 +1,11 @@
 <?php
 /**
- * @author     : JIHAD SINNAOUR
+ * @author     : Jakiboy
  * @package    : FloatPHP
- * @subpackage : Helpers Connection Component
- * @version    : 1.0.2
- * @category   : PHP framework
- * @copyright  : (c) 2017 - 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
- * @link       : https://www.floatphp.com
+ * @subpackage : Helpers Framework Component
+ * @version    : 1.1.0
+ * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
+ * @link       : https://floatphp.com
  * @license    : MIT
  *
  * This file if a part of FloatPHP Framework.
@@ -14,11 +13,12 @@
 
 declare(strict_types=1);
 
-namespace FloatPHP\Helpers\Connection;
+namespace FloatPHP\Helpers\Framework\hook;
 
 use FloatPHP\Kernel\BaseController;
 use FloatPHP\Classes\Filesystem\Arrayify;
-use FloatPHP\Helpers\Filesystem\Transient;
+use FloatPHP\Classes\Http\Server;
+use FloatPHP\Helpers\Connection\Transient;
 
 class Security extends BaseController
 {
@@ -38,7 +38,6 @@ class Security extends BaseController
 	 * Force strong password.
 	 * 
 	 * @access public
-	 * @param void
 	 * @return void
 	 */
 	public function useStrongPassword()
@@ -46,6 +45,20 @@ class Security extends BaseController
 		$this->addFilter('authenticate-strong-password', function(){
 			return true;
 		});
+	}
+
+	/**
+	 * Force token method.
+	 * 
+	 * @access public
+	 * @return void
+	 */
+	public function useTokenOnly()
+	{
+		if ( !Server::getBearerToken() ) {
+			$msg = $this->applyFilter('api-authenticate-method-message', 'Access forbidden');
+			$this->setHttpResponse($msg, [], 'error', 403);
+		}
 	}
 
 	/**
@@ -66,6 +79,7 @@ class Security extends BaseController
 				$key = "authenticate-{$username}";
 				if ( !($attempt = $transient->getTemp($key)) ) {
 					$transient->setTemp($key, 1, 0);
+
 				} else {
 					$transient->setTemp($key, $attempt + 1, 0);
 				}
@@ -97,7 +111,7 @@ class Security extends BaseController
 	 * @param bool $method
 	 * @return void
 	 */
-	public function useAccessProtection($max = 120, $seconds = 60, $address = true, $method = true)
+	public function useAccessProtection(int $max = 120, int $seconds = 60, bool $address = true, bool $method = true)
 	{
 		$this->max = $max;
 		$this->seconds = $seconds;
@@ -130,9 +144,11 @@ class Security extends BaseController
 			$attempts = 0;
 			if ( !($attempts = $transient->getTemp($key)) ) {
 				$transient->setTemp($key, 1, $this->seconds);
+				
 			} else {
 				$transient->setTemp($key, $attempts + 1, $this->seconds);
 			}
+
 			if ( $attempts >= $this->max && $this->max !== 0 ) {
 				$msg = $this->applyFilter('api-authenticate-attempt-message', 'Access forbidden');
 				$this->setHttpResponse($msg, [], 'error', 429);

@@ -1,12 +1,11 @@
 <?php
 /**
- * @author     : JIHAD SINNAOUR
+ * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Connection Component
- * @version    : 1.0.2
- * @category   : PHP framework
- * @copyright  : (c) 2017 - 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
- * @link       : https://www.floatphp.com
+ * @version    : 1.1.0
+ * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
+ * @link       : https://floatphp.com
  * @license    : MIT
  *
  * This file if a part of FloatPHP Framework.
@@ -27,72 +26,41 @@ class Role extends Model
 	protected $key = 'roleId';
 
 	/**
+	 * Get role slug.
+	 * 
 	 * @access public
-	 * @param int $roleId
-	 * @return array
-	 */
-	public function get($roleId = 0) : array
-	{
-		$this->roleId = intval($roleId);
-		$this->find();
-		return (array)$this->data;
-	}
-
-	/**
-	 * @access public
-	 * @param int $roleId
+	 * @param int $id
 	 * @return string
 	 */
-	public function getSlug($roleId = 0) : string
+	public function getSlug(?int $id) : string
 	{
-		$this->roleId = intval($roleId);
-		$this->find();
+		$this->get((int)$id);
 		return (string)$this->slug;
 	}
 
 	/**
+	 * Get role name.
+	 * 
 	 * @access public
-	 * @param int $roleId
+	 * @param int $id
 	 * @return string
 	 */
-	public function getName($roleId = 0) : string
+	public function getName(?int $id) : string
 	{
-		$this->roleId = intval($roleId);
-		$this->find();
+		$this->get((int)$id);
 		return (string)$this->name;
 	}
 
 	/**
+	 * Get role capability.
+	 * 
 	 * @access public
-	 * @param int $roleId
+	 * @param int $id
 	 * @return string
 	 */
-	public function getCapability($roleId = 0) : string
+	public function getCapability(?int $id) : string
 	{
-		$this->roleId = intval($roleId);
-		$this->find();
+		$this->get((int)$id);
 		return (string)$this->capability;
-	}
-
-	/**
-	 * @access public
-	 * @param int $data
-	 * @return bool
-	 */
-	public function add($data = []) : bool
-	{
-		$this->$data = $data;
-		return (bool)$this->create();
-	}
-
-	/**
-	 * @access public
-	 * @param int $data
-	 * @return bool
-	 */
-	public function update($data = []) : bool
-	{
-		$this->$data = $data;
-		return (bool)$this->save();
 	}
 }

@@ -1,12 +1,11 @@
 <?php
 /**
- * @author     : JIHAD SINNAOUR
+ * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Connection Component
- * @version    : 1.0.2
- * @category   : PHP framework
- * @copyright  : (c) 2017 - 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
- * @link       : https://www.floatphp.com
+ * @version    : 1.1.0
+ * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
+ * @link       : https://floatphp.com
  * @license    : MIT
  *
  * This file if a part of FloatPHP Framework.
@@ -16,7 +15,6 @@ declare(strict_types=1);
 
 namespace FloatPHP\Helpers\Connection;
 
-use FloatPHP\Kernel\TraitConfiguration;
 use FloatPHP\Classes\{
 	Filesystem\Arrayify,
 	Server\System
@@ -26,9 +24,12 @@ use \mysqli;
 System::setTimeLimit(0);
 System::setMemoryLimit('-1');
 
+/**
+ * MySQLi dump class.
+ */
 final class Dump
 {
-	use TraitConfiguration;
+	use \FloatPHP\Kernel\TraitConfiguration;
 
 	/**
 	 * @access private
@@ -46,7 +47,7 @@ final class Dump
 
 		// Init access
 		$this->access = Arrayify::merge(
-			$this->getDatabaseAccess(),
+			$this->getDbAccess(),
 			$config
 		);
 		
@@ -61,7 +62,7 @@ final class Dump
 	 * @param string $file
 	 * @return bool
 	 */
-	public function import($file = '') : bool
+	public function import(string $file) : bool
 	{
 		// Init connection
 		$connection = @new mysqli(
@@ -110,7 +111,7 @@ final class Dump
 			}
 		}
 
-		$connection->close($connection);
+		$connection->close();
 		return (bool)$status;
 	}
 
@@ -121,7 +122,7 @@ final class Dump
 	 * @param string $file
 	 * @return bool
 	 */
-	public function export($file = 'dump.sql') : bool
+	public function export(string $file = 'dump.sql') : bool
 	{
 		$command  = 'mysqldump --opt';
 		$command .= " -u {$this->access['user']}";

@@ -1,12 +1,11 @@
 <?php
 /**
- * @author     : JIHAD SINNAOUR
+ * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Filesystem Component
- * @version    : 1.0.2
- * @category   : PHP framework
- * @copyright  : (c) 2017 - 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
- * @link       : https://www.floatphp.com
+ * @version    : 1.1.0
+ * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
+ * @link       : https://floatphp.com
  * @license    : MIT
  *
  * This file if a part of FloatPHP Framework.
@@ -16,43 +15,35 @@ declare(strict_types=1);
 
 namespace FloatPHP\Helpers\Filesystem;
 
-use FloatPHP\Kernel\TraitConfiguration;
-use FloatPHP\Classes\{
-    Http\Session,
-    Filesystem\Translation
-};
+use FloatPHP\Classes\Filesystem\Translation;
 
+/**
+ * Built-in Translation factory class.
+ */
 final class Translator extends Translation
 {
-    use TraitConfiguration;
-
-    /**
-     * @param string $locale
+    use \FloatPHP\Kernel\TraitConfiguration;
+    
+	/**
+     * @inheritdoc
+     * @uses initConfig()
+     * @uses resetConfig()
      */
-    public function __construct($locale = '')
+    public function __construct(?string $locale = null)
     {
         // Init configuration
         $this->initConfig();
-        
+
         // Override
-        $locale = !empty($locale) ? $locale : $this->getLanguage();
         parent::__construct($locale, $this->getTranslatePath());
+
+        // Check
+        if ( !$this->canTranslate && $this->isDebug() ) {
+            $logger = new Logger('core');
+            $logger->warning("Invalid language locale [{$locale}]");
+        }
         
         // Reset configuration
         $this->resetConfig();
-    }
-
-    /**
-     * @access private
-     * @param void
-     * @return string
-     */
-    private function getLanguage()
-    {
-        $lang = Session::get('--lang');
-        if ( empty($lang) ) {
-            $lang = Session::get('--default-lang');
-        }
-        return $lang;
     }
 }

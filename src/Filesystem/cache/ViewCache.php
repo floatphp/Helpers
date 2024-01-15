@@ -1,12 +1,11 @@
 <?php
 /**
- * @author     : JIHAD SINNAOUR
+ * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Filesystem Component
- * @version    : 1.0.2
- * @category   : PHP framework
- * @copyright  : (c) 2017 - 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
- * @link       : https://www.floatphp.com
+ * @version    : 1.1.0
+ * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
+ * @link       : https://floatphp.com
  * @license    : MIT
  *
  * This file if a part of FloatPHP Framework.
@@ -19,11 +18,10 @@ namespace FloatPHP\Helpers\Filesystem\cache;
 use FloatPHP\Classes\Filesystem\{
 	File, Stringify
 };
-use FloatPHP\Kernel\TraitConfiguration;
 
 final class ViewCache
 {
-	use TraitConfiguration;
+	use \FloatPHP\Kernel\TraitConfiguration;
 
 	/**
 	 * @access private
@@ -32,7 +30,8 @@ final class ViewCache
 	private $path = 'view';
 
 	/**
-	 * @param void
+	 * @uses initConfig()
+	 * @uses resetConfig()
 	 */
     public function __construct()
     {
@@ -50,7 +49,6 @@ final class ViewCache
 	 * Purge cache.
 	 *
 	 * @access public
-	 * @param void
 	 * @return bool
 	 */
 	public function purge() : bool

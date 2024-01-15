@@ -7,6 +7,8 @@ CREATE TABLE IF NOT EXISTS `user` (
   `roleId` int(11) NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`userId`),
+  UNIQUE(`email`),
+  UNIQUE(`username`),
   KEY `idue` (`email`) USING BTREE,
   KEY `idun` (`username`) USING BTREE,
   KEY `idur` (`roleId`)

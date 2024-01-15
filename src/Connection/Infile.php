@@ -1,12 +1,11 @@
 <?php
 /**
- * @author     : JIHAD SINNAOUR
+ * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Connection Component
- * @version    : 1.0.2
- * @category   : PHP framework
- * @copyright  : (c) 2017 - 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
- * @link       : https://www.floatphp.com
+ * @version    : 1.1.0
+ * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
+ * @link       : https://floatphp.com
  * @license    : MIT
  *
  * This file if a part of FloatPHP Framework.
@@ -23,6 +22,9 @@ use \PDO;
 System::setTimeLimit(0);
 System::setMemoryLimit('-1');
 
+/**
+ * MySQL infile class.
+ */
 class Infile
 {
     /**
@@ -61,7 +63,6 @@ class Infile
      * Execute.
      *
      * @access public
-     * @param void
      * @return void
      */
     public function execute()
@@ -76,7 +77,7 @@ class Infile
             $dsn .= "port={$this->config['port']}";
 
             // Init PDO INFILE
-            $pdo = new PDO($dsn,$this->config['user'],$this->config['pswd'],[
+            $pdo = new PDO($dsn,$this->config['user'], $this->config['pswd'], [
                 PDO::MYSQL_ATTR_LOCAL_INFILE  => true
             ]);
 
@@ -104,25 +105,30 @@ class Infile
      * Build query.
      *
      * @access private
-     * @param void
      * @return string
      */
     private function buildQuery()
     {
         $query  = "LOAD DATA INFILE '{$this->config['file']}' ";
+
         if ( $this->config['action'] ) {
             $query .= "{$this->config['action']} ";
         }
+        
         $query .= "INTO TABLE `{$this->config['table']}` ";
+
         if ( $this->config['charset'] ) {
             $query .= "CHARACTER SET {$this->config['charset']} ";
         }
+
         $query .= "FIELDS TERMINATED BY '{$this->config['delimiter']}' ";
         $query .= "OPTIONALLY ENCLOSED BY '{$this->config['enclosed']}' ";
         $query .= "LINES TERMINATED BY '{$this->config['line']}'";
+
         if ( $this->config['ignore'] ) {
             $query .= " IGNORE {$this->config['ignore']} LINES";
         }
+
         return $query;
     }
 }

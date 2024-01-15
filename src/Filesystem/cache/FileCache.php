@@ -1,12 +1,11 @@
 <?php
 /**
- * @author     : JIHAD SINNAOUR
+ * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Filesystem Component
- * @version    : 1.0.2
- * @category   : PHP framework
- * @copyright  : (c) 2017 - 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
- * @link       : https://www.floatphp.com
+ * @version    : 1.1.0
+ * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
+ * @link       : https://floatphp.com
  * @license    : MIT
  *
  * This file if a part of FloatPHP Framework.
@@ -21,7 +20,6 @@ use FloatPHP\Helpers\Filesystem\Logger;
 use FloatPHP\Classes\Filesystem\{
 	Stringify, Arrayify, File, Exception as ErrorHandler
 };
-use FloatPHP\Kernel\TraitConfiguration;
 use Phpfastcache\{
 	CacheManager,
 	Drivers\Files\Config,
@@ -34,6 +32,8 @@ use Phpfastcache\{
  */
 class FileCache extends PhpfastcacheAbstractProxy implements CacheInterface
 {
+	use \FloatPHP\Kernel\TraitConfiguration;
+	
 	/**
 	 * @access private
 	 * @var object $temp, Temp cache object
@@ -41,8 +41,6 @@ class FileCache extends PhpfastcacheAbstractProxy implements CacheInterface
 	 */
 	private $temp;
 	private $isCached = false;
-
-	use TraitConfiguration;
 
 	/**
 	 * @param array $config
@@ -55,9 +53,6 @@ class FileCache extends PhpfastcacheAbstractProxy implements CacheInterface
 		// Init configuration
 		$this->initConfig();
 
-		// Init logger
-		$logger = new Logger('core', 'system');
-
 		// Init config
 		$config = Arrayify::merge([
 			'path'               => 'temp',
@@ -65,7 +60,7 @@ class FileCache extends PhpfastcacheAbstractProxy implements CacheInterface
 			'compressData'       => true,
 			'preventCacheSlams'  => true,
 			'cacheSlamsTimeout'  => 5,
-			'defaultChmod'       => 777,
+			'defaultChmod'       => 0777,
 			'defaultTtl'         => $this->getCacheTTL(),
 			'securityKey'        => 'private',
 			'cacheFileExtension' => 'txt'
@@ -79,7 +74,9 @@ class FileCache extends PhpfastcacheAbstractProxy implements CacheInterface
 			$this->instance = CacheManager::getInstance('Files', new Config($config));
 
 		} catch (\Phpfastcache\Exceptions\PhpfastcacheIOException $e) {
+
 			ErrorHandler::clearLastError();
+			$logger = new Logger('core', 'system');
 			$logger->error('File cache failed');
 			if ( $this->isDebug() ) {
 				$logger->debug($e->getMessage());
@@ -97,7 +94,7 @@ class FileCache extends PhpfastcacheAbstractProxy implements CacheInterface
 	 * @param string $key
 	 * @return mixed
 	 */
-	public function get($key)
+	public function get(string $key)
 	{
 		$this->temp = $this->instance->getItem($key);
 		$this->isCached = $this->temp->isHit();
@@ -108,7 +105,6 @@ class FileCache extends PhpfastcacheAbstractProxy implements CacheInterface
 	 * Check cache.
 	 *
 	 * @access public
-	 * @param void
 	 * @return bool
 	 */
 	public function isCached() : bool
@@ -122,17 +118,17 @@ class FileCache extends PhpfastcacheAbstractProxy implements CacheInterface
 	 * @access public
 	 * @param mixed $value
 	 * @param string $tag
-	 * @param mixed $ttl
+	 * @param int $ttl
 	 * @return bool
 	 */
-	public function set($value, $tag = null, $ttl = null) : bool
+	public function set($value, ?string $tag = null, ?int $ttl = null) : bool
 	{
 		$this->temp->set($value);
 		if ( $ttl ) {
 			$this->temp->expiresAfter($ttl);
 		}
 		if ( $tag ) {
-			$this->temp->addTag((string)$tag);
+			$this->temp->addTag($tag);
 		}
 		return $this->instance->save($this->temp);
 	}
@@ -141,10 +137,10 @@ class FileCache extends PhpfastcacheAbstractProxy implements CacheInterface
 	 * Delete cache by key.
 	 *
 	 * @access public
-	 * @param mixed $key
+	 * @param string $key
 	 * @return bool
 	 */
-	public function delete($key) : bool
+	public function delete(string $key) : bool
 	{
 		return $this->instance->deleteItem($key);
 	}
@@ -156,7 +152,7 @@ class FileCache extends PhpfastcacheAbstractProxy implements CacheInterface
 	 * @param string $tag
 	 * @return bool
 	 */
-	public function deleteByTag($tag) : bool
+	public function deleteByTag(string $tag) : bool
 	{
 		return $this->instance->deleteItemsByTag($tag);
 	}
@@ -165,7 +161,6 @@ class FileCache extends PhpfastcacheAbstractProxy implements CacheInterface
 	 * Purge cache (all).
 	 *
 	 * @access public
-	 * @param void
 	 * @return bool
 	 */
 	public function purge() : bool
@@ -177,7 +172,6 @@ class FileCache extends PhpfastcacheAbstractProxy implements CacheInterface
 	 * Purge cache path.
 	 *
 	 * @access public
-	 * @param void
 	 * @return bool
 	 */
 	public function purgePath() : bool

@@ -1,12 +1,11 @@
 <?php
 /**
- * @author     : JIHAD SINNAOUR
+ * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Connection Component
- * @version    : 1.0.2
- * @category   : PHP framework
- * @copyright  : (c) 2017 - 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
- * @link       : https://www.floatphp.com
+ * @version    : 1.1.0
+ * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
+ * @link       : https://floatphp.com
  * @license    : MIT
  *
  * This file if a part of FloatPHP Framework.
@@ -29,48 +28,57 @@ class User extends Model
 	protected $key = 'userId';
 
 	/**
+	 * Get user.
+	 * 
 	 * @access public
-	 * @param int $userId
+	 * @param int $id
+	 * @param bool $secured
 	 * @return array
 	 */
-	public function get($userId = 0) : array
+	public function getById(?int $id, $secured = true) : array
 	{
-		$this->userId = intval($userId);
-		$this->find();
-		return (array)$this->data;
+		$user = (array)$this->get((int)$id);
+		if ( $secured ) {
+			unset($user['password']);
+		}
+		return $user;
 	}
 
 	/**
+	 * Get user name.
+	 * 
 	 * @access public
-	 * @param int $userId
+	 * @param int $id
+	 * @return array
+	 */
+	public function getName(?int $id) : string
+	{
+		$this->get((int)$id);
+		return (string)$this->name;
+	}
+
+	/**
+	 * Get user role.
+	 * 
+	 * @access public
+	 * @param int $id
 	 * @return int
 	 */
-	public function getRoleId($userId = 0) : int
+	public function getRoleId(?int $id) : int
 	{
-		$this->userId = intval($userId);
-		$this->find();
+		$this->get((int)$id);
 		return (int)$this->roleId;
 	}
 
 	/**
+	 * Update user.
+	 * 
 	 * @access public
-	 * @param int $data
-	 * @return bool
+	 * @param array $data
+	 * @return array
 	 */
-	public function add($data = []) : bool
+	public function updateUser(array $data)
 	{
-		$this->$data = $data;
-		return (bool)$this->create();
-	}
-
-	/**
-	 * @access public
-	 * @param int $data
-	 * @return bool
-	 */
-	public function update($data = []) : bool
-	{
-		$this->$data = $data;
-		return (bool)$this->save();
+		$this->save($data);
 	}
 }

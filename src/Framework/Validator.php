@@ -1,12 +1,11 @@
 <?php
 /**
- * @author     : JIHAD SINNAOUR
+ * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Framework Component
- * @version    : 1.0.2
- * @category   : PHP framework
- * @copyright  : (c) 2017 - 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
- * @link       : https://www.floatphp.com
+ * @version    : 1.1.0
+ * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
+ * @link       : https://floatphp.com
  * @license    : MIT
  *
  * This file if a part of FloatPHP Framework.
@@ -23,6 +22,8 @@ use JsonSchema\Validator as JsonValidator;
 final class Validator
 {
 	/**
+	 * Check global config.
+	 * 
 	 * @access public
 	 * @var object $config
 	 * @return void
@@ -44,6 +45,8 @@ final class Validator
 	}
 
 	/**
+	 * Check module config.
+	 * 
 	 * @access public
 	 * @var object $config
 	 * @return void
@@ -65,6 +68,8 @@ final class Validator
 	}
 
 	/**
+	 * Check route config.
+	 * 
 	 * @access public
 	 * @var object $config
 	 * @return void
@@ -86,12 +91,14 @@ final class Validator
 	}
 
 	/**
+	 * Check database config.
+	 * 
 	 * @access public
 	 * @var array $access
 	 * @return void
 	 * @throws ConfigurationException
 	 */
-	public static function checkDatabaseAccess($access)
+	public static function checkDatabaseConfig($access)
 	{
 		if ( !isset($access['default']) || !isset($access['root']) ) {
 	        throw new ConfigurationException(
@@ -101,6 +108,8 @@ final class Validator
 	}
 
 	/**
+	 * Check whether config is valid using schema.
+	 * 
 	 * @access private
 	 * @var object $config
 	 * @var string $schema

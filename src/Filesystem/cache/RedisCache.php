@@ -1,12 +1,11 @@
 <?php
 /**
- * @author     : JIHAD SINNAOUR
+ * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Filesystem Component
- * @version    : 1.0.2
- * @category   : PHP framework
- * @copyright  : (c) 2017 - 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
- * @link       : https://www.floatphp.com
+ * @version    : 1.1.0
+ * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
+ * @link       : https://floatphp.com
  * @license    : MIT
  *
  * This file if a part of FloatPHP Framework.
@@ -21,7 +20,6 @@ use FloatPHP\Helpers\Filesystem\Logger;
 use FloatPHP\Classes\Filesystem\{
 	Arrayify, Exception as ErrorHandler
 };
-use FloatPHP\Kernel\TraitConfiguration;
 use Phpfastcache\{
 	CacheManager,
 	Drivers\Redis\Config,
@@ -34,6 +32,8 @@ use Phpfastcache\{
  */
 final class RedisCache extends PhpfastcacheAbstractProxy implements CacheInterface
 {
+	use \FloatPHP\Kernel\TraitConfiguration;
+
 	/**
 	 * @access private
 	 * @var object $temp, Temp cache object
@@ -41,8 +41,6 @@ final class RedisCache extends PhpfastcacheAbstractProxy implements CacheInterfa
 	 */
 	private $temp;
 	private $isCached = false;
-
-	use TraitConfiguration;
 	
 	/**
 	 * @param array $config
@@ -54,9 +52,6 @@ final class RedisCache extends PhpfastcacheAbstractProxy implements CacheInterfa
 
 		// Init configuration
 		$this->initConfig();
-
-		// Init logger
-		$logger = new Logger('core', 'system');
 
 		// Init path
 		$config = Arrayify::merge([
@@ -76,11 +71,27 @@ final class RedisCache extends PhpfastcacheAbstractProxy implements CacheInterfa
 			$this->instance = CacheManager::getInstance('Redis', new Config($config));
 
 		} catch (\Phpfastcache\Exceptions\PhpfastcacheDriverConnectException $e) {
+
 			ErrorHandler::clearLastError();
+			$logger = new Logger('core', 'system');
 			$logger->error('Redis cache failed');
 			if ( $this->isDebug() ) {
 				$logger->debug($e->getMessage());
 			}
+
+		} catch (\Phpfastcache\Exceptions\PhpfastcacheDriverCheckException $e) {
+
+			ErrorHandler::clearLastError();
+			$logger = new Logger('core', 'system');
+			$logger->error('Redis cache driver failed');
+			if ( $this->isDebug() ) {
+				$logger->debug($e->getMessage());
+			}
+		}
+
+		// Set backup instance
+		if ( !$this->instance ) {
+			$this->instance = CacheManager::getInstance('Files');
 		}
 
 		// Reset configuration
@@ -94,7 +105,7 @@ final class RedisCache extends PhpfastcacheAbstractProxy implements CacheInterfa
 	 * @param string $key
 	 * @return mixed
 	 */
-	public function get($key)
+	public function get(string $key)
 	{
 		$this->temp = $this->instance->getItem($key);
 		$this->isCached = $this->temp->isHit();
@@ -105,7 +116,6 @@ final class RedisCache extends PhpfastcacheAbstractProxy implements CacheInterfa
 	 * Check cache.
 	 *
 	 * @access public
-	 * @param void
 	 * @return bool
 	 */
 	public function isCached() : bool
@@ -122,14 +132,14 @@ final class RedisCache extends PhpfastcacheAbstractProxy implements CacheInterfa
 	 * @param mixed $ttl
 	 * @return bool
 	 */
-	public function set($value, $tag = null, $ttl = null) : bool
+	public function set($value, ?string $tag = null, ?int $ttl = null) : bool
 	{
 		$this->temp->set($value);
 		if ( $ttl ) {
 			$this->temp->expiresAfter($ttl);
 		}
 		if ( $tag ) {
-			$this->temp->addTag((string)$tag);
+			$this->temp->addTag($tag);
 		}
 		return $this->instance->save($this->temp);
 	}
@@ -138,10 +148,10 @@ final class RedisCache extends PhpfastcacheAbstractProxy implements CacheInterfa
 	 * Delete cache by key.
 	 *
 	 * @access public
-	 * @param mixed $key
+	 * @param string $key
 	 * @return bool
 	 */
-	public function delete($key) : bool
+	public function delete(string $key) : bool
 	{
 		return $this->instance->deleteItem($key);
 	}
@@ -153,7 +163,7 @@ final class RedisCache extends PhpfastcacheAbstractProxy implements CacheInterfa
 	 * @param string $tag
 	 * @return bool
 	 */
-	public function deleteByTag($tag) : bool
+	public function deleteByTag(string $tag) : bool
 	{
 		return $this->instance->deleteItemsByTag($tag);
 	}
@@ -162,7 +172,6 @@ final class RedisCache extends PhpfastcacheAbstractProxy implements CacheInterfa
 	 * Purge cache (all).
 	 *
 	 * @access public
-	 * @param void
 	 * @return bool
 	 */
 	public function purge() : bool

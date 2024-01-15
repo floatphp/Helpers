@@ -1,12 +1,11 @@
 <?php
 /**
- * @author     : JIHAD SINNAOUR
+ * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Filesystem Component
- * @version    : 1.0.2
- * @category   : PHP framework
- * @copyright  : (c) 2017 - 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
- * @link       : https://www.floatphp.com
+ * @version    : 1.1.0
+ * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
+ * @link       : https://floatphp.com
  * @license    : MIT
  *
  * This file if a part of FloatPHP Framework.
@@ -16,28 +15,26 @@ declare(strict_types=1);
 
 namespace FloatPHP\Helpers\Filesystem;
 
-use FloatPHP\Classes\{
-	Filesystem\TypeCheck,
-	Filesystem\Stringify,
-	Filesystem\Arrayify,
-	Http\Request
-};
 use FloatPHP\Helpers\Filesystem\cache\{
 	FileCache,
 	RedisCache,
 	ViewCache
 };
+use FloatPHP\Helpers\Http\Catcher;
 use FloatPHP\Exceptions\Helpers\CacheException;
 
 /**
- * Cache helper class.
+ * Built-in cache factory class.
  */
 class Cache
 {
+	use \FloatPHP\Helpers\Framework\inc\TraitFormattable,
+		\FloatPHP\Helpers\Framework\inc\TraitRequestable;
+
 	/**
 	 * @access private
 	 * @var object $instance, Cache instance
-	 * @var array DRIVERS, Valid drivers
+	 * @var object DRIVERS, Valid drivers
 	 */
 	private $instance;
 	private const DRIVERS = ['Files', 'Redis'];
@@ -52,7 +49,7 @@ class Cache
 	public function __construct(string $driver = 'Files', array $config = [])
 	{
 		// Check driver
-		if ( !Arrayify::inArray($driver, self::DRIVERS) ) {
+		if ( !$this->inArray($driver, self::DRIVERS) ) {
 	        throw new CacheException(
 	            CacheException::invalidCacheDriver($driver)
 	        );
@@ -67,7 +64,7 @@ class Cache
 		}
 
 		// Check instance
-		if ( !TypeCheck::hasInterface($this->instance, 'CacheInterface') ) {
+		if ( !$this->hasItem('interface', $this->instance, 'cache') ) {
 	        throw new CacheException(
 	            CacheException::invalidCacheInstance()
 	        );
@@ -89,13 +86,24 @@ class Cache
 	}
 
 	/**
+	 * Set cache key.
+	 * 
+	 * @access public
+	 * @param mixed $key
+	 * @return void
+	 */
+	public function setKey($key)
+	{
+		$this->get($key);
+	}
+
+	/**
 	 * Check cache.
 	 *
 	 * @access public
-	 * @param void
 	 * @return bool
 	 */
-	public function isCached(): bool
+	public function isCached() : bool
 	{
 		return $this->instance->isCached();
 	}
@@ -109,7 +117,7 @@ class Cache
 	 * @param mixed $ttl
 	 * @return bool
 	 */
-	public function set($value, $tag = null, $ttl = null): bool
+	public function set($value, ?string $tag = null, $ttl = null) : bool
 	{
 		return $this->instance->set($value, $tag, $ttl);
 	}
@@ -121,10 +129,10 @@ class Cache
 	 * @param mixed $key
 	 * @return bool
 	 */
-	public function delete($key = ''): bool
+	public function delete($key) : bool
 	{
 		$status = 0;
-		if ( TypeCheck::isArray($key) ) {
+		if ( $this->isType('array', $key) ) {
 			foreach ($key as $k) {
 				$status += (int)$this->instance->delete(
 					$this->formatKey($k)
@@ -146,10 +154,10 @@ class Cache
 	 * @param mixed $tag
 	 * @return bool
 	 */
-	public function deleteByTag($tag = ''): bool
+	public function deleteByTag($tag) : bool
 	{
 		$status = 0;
-		if ( TypeCheck::isArray($tag) ) {
+		if ( $this->isType('array', $tag) ) {
 			foreach ($tag as $t) {
 				$status += (int)$this->instance->deleteByTag(
 					$this->formatKey($t)
@@ -168,10 +176,9 @@ class Cache
 	 * Purge cache (all).
 	 * 
 	 * @access public
-	 * @param void
 	 * @return bool
 	 */
-	public function purge(): bool
+	public function purge() : bool
 	{
 		return $this->instance->purge();
 	}
@@ -180,7 +187,6 @@ class Cache
 	 * Reset instance.
 	 *
 	 * @access public
-	 * @param void
 	 * @return void
 	 */
 	public function reset()
@@ -192,10 +198,9 @@ class Cache
 	 * Purge view cache.
 	 * 
 	 * @access public
-	 * @param void
 	 * @return bool
 	 */
-	public function purgeView(): bool
+	public function purgeView() : bool
 	{
 		$cache = new ViewCache();
 		return (bool)$cache->purge();
@@ -205,13 +210,50 @@ class Cache
 	 * Purge path cache.
 	 * 
 	 * @access public
-	 * @param void
 	 * @return bool
 	 */
-	public function purgePath(): bool
+	public function purgePath() : bool
 	{
 		$cache = new FileCache();
 		return (bool)$cache->purgePath();
+	}
+
+	/**
+	 * Generate cache key.
+	 * 
+	 * @access public
+	 * @param string $item
+	 * @param bool $request
+	 * @param array $args
+	 * @return string
+	 */
+	public function generateKey($item = '', $request = true, $args = []) : string
+	{
+		$args = ($request !== false) ? $this->getRequest() : $args;
+		$key = !empty($item) ? $item : '--temp';
+		
+		foreach ($args as $name => $value) {
+
+			if ( $this->isType('array', $value) 
+			  || $this->isType('null', $value) 
+			  || $this->isType('empty', $value) ) {
+				continue;
+			}
+
+			if ( $value === 0 ) {
+				$value = '0';
+
+			} elseif ( $this->isType('false', $value) ) {
+				$value = 'false';
+
+			} elseif ( $this->isType('true', $value) ) {
+				$value = 'true';
+			}
+
+			$key .= "-{$name}-{$value}";
+		}
+
+		return $key;
 	}
 
     /**
@@ -221,62 +263,40 @@ class Cache
      * @param array $request
      * @return bool
      */
-    public static function auto($request = []): bool
+    public static function auto(array $request = []) : bool
     {
-        if ( !$request ) {
-            $request = Request::get('cache');
-        }
-
-        $type = $request['type'] ?? 'tag';
-        $id = $request['id'] ?? false;
-
-        $id = Stringify::stripSpace($id);
-        if ( Stringify::contains($id, ',') ) {
-            $id = explode(',', $id);
-        }
+		$catcher = new Catcher($request, 'cache');
+		
+    	$key   = $catcher->key;
+    	$type  = ($catcher->type) ? $catcher->type : 'tag';
+        $count = 0;
 
         foreach (self::DRIVERS as $driver) {
+
         	$cache = new self($driver);
         	if ( $driver == 'Files' ) {
 		        switch ($type) {
-		            // View
 		            case 'view':
-		                return $cache->purgeView();
+		                $count += (int)$cache->purgeView();
 		                break;
-		            // Path
 		            case 'path':
-		                return $cache->purgePath();
+		                $count += (int)$cache->purgePath();
 		                break;
 		        }
         	}
 	        switch ($type) {
-	            // Key
 	            case 'key':
-	                return $cache->delete($id);
+	                $count += (int)$cache->delete($key);
 	                break;
-	            // Tag
 	            case 'tag':
-	                return $cache->deleteByTag($id);
+	                $count += (int)$cache->deleteByTag($key);
 	                break;
-	            // All
 	            case 'all':
-	                return $cache->purge();
+	                $count += (int)$cache->purge();
 	                break;
 	        }
         }
 
-        return false;
+        return (bool)$count;
     }
-
-	/**
-	 * Format key.
-	 * 
-	 * @access private
-	 * @param string $key
-	 * @return string
-	 */
-	private function formatKey($key) : string
-	{
-		return Stringify::formatKey((string)$key);
-	}
 }

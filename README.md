@@ -1,8 +1,9 @@
 # FloatPHP (Helpers)
 
-<img src="https://www.floatphp.com/assets/img/floatphp.png" width="100" alt="Micro PHP framework">
+<img src="https://floatphp.com/assets/img/floatphp.png" width="100" alt="Micro PHP framework">
 
-FloatPHP **Helpers Components**.
+FloatPHP **Helpers Components** including 3th-parties.
+This components re-uses **Classes Components** to simplify implementation.
 
 ## ⚡ Installing:
 

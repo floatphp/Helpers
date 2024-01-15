@@ -1,12 +1,11 @@
 <?php
 /**
- * @author     : JIHAD SINNAOUR
+ * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Framework Component
- * @version    : 1.0.2
- * @category   : PHP framework
- * @copyright  : (c) 2017 - 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
- * @link       : https://www.floatphp.com
+ * @version    : 1.1.0
+ * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
+ * @link       : https://floatphp.com
  * @license    : MIT
  *
  * This file if a part of FloatPHP Framework.
@@ -16,25 +15,20 @@ declare(strict_types=1);
 
 namespace FloatPHP\Helpers\Framework;
 
-use FloatPHP\Kernel\TraitConfiguration;
-use FloatPHP\Classes\Filesystem\Stringify;
-
-final class Configuration
+final class Configurator
 {
-	use TraitConfiguration;
+	use \FloatPHP\Kernel\TraitConfiguration;
 
     /**
-     * @param void
+	 * Init configuration.
      */
     public function __construct()
     {
-        // Init configuration
         $this->initConfig();
     }
 
 	/**
 	 * @access public
-	 * @param void
 	 * @return object
 	 */
 	public function reflect() : object
@@ -47,10 +41,10 @@ final class Configuration
 	 * @param string $path
 	 * @return string
 	 */
-	public function getRoot($path = '') : string
+	public function getRoot(string $path = '') : string
 	{
 		global $appDir;
 		$root = dirname($appDir);
-		return Stringify::formatPath("{$root}/{$path}", true);
+		return $this->formatPath("{$root}/{$path}", true);
 	}
 }

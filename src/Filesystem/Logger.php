@@ -1,12 +1,11 @@
 <?php
 /**
- * @author     : JIHAD SINNAOUR
+ * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Filesystem Component
- * @version    : 1.0.2
- * @category   : PHP framework
- * @copyright  : (c) 2017 - 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
- * @link       : https://www.floatphp.com
+ * @version    : 1.1.0
+ * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
+ * @link       : https://floatphp.com
  * @license    : MIT
  *
  * This file if a part of FloatPHP Framework.
@@ -17,17 +16,20 @@ declare(strict_types=1);
 namespace FloatPHP\Helpers\Filesystem;
 
 use FloatPHP\Kernel\TraitConfiguration;
-use FloatPHP\Classes\Filesystem\{
-    File, TypeCheck, Stringify, Logger as ParentLogger
+use FloatPHP\Classes\Filesystem\Logger as MainLogger;
+use FloatPHP\Helpers\Framework\inc\{
+	TraitFormattable,
+	TraitIO
 };
 
 /**
- * Logger helper class,
- * @see {[date]} : {level} - {content}.
+ * Built-in Logger factory class.
  */
-final class Logger extends ParentLogger
+final class Logger extends MainLogger
 {
     use TraitConfiguration;
+    use TraitFormattable;
+    use TraitIO;
 
     /**
      * @access private
@@ -35,40 +37,27 @@ final class Logger extends ParentLogger
      * @var string $parserRegex
      * @var string $levelRegex
      */
-    private $parserIgnore = ["\n\r","\n","\r"];
+    private $parserIgnore = ["\n\r", "\n", "\r"];
     private $parserRegex = '/\[[0-9]{1,4}-[0-9]{1,4}-[0-9]{1,4}\s[0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}\]/';
     private $levelRegex = '/:\s\[([a-z]{1,})]\s-/';
 
     /**
-     * @param string $path
-     * @param string $filename
-     * @param string $extension
+     * @inheritdoc
+     * @uses initConfig()
+     * @uses resetConfig()
      */
-    public function __construct($path = '', $filename = 'debug', $extension = 'log')
+    public function __construct(?string $path = null, string $file = 'debug', string $ext = 'log')
     {
         // Init configuration
         $this->initConfig();
 
         // Override
         $path = "{$this->getLoggerPath()}/{$path}";
-        $this->setPath(Stringify::formatPath($path,true));
-        $this->setFilename($filename);
-        $this->setExtension($extension);
+        $path = $this->formatPath($path, true);
+        parent::__construct($path, $file, $ext);
 
         // Reset configuration
         $this->resetConfig();
-    }
-
-    /**
-     * Get logger path.
-     * 
-     * @access public
-     * @param void
-     * @return string
-     */
-    public function getPath()
-    {
-        return $this->path;
     }
 
     /**
@@ -111,15 +100,15 @@ final class Logger extends ParentLogger
      * Parse logs.
      * 
      * @access public
-     * @param void
      * @return array
+     * @uses {[date]} : {level} - {content}.
      */
     public function parse() : array
     {
         $wrapper = [];
-        foreach (File::scanDir($this->path) as $file) {
-            if ( ($content = File::r("{$this->path}/{$file}")) ) {
-                $strings = Stringify::split($content, [
+        foreach ($this->scanDir($this->path) as $file) {
+            if ( ($content = $this->readFile("{$this->path}/{$file}")) ) {
+                $strings = $this->splitString($content, [
                     'regex' => $this->parserRegex,
                     'flags' => 1|4
                 ]);
@@ -130,22 +119,22 @@ final class Logger extends ParentLogger
                     if ( $key > 0 ){
                         $start = $strings[$key-1][1] ?? 0;
                     }
-                    $temp = Stringify::replace($this->parserIgnore, '', $temp);
-                    if ( ($level = Stringify::match($this->levelRegex, $temp, -1)) ) {
-                        $temp = Stringify::replace($level[0], '', $temp);
+                    $temp = $this->replaceString($this->parserIgnore, '', $temp);
+                    if ( ($level = $this->matchString($this->levelRegex, $temp, -1)) ) {
+                        $temp = $this->replaceString($level[0], '', $temp);
                         $level = $level[1];
                     }
                     $date = substr($content, $start, $offset);
-                    if ( ($date = Stringify::match($this->parserRegex, $date)) ) {
-                        $date = Stringify::replace(['[', ']'], '', $date);
+                    if ( ($date = $this->matchString($this->parserRegex, $date)) ) {
+                        $date = $this->replaceString(['[', ']'], '', $date);
                     }
 
-                    $level = !TypeCheck::isArray($level) ? trim($level) : 'unknown';
-                    $date = !TypeCheck::isBool($date) ? trim($date) : 'undefined';
+                    $level = !$this->isType('array', $level) ? trim($level) : 'unknown';
+                    $date = !$this->isType('bool', $date) ? trim($date) : 'undefined';
                     $temp = trim($temp);
 
                     $wrapper[] = [
-                        'id'      => $key+1,
+                        'id'      => $key + 1,
                         'file'    => $file,
                         'level'   => $level,
                         'date'    => $date,
