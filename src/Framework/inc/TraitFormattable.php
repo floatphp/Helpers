@@ -180,12 +180,14 @@ trait TraitFormattable
 	}
 
 	/**
+	 * Limit string.
+	 *
 	 * @access protected
 	 * @inheritdoc
 	 */
-	protected function limitString(string $string, int $length = 128, int $offset = 0) : string
+	protected function limitString(string $string, int $limit = 150) : string
 	{
-		return Stringify::limit($string, $length, $offset);
+		return Stringify::limit($string, $limit);
 	}
 
 	/**
@@ -231,6 +233,17 @@ trait TraitFormattable
     protected function parseString(string $string, array &$result = null)
 	{
 		return Stringify::parse($string, $result);
+	}
+	
+	/**
+	 * Get basename with path format.
+	 * 
+	 * @access protected
+	 * @inheritdoc
+	 */
+	protected function basename(string $path, string $suffix = '') : string
+	{
+		return Stringify::basename($path, $suffix);
 	}
 
 	/**

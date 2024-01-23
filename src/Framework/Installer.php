@@ -207,7 +207,7 @@ final class Installer
 		$domain = $this->removeString('www.', $domain);
 
 		// Set file
-		$file = basename($this->getServer('script-filename'));
+		$file = $this->basename($this->getServer('script-filename'));
 		$file = $this->removeString('.php', $file);
 
 		$htaccess = $this->replaceStringArray([
