@@ -1,6 +1,6 @@
 {
   "name": "floatphp/helpers",
-  "version" : "1.1.0",
+  "version" : "1.1.1",
   "type": "library",
   "description": "FloatPHP Helpers Components",
   "keywords": ["floatphp","micro-framework","framework","PSR","ORM","jakiboy"],
@@ -17,10 +17,10 @@
     "php": ">=7.4",
     "phpfastcache/phpfastcache": "^8.1.4",
     "rakibtg/sleekdb": "^2.15",
-    "floatphp/classes": "^1.1.0",
-    "floatphp/interfaces": "^1.1.0",
-    "floatphp/exceptions": "^1.1.0",
-    "floatphp/kernel": "^1.1.0"
+    "floatphp/classes": "^1.1.1",
+    "floatphp/interfaces": "^1.1.1",
+    "floatphp/exceptions": "^1.1.1",
+    "floatphp/kernel": "^1.1.1"
   },
   "autoload": {
     "psr-4" : {
