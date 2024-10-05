@@ -212,7 +212,7 @@ trait TraitFormattable
 	 * @access protected
 	 * @inheritdoc
 	 */
-    protected function buildQuery($args, string $prefix = '', ?string $sep, int $enc = 1) : string
+    protected function buildQuery($args, string $prefix = '', ?string $sep = '&', int $enc = 1) : string
 	{
 		return Stringify::buildQuery($args, $prefix, $sep, $enc);
 	}
