@@ -34,7 +34,7 @@ final class Settings
 
 	/**
 	 * Set settings row group.
-	 * 
+	 *
 	 * @param string $row
 	 */
 	public function __construct($row = self::ROW)
@@ -48,7 +48,7 @@ final class Settings
 
 	/**
 	 * Get settings value.
-	 * 
+	 *
 	 * @access public
 	 * @param string $key
 	 * @param mixed $default
@@ -65,7 +65,7 @@ final class Settings
 
 	/**
 	 * Set settings value.
-	 * 
+	 *
 	 * @access public
 	 * @param mixed $key
 	 * @param mixed $value
@@ -86,7 +86,7 @@ final class Settings
 
 	/**
 	 * Delete settings value.
-	 * 
+	 *
 	 * @access public
 	 * @param string $key
 	 * @return bool
@@ -103,7 +103,7 @@ final class Settings
 
 	/**
 	 * Reset database settings row.
-	 * 
+	 *
 	 * @access public
 	 * @return bool
 	 */
@@ -114,7 +114,7 @@ final class Settings
 
 	/**
 	 * Get settings values from database.
-	 * 
+	 *
 	 * @access private
 	 * @return array
 	 */
@@ -130,7 +130,7 @@ final class Settings
 
 	/**
 	 * Set settings values in database.
-	 * 
+	 *
 	 * @access private
 	 * @param array $settings
 	 * @return bool
