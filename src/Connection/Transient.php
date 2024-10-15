@@ -46,7 +46,7 @@ final class Transient
 	 * @param string $row
 	 * @param string $driver
 	 */
-	public function __construct($row = self::ROW, $driver = self::DRIVER)
+	public function __construct(string $row = self::ROW, string $driver = self::DRIVER)
 	{
 		// Set temp row name
 		$this->row = $row;
@@ -81,7 +81,7 @@ final class Transient
 	 * @param mixed $default
 	 * @return mixed
 	 */
-	public function get($key, $default = null)
+	public function get(string $key, $default = null)
 	{
 		$value = $this->getTemp($key, $default);
 		if ( $this->isType('null', $value) ) {
@@ -100,7 +100,7 @@ final class Transient
 	 * @param int $ttl
 	 * @return bool
 	 */
-	public function set($key, $value = true, $ttl = self::TTL) : bool
+	public function set(string $key, $value = true, int $ttl = self::TTL) : bool
 	{
 		if ( $this->setBaseTemp($key, $value, $ttl) ) {
 			if ( $ttl == 0 ) {
@@ -118,7 +118,7 @@ final class Transient
 	 * @param string $key
 	 * @return bool
 	 */
-	public function delete($key) : bool
+	public function delete(string $key) : bool
 	{
 		$this->deleteTemp($key);
 		return $this->deleteBaseTemp($key);
@@ -131,7 +131,7 @@ final class Transient
 	 * @param string $key
 	 * @return mixed
 	 */
-	public function getTemp($key)
+	public function getTemp(string $key)
 	{
 		if ( !$this->useCache ) {
 			return null;
@@ -148,7 +148,7 @@ final class Transient
 	 * @param int $ttl
 	 * @return bool
 	 */
-	public function setTemp($key, $value = true, $ttl = self::TTL) : bool
+	public function setTemp(string $key, $value = true, int $ttl = self::TTL) : bool
 	{
 		if ( !$this->useCache ) {
 			return false;
@@ -163,7 +163,7 @@ final class Transient
 	 * @param string $key
 	 * @return bool
 	 */
-	public function deleteTemp($key) : bool
+	public function deleteTemp(string $key) : bool
 	{
 		if ( !$this->useCache ) {
 			return false;
@@ -180,7 +180,7 @@ final class Transient
 	 * @param bool $persistent
 	 * @return mixed
 	 */
-	public function getBaseTemp($key, $default = null, $persistent = false)
+	public function getBaseTemp(string $key, $default = null, bool $persistent = false)
 	{
 		$temp = $this->getConfigValue($this->row);
 
@@ -226,7 +226,7 @@ final class Transient
 	 * @param int $ttl
 	 * @return bool
 	 */
-	public function setBaseTemp($key, $value = true, $ttl = self::TTL) : bool
+	public function setBaseTemp(string $key, $value = true, int $ttl = self::TTL) : bool
 	{
 		$temp = $this->getConfigValue($this->row);
 		
@@ -256,7 +256,7 @@ final class Transient
 	 * @param int $ttl
 	 * @return bool
 	 */
-	public function deleteBaseTemp($key) : bool
+	public function deleteBaseTemp(string $key) : bool
 	{
 		if ( empty($temp = $this->getConfigValue($this->row)) ) {
 			return false;
