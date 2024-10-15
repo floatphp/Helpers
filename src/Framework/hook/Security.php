@@ -38,27 +38,29 @@ class Security extends BaseController
 	 * Force strong password.
 	 * 
 	 * @access public
-	 * @return void
+	 * @return object
 	 */
-	public function useStrongPassword()
+	public function useStrongPassword() : self
 	{
 		$this->addFilter('authenticate-strong-password', function(){
 			return true;
 		});
+		return $this;
 	}
 
 	/**
 	 * Force token method.
 	 * 
 	 * @access public
-	 * @return void
+	 * @return object
 	 */
-	public function useTokenOnly()
+	public function useTokenOnly() : self
 	{
 		if ( !Server::getBearerToken() ) {
 			$msg = $this->applyFilter('api-authenticate-method-message', 'Access forbidden');
 			$this->setHttpResponse($msg, [], 'error', 403);
 		}
+		return $this;
 	}
 
 	/**
@@ -66,9 +68,9 @@ class Security extends BaseController
 	 * 
 	 * @access public
 	 * @param int $max
-	 * @return void
+	 * @return object
 	 */
-	public function useLimitedAttempt(int $max = 3)
+	public function useLimitedAttempt(int $max = 3) : self
 	{
 		$this->max = $max;
 
@@ -99,6 +101,8 @@ class Security extends BaseController
 				}
 			}
 		});
+
+		return $this;
 	}
 
 	/**
@@ -109,9 +113,9 @@ class Security extends BaseController
 	 * @param int $seconds
 	 * @param bool $address
 	 * @param bool $method
-	 * @return void
+	 * @return object
 	 */
-	public function useAccessProtection(int $max = 120, int $seconds = 60, bool $address = true, bool $method = true)
+	public function useAccessProtection(int $max = 120, int $seconds = 60, bool $address = true, bool $method = true) : self
 	{
 		$this->max = $max;
 		$this->seconds = $seconds;
@@ -154,5 +158,7 @@ class Security extends BaseController
 				$this->setHttpResponse($msg, [], 'error', 429);
 			}
 		});
+
+		return $this;
 	}
 }
