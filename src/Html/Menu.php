@@ -32,6 +32,7 @@ final class Menu
 	 * @access private
 	 * @var array $menu
 	 * @var array $native
+	 * @var bool $debug
 	 * @var string $lang
 	 * @var int $user
 	 * @var string $itemClass
@@ -43,6 +44,7 @@ final class Menu
 	 */
 	private $menu;
 	private $native;
+	private $debug;
 	private $lang;
 	private $user;
 	private $itemClass;
@@ -61,12 +63,12 @@ final class Menu
 	 * @var string SUB
 	 * @var string ACTIVE
 	 */
-	private const ITEM = 'nav-item';
-	private const LINK = 'nav-link';
+	private const ITEM    = 'nav-item';
+	private const LINK    = 'nav-link';
 	private const LINKSUB = 'with-sub';
-	private const SUB = 'nav-sub';
-	private const ACTIVE = 'active';
-	private const SHOW = 'show';
+	private const SUB     = 'nav-sub';
+	private const ACTIVE  = 'active';
+	private const SHOW    = 'show';
 
 	/**
 	 * @param int $user
@@ -77,6 +79,7 @@ final class Menu
 		// Init configuration
 		$this->initConfig();
 
+		$this->debug = $this->isDebug();
 		$this->user = $user;
 		$this->lang = $lang;
 		$this->native = $this->menu = $this->getMenu();
@@ -117,7 +120,7 @@ final class Menu
 	 */
 	public function prepare() : Menu
 	{
-		if ( $this->useCache ) {
+		if ( $this->useCache && !$this->debug ) {
 
 			$cache = new Cache();
 			$key = $cache->getKey('menu', [
@@ -128,7 +131,7 @@ final class Menu
 			$data = $cache->get($key, $status);
 			if ( !$status ) {
 				$data = $this->build($this->menu);
-				 $cache->set($key, $data, 3600, 'menu');
+				$cache->set($key, $data, 3600, 'menu');
 			}
 			$this->menu = $data;
 
@@ -207,18 +210,16 @@ final class Menu
 				continue;
 			}
 
-			if ( isset($item['type']) && $item['type'] == 'menu' ) {
-
-				// Translate
-				if ( isset($menu[$key]['name']) ) {
-					$menu[$key]['name'] = $this->translator->translate($item['name']);
-				}
-
-				// Set access
-				if ( !$this->hasAccess($item) ) {
-					unset($menu[$key]);
-				}
+			// Translate
+			if ( isset($menu[$key]['name']) ) {
+				$menu[$key]['name'] = $this->translator->translate($item['name']);
 			}
+
+			// Set access
+			if ( !$this->hasAccess($item) ) {
+				unset($menu[$key]);
+			}
+
 		}
 
 		return $this->filterArray($menu);
@@ -285,6 +286,9 @@ final class Menu
 
 						$this->menu[$key]['class'] = $itemClass;
 						$this->menu[$key]['sub'][$n]['class'] = $subClass;
+
+						// Translate sub
+						$this->menu[$key]['sub'][$n]['name'] = $this->translator->translate($i['name']);
 
 						// Set sub access
 						if ( !$this->hasAccess($i) ) {
