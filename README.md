@@ -1,6 +1,6 @@
 # FloatPHP (Helpers)
 
-<img src="https://floatphp.com/assets/img/floatphp.png" width="100" alt="Micro PHP framework">
+<img src="https://avatars.githubusercontent.com/u/33136510" width="100" alt="Micro PHP framework">
 
 FloatPHP **Helpers Components** including 3th-parties.
 This components re-uses **Classes Components** to simplify implementation.
