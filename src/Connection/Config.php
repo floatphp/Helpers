@@ -36,8 +36,8 @@ class Config extends Orm
 	 * @var string KEY
 	 * @var string VALUE
 	 */
-	private const ID = 'configId';
-	private const KEY = 'name';
+	private const ID    = 'configId';
+	private const KEY   = 'name';
 	private const VALUE = 'options';
 	private const TABLE = 'config';
 
