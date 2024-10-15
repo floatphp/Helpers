@@ -91,6 +91,7 @@ final class Table extends Orm
 	 * @access public
 	 * @param bool $resetId
 	 * @return bool
+	 * @todo Add cache reset
 	 */
 	public function restore($resetId = false) : bool
 	{
@@ -125,7 +126,7 @@ final class Table extends Orm
 			$count += (int)$this->create($item);
 		}
 		if ( $count ) {
-			Cache::auto(['key' => $this->table]);
+			// Cache::auto(['key' => $this->table]);
 		}
 
 		return (bool)$count;
@@ -136,6 +137,7 @@ final class Table extends Orm
 	 * 
 	 * @access public
 	 * @return bool
+	 * @todo Add cache reset
 	 */
 	public function reset() : bool
 	{
@@ -150,7 +152,7 @@ final class Table extends Orm
 		// Reset table
 		if ( $this->clear() ) {
 			$this->resetId();
-			Cache::auto(['key' => $this->table]);
+			// Cache::auto(['key' => $this->table]);
 			return true;
 		}
 

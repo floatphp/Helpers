@@ -17,26 +17,41 @@ namespace FloatPHP\Helpers\Framework\inc;
 
 use FloatPHP\Helpers\Filesystem\Logger;
 
+/**
+ * Define logging functions.
+ */
 trait TraitLoggable
 {
     /**
-     * @access protected
-     * @var object $logger, Logger object
-     */
-    protected $logger;
-
-    /**
-     * Get logger object.
+     * Log debug message.
      *
      * @access protected
-     * @param string $path
-     * @param string $file
-     * @param string $ext
-     * @return object
+     * @inheritdoc
      */
-    protected function getLoggerObject(string $path = '/core', string $file = 'debug', string $ext = 'log') : Logger
+    protected function debug($message, bool $isArray = false) : bool
     {
-		$this->logger = new Logger($path, $file, $ext);
-        return $this->logger;
+        return (new Logger())->debug($message, $isArray);
+    }
+
+    /**
+     * Log error message.
+     *
+     * @access protected
+     * @inheritdoc
+     */
+    protected function error(string $message) : bool
+    {
+        return (new Logger())->error($message);
+    }
+
+    /**
+     * Log warning message.
+     *
+     * @access protected
+     * @inheritdoc
+     */
+    protected function warning(string $message) : bool
+    {
+        return (new Logger())->warning($message);
     }
 }

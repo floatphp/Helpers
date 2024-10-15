@@ -15,6 +15,8 @@ declare(strict_types=1);
 
 namespace FloatPHP\Helpers\Html;
 
+use FloatPHP\Helpers\Filesystem\Cache;
+
 /**
  * Menu factory class.
  */
@@ -116,17 +118,19 @@ final class Menu
 	public function prepare() : Menu
 	{
 		if ( $this->useCache ) {
-			$this->getCacheObject();
-			$key = $this->cache->generateKey('menu', false, [
+
+			$cache = new Cache();
+			$key = $cache->getKey('menu', [
 				'user' => $this->user,
 				'lang' => $this->lang
 			]);
-			$menu = $this->cache->get($key);
-			if ( !$this->cache->isCached() ) {
-				$menu = $this->build($this->menu);
-				$this->cache->set($menu, 'menu', 3600);
+
+			$data = $cache->get($key, $status);
+			if ( !$status ) {
+				$data = $this->build($this->menu);
+				 $cache->set($key, $data, 3600, 'menu');
 			}
-			$this->menu = $menu;
+			$this->menu = $data;
 
 		} else {
 			$this->menu = $this->build($this->menu);

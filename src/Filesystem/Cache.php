@@ -15,223 +15,115 @@ declare(strict_types=1);
 
 namespace FloatPHP\Helpers\Filesystem;
 
-use FloatPHP\Helpers\Filesystem\cache\{
-	FileCache,
-	RedisCache,
-	ViewCache
-};
-use FloatPHP\Helpers\Http\Catcher;
 use FloatPHP\Exceptions\Helpers\CacheException;
+use FloatPHP\Helpers\Filesystem\cache\{
+	FileCache, RedisCache
+};
 
 /**
- * Built-in cache factory class.
+ * Built-in cache factory.
  */
 class Cache
 {
-	use \FloatPHP\Helpers\Framework\inc\TraitFormattable,
-		\FloatPHP\Helpers\Framework\inc\TraitRequestable;
+	use \FloatPHP\Helpers\Framework\inc\TraitFormattable;
 
 	/**
 	 * @access private
 	 * @var object $instance, Cache instance
-	 * @var object DRIVERS, Valid drivers
+	 * @var object DRIVERS, Cache drivers
 	 */
-	private $instance;
-	private const DRIVERS = ['Files', 'Redis'];
+	private static $instance;
+	private const DRIVERS = ['File', 'Redis'];
 
 	/**
 	 * Instance cache driver.
-	 * 
+	 *
 	 * @access public
 	 * @param string $driver
 	 * @param array $config
 	 */
-	public function __construct(string $driver = 'Files', array $config = [])
+	public function __construct(string $driver = 'File', array $config = [])
 	{
-		// Check driver
-		if ( !$this->inArray($driver, self::DRIVERS) ) {
-	        throw new CacheException(
-	            CacheException::invalidCacheDriver($driver)
-	        );
-		}
+		if ( !self::$instance ) {
 
-		// Instance driver
-		if ( $driver == 'Redis' ) {
-			$this->instance = new RedisCache($config);
-
-		} else {
-			$this->instance = new FileCache($config);
-		}
-
-		// Check instance
-		if ( !$this->hasItem('interface', $this->instance, 'cache') ) {
-	        throw new CacheException(
-	            CacheException::invalidCacheInstance()
-	        );
-		}
-	}
-
-	/**
-	 * Get cache.
-	 * 
-	 * @access public
-	 * @param mixed $key
-	 * @return mixed
-	 */
-	public function get($key)
-	{
-		return $this->instance->get(
-			$this->formatKey($key)
-		);
-	}
-
-	/**
-	 * Set cache key.
-	 * 
-	 * @access public
-	 * @param mixed $key
-	 * @return void
-	 */
-	public function setKey($key)
-	{
-		$this->get($key);
-	}
-
-	/**
-	 * Check cache.
-	 *
-	 * @access public
-	 * @return bool
-	 */
-	public function isCached() : bool
-	{
-		return $this->instance->isCached();
-	}
-
-	/**
-	 * Set cache.
-	 * 
-	 * @access public
-	 * @param mixed $value
-	 * @param string $tag
-	 * @param mixed $ttl
-	 * @return bool
-	 */
-	public function set($value, ?string $tag = null, $ttl = null) : bool
-	{
-		return $this->instance->set($value, $tag, $ttl);
-	}
-
-	/**
-	 * Delete cache by key.
-	 * 
-	 * @access public
-	 * @param mixed $key
-	 * @return bool
-	 */
-	public function delete($key) : bool
-	{
-		$status = 0;
-		if ( $this->isType('array', $key) ) {
-			foreach ($key as $k) {
-				$status += (int)$this->instance->delete(
-					$this->formatKey($k)
+			if ( !$this->inArray($driver, self::DRIVERS) ) {
+				throw new CacheException(
+					CacheException::invalidCacheDriver($driver)
 				);
 			}
 
-		} else {
-			$status += (int)$this->instance->delete(
-				$this->formatKey($key)
-			);
-		}
-		return (bool)$status;
-	}
+			if ( $driver == 'Redis' ) {
+				self::$instance = new RedisCache($config);
 
-	/**
-	 * Delete cache by tag.
-	 * 
-	 * @access public
-	 * @param mixed $tag
-	 * @return bool
-	 */
-	public function deleteByTag($tag) : bool
-	{
-		$status = 0;
-		if ( $this->isType('array', $tag) ) {
-			foreach ($tag as $t) {
-				$status += (int)$this->instance->deleteByTag(
-					$this->formatKey($t)
-				);
+			} else {
+				self::$instance = new FileCache($config);
 			}
 
-		} else {
-			$status += (int)$this->instance->deleteByTag(
-				$this->formatKey($tag)
-			);
+			if ( !$this->hasItem('interface', self::$instance, 'Cache') ) {
+				throw new CacheException(
+					CacheException::invalidCacheInstance()
+				);
+			}
+			
 		}
-		return (bool)$status;
 	}
 
 	/**
-	 * Purge cache (all).
-	 * 
-	 * @access public
-	 * @return bool
+	 * @inheritdoc
+	 */
+	public function get(string $key, ?bool &$status = null)
+	{
+		$key = $this->slugify($key);
+		return self::$instance->get($key, $status);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function has(string $key) : bool
+	{
+		$key = $this->slugify($key);
+		return self::$instance->has($key);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function set(string $key, $value, ?int $ttl = null, ?string $group = null) : bool
+	{
+		$key = $this->slugify($key);
+		return self::$instance->set($key, $value, $ttl, $group);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function delete(string $key) : bool
+	{
+		$key = $this->slugify($key);
+		return self::$instance->delete($key);
+	}
+
+	/**
+	 * @inheritdoc
 	 */
 	public function purge() : bool
 	{
-		return $this->instance->purge();
+		return self::$instance->purge();
 	}
 
 	/**
-	 * Reset instance.
+	 * Get cache key.
 	 *
 	 * @access public
-	 * @return void
-	 */
-	public function reset()
-	{
-		$this->instance->reset();
-	}
-
-	/**
-	 * Purge view cache.
-	 * 
-	 * @access public
-	 * @return bool
-	 */
-	public function purgeView() : bool
-	{
-		$cache = new ViewCache();
-		return (bool)$cache->purge();
-	}
-
-	/**
-	 * Purge path cache.
-	 * 
-	 * @access public
-	 * @return bool
-	 */
-	public function purgePath() : bool
-	{
-		$cache = new FileCache();
-		return (bool)$cache->purgePath();
-	}
-
-	/**
-	 * Generate cache key.
-	 * 
-	 * @access public
 	 * @param string $item
-	 * @param bool $request
 	 * @param array $args
 	 * @return string
 	 */
-	public function generateKey($item = '', $request = true, $args = []) : string
+	public function getKey(string $item = '--temp', array $args = []) : string
 	{
-		$args = ($request !== false) ? $this->getRequest() : $args;
-		$key = !empty($item) ? $item : '--temp';
-		
+		$key = $item;
+
 		foreach ($args as $name => $value) {
 
 			if ( $this->isType('array', $value) 
@@ -253,50 +145,6 @@ class Cache
 			$key .= "-{$name}-{$value}";
 		}
 
-		return $key;
+		return $this->slugify($key);
 	}
-
-    /**
-     * Purge cache by request.
-     * 
-     * @access public
-     * @param array $request
-     * @return bool
-     */
-    public static function auto(array $request = []) : bool
-    {
-		$catcher = new Catcher($request, 'cache');
-		
-    	$key   = $catcher->key;
-    	$type  = ($catcher->type) ? $catcher->type : 'tag';
-        $count = 0;
-
-        foreach (self::DRIVERS as $driver) {
-
-        	$cache = new self($driver);
-        	if ( $driver == 'Files' ) {
-		        switch ($type) {
-		            case 'view':
-		                $count += (int)$cache->purgeView();
-		                break;
-		            case 'path':
-		                $count += (int)$cache->purgePath();
-		                break;
-		        }
-        	}
-	        switch ($type) {
-	            case 'key':
-	                $count += (int)$cache->delete($key);
-	                break;
-	            case 'tag':
-	                $count += (int)$cache->deleteByTag($key);
-	                break;
-	            case 'all':
-	                $count += (int)$cache->purge();
-	                break;
-	        }
-        }
-
-        return (bool)$count;
-    }
 }

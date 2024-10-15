@@ -36,7 +36,7 @@ final class CacheTest extends TestCase
             );
         }
 
-        $cache = Cache::instance('Files');
+        $cache = Cache::instance('File');
         $object = 'FloatPHP\Helpers\Filesystem\cache\FileCache';
         $this->assertTrue(
             TypeCheck::isObject($cache, $object)
@@ -59,7 +59,7 @@ final class CacheTest extends TestCase
             );
         }
 
-        $cache = Cache::i('Files');
+        $cache = Cache::i('File');
         $object = 'FloatPHP\Helpers\Filesystem\cache\FileCache';
         $this->assertTrue(
             TypeCheck::isObject($cache, $object)
@@ -95,10 +95,10 @@ final class CacheTest extends TestCase
     public function testIsCached()
     {
         $cache = new Cache();
-        $cache->get('test-2');
-        $this->assertFalse($cache->isCached());
-        $cache->set(123 'tag-2');
-        $this->assertTrue($cache->isCached());
+        $cache->get('test-2', $status);
+        $this->assertFalse($status);
+        $cache->set(123, 'tag-2');
+        $this->assertTrue($status);
     }
 
     public function testSet()

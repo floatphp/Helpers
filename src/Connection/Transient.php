@@ -15,6 +15,8 @@ declare(strict_types=1);
 
 namespace FloatPHP\Helpers\Connection;
 
+use FloatPHP\Helpers\Filesystem\Cache;
+
 /**
  * Built-in Transient,
  * @uses Inspired by WordPress kernel https://make.wordpress.org
@@ -29,13 +31,15 @@ final class Transient
 	/**
 	 * @access private
 	 * @var string $row, Temp row name
+	 * @var string $cache, Cache object
 	 * @var string ROW
 	 * @var string DRIVER
 	 * @var string TTL
 	 */
 	private $row;
+	private $cache;
 	private const ROW = '--temp';
-	private const DRIVER = 'Files';
+	private const DRIVER = 'File';
 	private const TTL = 300;
 
 	/**
@@ -52,7 +56,7 @@ final class Transient
 
 		// Init cache
 		if ( $this->useCache ) {
-			$this->getCacheObject($driver);
+			$this->cache = new Cache($driver);
 		}
 	}
 
@@ -149,8 +153,7 @@ final class Transient
 		if ( !$this->useCache ) {
 			return false;
 		}
-		$this->cache->setKey($key);
-		return $this->cache->set($value, $this->row, $ttl);
+		return $this->cache->set($key, $value, $ttl, $this->row);
 	}
 
 	/**
@@ -165,7 +168,6 @@ final class Transient
 		if ( !$this->useCache ) {
 			return false;
 		}
-		$this->cache->setKey($key);
 		return $this->cache->delete($key);
 	}
 

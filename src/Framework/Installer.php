@@ -33,9 +33,10 @@ final class Installer
 	 * Setup application.
 	 *
 	 * @access public
+	 * @param bool $db
 	 * @return void
 	 */
-	public function setup()
+	public function setup(bool $db = true)
 	{
 		// Setup config
 		if ( !$this->hasFile($this->getConfigFile()) ) {
@@ -43,10 +44,12 @@ final class Installer
 		}
 
 		// Setup database
-		if ( $this->getDatabaseFile() && $this->getMigratePath() ) {
-			$this->setTables();
-			$this->migrate();
-			$this->importRoles();
+		if ( $db ) {
+			if ( $this->getDatabaseFile() && $this->getMigratePath() ) {
+				$this->setTables();
+				$this->migrate();
+				$this->importRoles();
+			}
 		}
 
 		// Setup rewrite
@@ -95,17 +98,18 @@ final class Installer
 	}
 
 	/**
-	 * Parse application config.
+	 * Default app config.
 	 *
 	 * @access public
 	 * @param array $config
 	 * @return array
 	 */
-	public function parse(array $config = []) : array
+	public function default(array $config = []) : array
 	{
 		return $this->mergeArray([
             '--enable-maintenance' => false,
             '--disable-setup'      => false,
+            '--disable-database'   => false,
             '--disable-powered-by' => false,
             '--disable-session'    => false,
             '--default-lang'       => 'en',

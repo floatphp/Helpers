@@ -11,9 +11,10 @@
  * This file if a part of FloatPHP Framework.
  */
 
+declare(strict_types=1);
+
 namespace FloatPHP\Helpers\Filesystem;
 
-use FloatPHP\Classes\Filesystem\Exception as ErrorHandler;
 use SleekDB\Store;
 
 /**
@@ -22,83 +23,89 @@ use SleekDB\Store;
  */
 final class Storage
 {
-	use \FloatPHP\Kernel\TraitConfiguration;
-	
+	use \FloatPHP\Kernel\TraitConfiguration,
+		\FloatPHP\Helpers\Framework\inc\TraitThrowable,
+		\FloatPHP\Helpers\Framework\inc\TraitLoggable;
+
     /**
      * @access private
+	 * @var bool $initialized
      * @var object $instance, Storage instance
      */
+	private static $initialized = false;
     private $instance;
 
 	/**
 	 * Init storage.
-	 * 
-	 * @param string $table
-	 * @param string $key
-	 * @param array $config
-	 * @param string $dir
-	 * @uses initConfig()
-	 * @uses resetConfig()
+	 *
+	 * @inheritdoc
 	 */
-	public function __construct(string $table, ?string $key = null, array $config = [], string $dir = 'db')
-	{
-		// Init configuration
-		$this->initConfig();
+    public function __construct(array $config = [])
+    {
+		if ( !static::$initialized ) {
 
-		// Init directory
-		$dir = $this->getAdminUploadPath($dir);
-		if ( !$this->isDir($dir) ) {
-			$this->addDir($dir);
-		}
+			$this->initConfig();
 
-		// Init config
-		if ( !$key ) $key = "{$table}Id";
-		$config = $this->mergeArray([
-			'timeout'            => false,
-			'primary_key'        => $key,
-			'folder_permissions' => 777
-		], $config);
+			$config = $this->mergeArray([
+				'dir'   => 'db',
+				'table' => 'sys',
+				'key'   => null
+			], $config);
 
-		// Init instance
-		try {
-			$this->instance = new Store($table, $dir, $config);
+			try {
 
-		} catch (\SleekDB\Exceptions\IOException $e) {
+				$dir = $this->getAdminUploadPath($config['dir']);
+				if ( !$this->isDir($dir) ) {
+					$this->addDir($dir);
+				}
 
-			ErrorHandler::clearLastError();
-			$logger = new Logger('core', 'system');
-			$logger->error('File cache failed');
-			if ( $this->isDebug() ) {
-				$logger->debug($e->getMessage());
-			}
-		}
+				$table = $config['table'];
+				$key   = $config['key'] ?: "{$table}Id";
 
-        // Reset configuration
-        $this->resetConfig();
-	}
+				$this->instance = new Store($table, $dir, [
+					'timeout'            => false,
+					'primary_key'        => $key,
+					'folder_permissions' => 755
+				]);
 	
+			} catch (\SleekDB\Exceptions\IOException $e) {
+
+				$this->clearLastError();
+
+				if ( $this->isDebug() ) {
+					$this->error('Storage failed');
+					$this->debug($e->getMessage());
+				}
+
+			}
+
+        	$this->resetConfig();
+
+		}
+    }
+
     /**
-     * Create row.
+     * Insert row.
      *
      * @access public
-     * @param array $where
+     * @param array $data
      * @return array
      */
-    public function create(array $data) : array
+    public function insert(array $data) : array
 	{
-		return $this->instance->insert($data);
+		return $this->getInstance()->insert($data);
 	}
 
     /**
-     * Read row.
+     * Fetch row.
      *
      * @access public
      * @param array $where
      * @return array
      */
-    public function read(array $where) : array
+    public function fetch(array $where) : array
 	{
-		$query = $this->instance->createQueryBuilder();
+		$query = $this->getInstance()->createQueryBuilder();
 		$query->where($where)->limit(1);
 		return $query->getQuery()->fetch();
 	}
@@ -108,12 +115,12 @@ final class Storage
      *
      * @access public
      * @param int $id
-     * @param array $where
+     * @param array $data
      * @return bool
      */
     public function update(int $id, array $data) : bool
 	{
-		return (bool)$this->instance->updateById($id, $data);
+		return (bool)$this->getInstance()->updateById($id, $data);
 	}
 
     /**
@@ -125,7 +132,7 @@ final class Storage
      */
     public function delete(int $id) : bool
 	{
-		return $this->instance->deleteById($id);
+		return $this->getInstance()->deleteById($id);
 	}
 
 	/**
@@ -137,7 +144,7 @@ final class Storage
 	 */
 	public function deleteAny(array $where) : int
 	{
-		return (int)$this->instance->deleteBy($where);
+		return (int)$this->getInstance()->deleteBy($where);
 	}
 
 	/**
@@ -151,7 +158,7 @@ final class Storage
 	 */
 	public function all(?array $order = null, ?int $limit = null, ?int $offset = null) : array
 	{
-		return $this->instance->findAll($order, $limit, $offset);
+		return $this->getInstance()->findAll($order, $limit, $offset);
 	}
 
 	/**
@@ -166,7 +173,7 @@ final class Storage
 	 */
 	public function search(array $where, ?array $order = null, ?int $limit = null, ?int $offset = null) : array
 	{
-		return $this->instance->findBy($where, $order, $limit, $offset);
+		return $this->getInstance()->findBy($where, $order, $limit, $offset);
 	}
 
 	/**
@@ -178,7 +185,7 @@ final class Storage
 	 */
 	public function searchOne(array $where) : array
 	{
-		$row = $this->instance->findOneBy($where);
+		$row = $this->getInstance()->findOneBy($where);
 		return ($row) ? $row : [];
 	}
 
@@ -191,7 +198,7 @@ final class Storage
      */
     public function exists(array $where) : bool
 	{
-		$query = $this->instance->createQueryBuilder();
+		$query = $this->getInstance()->createQueryBuilder();
 		return $query->where($where)->getQuery()->exists();
 	}
 
@@ -203,7 +210,7 @@ final class Storage
 	 */
 	public function count() : int
 	{
-		return $this->instance->count();
+		return $this->getInstance()->count();
 	}
 
 	/**

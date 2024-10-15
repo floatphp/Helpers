@@ -15,8 +15,9 @@ declare(strict_types=1);
 
 namespace FloatPHP\Helpers\Connection;
 
-use FloatPHP\Kernel\Orm;
+use FloatPHP\Helpers\Filesystem\Cache;
 use FloatPHP\Helpers\Http\Catcher;
+use FloatPHP\Kernel\Orm;
 
 /**
  * Built-in DataTable class for server-side rendering.
@@ -284,10 +285,9 @@ class DataTable extends Orm
 
 		// Log query
 		if ( $this->isDebug() ) {
-			$this->getLoggerObject();
 			$this->logger->debug($sql);
 		}
-		
+
 		return $sql;
 	}
 
@@ -370,8 +370,10 @@ class DataTable extends Orm
 		$this->setSearchCount();
 
 		if ( $this->useCache ) {
-			$this->getCacheObject();
-			$key = $this->cache->generateKey($this->table, false, [
+
+			$cache = new Cache();
+
+			$key = $cache->getKey($this->table, [
 				'start'    => $this->getStart(),
 				'length'   => $this->getLength(),
 				'orderby'  => $this->getOrderBy(),
@@ -380,12 +382,13 @@ class DataTable extends Orm
 				'total'    => $this->total,
 				'filtered' => $this->filtered
 			]);
-			$data = $this->cache->get($key);
-			if ( !$this->cache->isCached() ) {
+
+			$data = $cache->get($key, $status);
+			if ( !$status ) {
 				$data = $this->prepare();
 				// Cache on success
 				if ( $data ) {
-					$this->cache->set($data, $this->table, 3600);
+					$cache->set($key, $data, 3600, $this->table);
 				}
 			}
 			return $data;

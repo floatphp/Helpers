@@ -43,7 +43,7 @@ class Config extends Orm
 
 	/**
 	 * Init database.
-	 * 
+	 *
 	 * @param string $key
 	 * @param string $value
 	 * @param string $id
@@ -66,7 +66,7 @@ class Config extends Orm
 
 	/**
 	 * Get database config value by key.
-	 * 
+	 *
 	 * @access public
 	 * @param string $key
 	 * @return string
@@ -81,7 +81,7 @@ class Config extends Orm
 
 	/**
 	 * Set database config value.
-	 * 
+	 *
 	 * @access public
 	 * @param string $key
 	 * @param mixed $value
@@ -103,7 +103,7 @@ class Config extends Orm
 
 	/**
 	 * Update database config value.
-	 * 
+	 *
 	 * @access public
 	 * @param string $key
 	 * @param mixed $value
@@ -122,7 +122,7 @@ class Config extends Orm
 
 	/**
 	 * Delete database config by key.
-	 * 
+	 *
 	 * @access public
 	 * @param string $key
 	 * @return bool
@@ -137,7 +137,7 @@ class Config extends Orm
 
 	/**
 	 * Check database config exists by key.
-	 * 
+	 *
 	 * @access public
 	 * @param string $key
 	 * @return bool
@@ -152,7 +152,7 @@ class Config extends Orm
 
 	/**
 	 * Set config Id.
-	 * 
+	 *
 	 * @access public
 	 * @param string $key
 	 * @return int
