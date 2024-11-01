@@ -4,143 +4,197 @@
   "properties": {
     "path": {
       "type": "object",
-      "required": ["base","modules","view","logs","assets","migrate","cache","upload","translation","db","routes"],
-      "properties":{
-        "base":{
+      "required": [
+        "base",
+        "modules",
+        "view",
+        "logs",
+        "assets",
+        "migrate",
+        "cache",
+        "upload",
+        "translation",
+        "db",
+        "routes"
+      ],
+      "properties": {
+        "base": {
           "type": "string"
         },
-        "modules":{
+        "modules": {
           "type": "string"
         },
-        "view":{
-          "type": ["string","array"]
+        "view": {
+          "type": [
+            "string",
+            "array"
+          ]
         },
-        "logs":{
+        "logs": {
           "type": "string"
         },
-        "assets":{
+        "assets": {
           "type": "string"
         },
-        "migrate":{
-          "type": ["string","boolean"]
+        "migrate": {
+          "type": [
+            "string",
+            "boolean"
+          ]
         },
-        "cache":{
-          "type": ["string","boolean"]
+        "cache": {
+          "type": [
+            "string",
+            "boolean"
+          ]
         },
-        "upload":{
+        "upload": {
           "type": "object",
-          "required": ["admin","front"],
-          "properties":{
-            "admin":{
+          "required": [
+            "admin",
+            "front"
+          ],
+          "properties": {
+            "admin": {
               "type": "string"
             },
-            "front":{
+            "front": {
               "type": "string"
             }
           }
         },
-        "translation":{
+        "translation": {
           "type": "string"
         },
-        "db":{
+        "db": {
           "type": "string"
         },
-        "routes":{
+        "routes": {
           "type": "string"
         }
       }
     },
     "url": {
       "type": "object",
-      "required": ["admin","login","verify","api"],
-      "properties":{
-        "admin":{
+      "required": [
+        "admin",
+        "login",
+        "verify",
+        "api"
+      ],
+      "properties": {
+        "admin": {
           "type": "string"
         },
-        "login":{
+        "login": {
           "type": "string"
         },
-        "verify":{
+        "verify": {
           "type": "string"
         },
-        "api":{
+        "api": {
           "type": "string"
         }
       }
     },
     "namespace": {
       "type": "object",
-      "required": ["controller","module"],
-      "properties":{
-        "controller":{
+      "required": [
+        "controller",
+        "module"
+      ],
+      "properties": {
+        "controller": {
           "type": "string"
         },
-        "module":{
+        "module": {
           "type": "string"
         }
       }
     },
     "api": {
       "type": "object",
-      "required": ["username","password","secret"],
-      "properties":{
-        "username":{
+      "required": [
+        "username",
+        "password",
+        "secret"
+      ],
+      "properties": {
+        "username": {
           "type": "string"
         },
-        "password":{
+        "password": {
           "type": "string"
         },
-        "secret":{
+        "secret": {
           "type": "string"
         }
       }
     },
     "options": {
       "type": "object",
-      "required": ["view","debug","timeout","ttl"],
-      "properties":{
-        "view":{
+      "required": [
+        "view",
+        "debug",
+        "timeout",
+        "ttl"
+      ],
+      "properties": {
+        "view": {
           "type": "object",
-          "required": ["extension"],
-          "properties":{
-            "extension":"string"
+          "required": [
+            "extension"
+          ],
+          "properties": {
+            "extension": "string"
           }
         },
-        "timeout":{
+        "timeout": {
           "type": "integer"
         },
-        "ttl":{
+        "ttl": {
           "type": "integer"
         },
-        "debug":{
+        "debug": {
           "type": "boolean"
         }
       }
     },
     "access": {
       "type": "object",
-      "required": ["permissions","allowed","denied","sessionId","secret","expire"],
-      "properties":{
-        "permissions":{
+      "required": [
+        "permissions",
+        "allowed",
+        "denied",
+        "sessionId",
+        "secret",
+        "expire"
+      ],
+      "properties": {
+        "permissions": {
           "type": "boolean"
         },
-        "allowed":{
+        "allowed": {
           "type": "object",
-          "required": ["ip"],
-          "properties":{
-            "ip":"array"
+          "required": [
+            "ip"
+          ],
+          "properties": {
+            "ip": "array"
           }
         },
-        "denied":{
+        "denied": {
           "type": "object",
-          "required": ["ip"],
-          "properties":{
-            "ip":"array"
+          "required": [
+            "ip"
+          ],
+          "properties": {
+            "ip": "array"
           }
         },
-        "sessionId":"string",
-        "secret":"string",
-        "expire":"string"
+        "sessionId": "string",
+        "secret": "string",
+        "expire": "string"
       }
     },
     "vars": {
@@ -148,12 +202,15 @@
     },
     "strings": {
       "type": "object",
-      "required": ["admin","front"],
-      "properties":{
-        "admin":{
+      "required": [
+        "admin",
+        "front"
+      ],
+      "properties": {
+        "admin": {
           "type": "array"
         },
-        "front":{
+        "front": {
           "type": "array"
         }
       }
