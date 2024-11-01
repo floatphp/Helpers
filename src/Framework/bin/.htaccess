@@ -11,6 +11,9 @@
 	RewriteRule . /__BASE__/__FILE__.php [L]
 </IfModule>
 
+## Folder protection
+Options -Indexes
+
 ## Bandwidth protection
 <IfModule mod_rewrite.c>
 	# RewriteBase /
@@ -32,10 +35,10 @@
 
 ## WebP Images
 <IfModule mod_rewrite.c>
-	RewriteEngine On
-	RewriteCond %{HTTP_ACCEPT} image/webp
-	RewriteCond %{DOCUMENT_ROOT}/$1.webp -f
-	RewriteRule (.+)\.(jpe?g|png)$ $1.webp [T=image/webp,E=accept:1]
+	# RewriteEngine On
+	# RewriteCond %{HTTP_ACCEPT} image/webp
+	# RewriteCond %{DOCUMENT_ROOT}/$1.webp -f
+	# RewriteRule (.+)\.(jpe?g|png)$ $1.webp [T=image/webp,E=accept:1]
 </IfModule>
 
 ## UTF-8 encoding
@@ -143,7 +146,14 @@ SetEnvIfNoCase ^User-Agent$ .*(libwww-perl|aesop_com_spiderman) HTTP_SAFE_BADBOT
 Deny from env=HTTP_SAFE_BADBOT
 
 ## Cookie secure flags
-<IfModule php5_module>
+<IfModule mod_php.c>
     php_flag session.cookie_httponly on
     php_flag session.cookie_secure on
 </IfModule>
+
+## PHP
+# <FilesMatch \.php$>
+# SetHandler application/x-httpd-php82
+# </FilesMatch>
+# AddHandler application/x-httpd-php82 .php
+# suPHP_ConfigPath /__DOMAIN__/php.ini
