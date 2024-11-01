@@ -1,8 +1,8 @@
 [
    {
-      "name":"Administrator",
-      "slug":"administrator",
-      "capability":[
+      "name": "Administrator",
+      "slug": "administrator",
+      "capability": [
          "read",
          "create",
          "write",
@@ -10,18 +10,18 @@
       ]
    },
    {
-      "name":"Developer",
-      "slug":"developer",
-      "capability":[
+      "name": "Developer",
+      "slug": "developer",
+      "capability": [
          "read",
          "create",
          "write"
       ]
    },
    {
-      "name":"Editor",
-      "slug":"editor",
-      "capability":[
+      "name": "Editor",
+      "slug": "editor",
+      "capability": [
          "read",
          "create",
          "write"
