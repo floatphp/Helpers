@@ -64,9 +64,11 @@ final class Submitter
 		if ( !$input ) {
 			$input = $this->getPost();
 		}
+
 		if ( !$this->isType('array', $input) ) {
 			$input = (array)$input;
 		}
+
 		$vars = $this->vars[$this->group] ?? [];
 		foreach ($input as $key => $value) {
 			if ( isset($vars[$key]) ) {
