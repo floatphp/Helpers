@@ -22,39 +22,38 @@ class Loader
 {
 	use \FloatPHP\Kernel\TraitConfiguration;
 
+	protected const BASEDIR = 'App/Helpers';
+	protected const PATTERN = '/^.*\.(php)$/i';
+
 	/**
 	 * @access protected
 	 * @var string $baseDir
 	 * @var string $pattern
 	 */
-	protected $baseDir = 'App/Helpers';
-	protected $pattern = '/^.*\.(php)$/i';
+	protected $baseDir;
+	protected $pattern;
 
 	/**
-	 * Set base dir.
-	 * 
-	 * @access public
-	 * @param string $baseDir
-	 * @return mixed
+	 * Init loader.
 	 */
-	public function setBaseDir($baseDir)
+	public function __construct(string $baseDir = self::BASEDIR, string $pattern = self::PATTERN)
 	{
-        $this->baseDir = $this->formatPath($baseDir);
+		$this->baseDir = $this->format($baseDir);
+		$this->pattern = $pattern;
 	}
 
 	/**
 	 * Instance class.
-	 * 
+	 *
 	 * @access public
 	 * @param string $path
 	 * @param string $className
-	 * @param mixed $arg1
-	 * @param mixed $arg2
+	 * @param mixed $args
 	 * @return mixed
 	 */
-	public function instance($path, $className, $arg1 = null, $arg2 = null)
+	public function instance($path, $className, ...$args)
 	{
-		$path = $this->formatPath($path);
+		$path = $this->format($path);
 		$dir = "{$this->getRoot()}/{$this->baseDir}/{$path}";
 		if ( $this->isDir($dir) ) {
 			$files = $this->scan($dir, $path);
@@ -62,7 +61,7 @@ class Loader
 			if ( isset($files[$className]) ) {
 				if ( $this->isType('class', $files[$className]) ) {
 					$class = $files[$className];
-					return new $class($arg1, $arg2);
+					return new $class(...$args);
 				}
 			}
 		}
@@ -70,35 +69,22 @@ class Loader
 	}
 
 	/**
-	 * Instance alias.
-	 * 
+	 * Instance class (Alias).
+	 *
 	 * @access public
 	 * @param string $path
 	 * @param string $className
-	 * @param mixed $arg1
-	 * @param mixed $arg2
+	 * @param mixed $args
 	 * @return mixed
 	 */
-	public function i($path, $className, $arg1 = null, $arg2 = null)
+	public final function i($path, $className, ...$args)
 	{
-		return $this->instance($path, $className, $arg1, $arg2);
-	}
-
-	/**
-	 * Set pattern.
-	 * 
-	 * @access public
-	 * @param string $pattern
-	 * @return void
-	 */
-	public function setRegex($pattern)
-	{
-		$this->pattern = $pattern;
+		return $this->instance($path, $className, ...$args);
 	}
 
 	/**
 	 * Scan classes files.
-	 * 
+	 *
 	 * @access protected
 	 * @param string $dir
 	 * @param string $base
@@ -107,7 +93,7 @@ class Loader
 	protected function scan(string $dir, string $base)
 	{
 		$files = $this->scanDir($dir);
-		$namespace = $this->formatPath("{$this->baseDir}/{$base}", true);
+		$namespace = $this->format("{$this->baseDir}/{$base}", true);
 		foreach ($files as $key => $name) {
 			if ( $this->matchString($this->pattern, $name) ) {
 				$name = substr($name, 0, strrpos($name, '.php'));
@@ -120,14 +106,14 @@ class Loader
 	}
 
 	/**
-	 * Format path.
-	 * 
+	 * Format loader path.
+	 *
 	 * @access protected
 	 * @param string $path
 	 * @param bool $namespace
 	 * @return string
 	 */
-	protected function formatPath(string $path, bool $namespace = false)
+	protected function format(string $path, bool $namespace = false)
 	{
         $path = ltrim($path, '/');
         $path = rtrim($path, '/');
