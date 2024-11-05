@@ -142,7 +142,10 @@ class Cache
 				$value = 'true';
 			}
 
-			$key .= "-{$name}-{$value}";
+			if ( $name !== 0 ) {
+				$key .= "-{$name}";
+			}
+			$key .= "-{$value}";
 		}
 
 		return $this->slugify($key);
