@@ -20,6 +20,24 @@ use FloatPHP\Classes\Filesystem\Exception;
 trait TraitThrowable
 {
 	/**
+	 * @access public
+	 * @inheritdoc
+	 */
+	public function getLastError()
+	{
+		Exception::getLastError();
+	}
+
+	/**
+	 * @access public
+	 * @inheritdoc
+	 */
+	public function triggerError(string $error, int $type = E_USER_NOTICE) : bool
+	{
+		return Exception::trigger($error, $type);
+	}
+
+	/**
 	 * @access protected
 	 * @inheritdoc
 	 */
@@ -32,35 +50,8 @@ trait TraitThrowable
 	 * @access protected
 	 * @inheritdoc
 	 */
-	protected function getLastError()
-	{
-		Exception::getLastError();
-	}
-
-	/**
-	 * @access protected
-	 * @inheritdoc
-	 */
 	protected function clearLastError()
 	{
 		Exception::clearLastError();
-	}
-
-	/**
-	 * @access protected
-	 * @inheritdoc
-	 */
-	protected function triggerError(string $error, int $type = E_USER_NOTICE) : bool
-	{
-		return Exception::trigger($error, $type);
-	}
-	
-	/**
-	 * @access protected
-	 * @inheritdoc
-	 */
-	protected function throwError(string $error)
-	{
-        Exception::throw($error);
 	}
 }
