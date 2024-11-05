@@ -37,7 +37,7 @@ final class Settings
 	 *
 	 * @param string $row
 	 */
-	public function __construct($row = self::ROW)
+	public function __construct(string $row = self::ROW)
 	{
 		// Set settings row name
 		$this->row = $row;
@@ -122,10 +122,12 @@ final class Settings
 	{
 		$settings = $this->getConfigValue($this->row);
 		$settings = $this->unserialize($settings);
-		if ( empty($settings) ) {
-			$settings = [];
+		
+		if ( $this->isType('string', $settings) ) {
+			$settings = $this->decodeJson($settings, true);
 		}
-		return (array)$settings;
+
+		return $settings ?: [];
 	}
 
 	/**
@@ -137,7 +139,9 @@ final class Settings
 	 */
 	private function setValues(array $settings) : bool
 	{
+		$settings = $this->formatJson($settings, 256);
 		$settings = $this->serialize($settings);
+
 		return $this->setConfigValue($this->row, $settings);
 	}
 }
