@@ -25,17 +25,16 @@ trait TraitConfigurable
 	 */
 	protected $config;
 
-    /**
-     * Get config object.
-     *
-     * @access protected
-     * @return object
-     */
-    protected function getConfigObject() : Config
-    {
-        $this->config = new Config();
-        return $this->config;
-    }
+	/**
+	 * Get config object.
+	 *
+	 * @access protected
+	 * @return object
+	 */
+	protected function getConfigObject() : Config
+	{
+	    return $this->config = new Config();
+	}
 
 	/**
 	 * Get database config value by key.
@@ -44,7 +43,7 @@ trait TraitConfigurable
 	 * @param string $key
 	 * @return string
 	 */
-	protected function getConfigValue($key) : string
+	protected function getConfigValue(string $key) : string
 	{
 		return $this->config->getValue($key);
 	}
@@ -57,7 +56,7 @@ trait TraitConfigurable
 	 * @param mixed $value
 	 * @return bool
 	 */
-	protected function setConfigValue($key, $value = '') : bool
+	protected function setConfigValue(string $key, $value = '') : bool
 	{
 		return $this->config->setValue($key, $value);
 	}
@@ -70,7 +69,7 @@ trait TraitConfigurable
 	 * @param mixed $value
 	 * @return bool
 	 */
-	protected function updateConfigValue($key, $value = '') : bool
+	protected function updateConfigValue(string $key, $value = '') : bool
 	{
 		return $this->config->updateValue($key, $value);
 	}
@@ -82,7 +81,7 @@ trait TraitConfigurable
 	 * @param string $key
 	 * @return bool
 	 */
-	protected function deleteConfigValue($key) : bool
+	protected function deleteConfigValue(string $key) : bool
 	{
 		return $this->config->deleteValue($key);
 	}
@@ -94,7 +93,7 @@ trait TraitConfigurable
 	 * @param string $key
 	 * @return bool
 	 */
-	protected function hasConfigValue($key) : bool
+	protected function hasConfigValue(string $key) : bool
 	{
 		return $this->config->hasValue($key);
 	}
@@ -106,7 +105,7 @@ trait TraitConfigurable
 	 * @param string $table
 	 * @return int
 	 */
-	protected function getConfigId($key) : int
+	protected function getConfigId(string $key) : int
 	{
 		return $this->config->getId($key);
 	}
