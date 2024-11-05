@@ -156,4 +156,13 @@ trait TraitHookable
 	{
 		return Shortcode::getInstance()->stripShortcodes($content);
 	}
+
+	/**
+	 * @access protected
+	 * @inheritdoc
+	 */
+	protected function spinText($content)
+	{
+		return Shortcode::spin($content);
+	}
 }
