@@ -15,12 +15,12 @@ declare(strict_types=1);
 
 namespace FloatPHP\Helpers\Html;
 
-use FloatPHP\Classes\Html\Form as MainForm;
+use FloatPHP\Classes\Html\Form as Main;
 
 /**
  * Form factory class.
  */
-final class Form extends MainForm
+final class Form extends Main
 {
 	use \FloatPHP\Kernel\TraitConfiguration,
 		\FloatPHP\Helpers\Framework\inc\TraitTranslatable;
