@@ -27,25 +27,29 @@ final class Template
 {
     /**
      * Get view environment.
-     * 
+     * Used single path for security.
+     *
+     * @access public
      * @param mixed $path
-     * @param array $settings
+     * @param array $options
      * @return object
      */
-    public static function getEnvironment($path, array $settings = []) : Environment
+    public static function getEnvironment($path, array $options = []) : Environment
     {
-        return new Environment(new Loader($path), $settings);
+        return new Environment(new Loader($path), $options);
     }
 
     /**
-     * Add view functions.
-     * 
+     * Add view callable.
+     *
+     * @access public
      * @param string $name
-     * @param callable $function
+     * @param callable $callable
+     * @param array $options
      * @return object
      */
-    public static function extend(string $name, $function) : Module
+    public static function extend(string $name, $callable = null, array $options = []) : Module
     {
-        return new Module($name, $function);
+        return new Module($name, $callable, $options);
     }
 }
