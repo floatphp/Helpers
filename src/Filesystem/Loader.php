@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Filesystem Component
- * @version    : 1.1.0
+ * @version    : 1.2.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -95,7 +95,7 @@ class Loader
 		$files = $this->scanDir($dir);
 		$namespace = $this->format("{$this->baseDir}/{$base}", true);
 		foreach ($files as $key => $name) {
-			if ( $this->matchString($this->pattern, $name) ) {
+			if ( $this->matchString($this->pattern, $name, $matches) ) {
 				$name = substr($name, 0, strrpos($name, '.php'));
 				$slug = $this->lowercase($name);
 				$files[$slug] = "{$namespace}\\{$name}";

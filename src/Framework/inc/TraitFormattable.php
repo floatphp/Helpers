@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Framework Component
- * @version    : 1.1.0
+ * @version    : 1.2.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -22,7 +22,7 @@ use FloatPHP\Classes\{
     Filesystem\Validator,
 	Filesystem\Converter,
     Filesystem\Json,
-    Http\ResponseXML,
+    Http\Xml,
 	Server\System
 };
 
@@ -147,7 +147,7 @@ trait TraitFormattable
 	 * @access protected
 	 * @inheritdoc
 	 */
-	protected function removeString(string $search, string $subject) : string
+	protected function removeString($search, $subject) : string
 	{
 		return Stringify::remove($search, $subject);
 	}
@@ -156,18 +156,18 @@ trait TraitFormattable
 	 * @access protected
 	 * @inheritdoc
 	 */
-	protected function matchString($regex, $string, $index = 0, $flags = 0, $offset = 0)
+	protected function matchString($regex, $string, &$matches, $flags = 0, $offset = 0) : bool
 	{
-		return Stringify::match($regex, $string, $index, $flags, $offset);
+		return Stringify::match($regex, $string, $matches, $flags, $offset);
 	}
 
 	/**
 	 * @access protected
 	 * @inheritdoc
 	 */
-	protected function matchEveryString(string $regex, string $string, int $index = 0, int $flags = 0, int $offset = 0)
+	protected function matchEveryString(string $regex, string $string, &$matches, int $flags = 0, int $offset = 0) : bool
 	{
-		return Stringify::matchAll($regex, $string, $index, $flags, $offset);
+		return Stringify::matchAll($regex, $string, $matches, $flags, $offset);
 	}
 
 	/**
@@ -250,15 +250,6 @@ trait TraitFormattable
 	 * @access protected
 	 * @inheritdoc
 	 */
-    protected function randomizeString(?int $length = null, ?string $char = null) : string
-	{
-		return Stringify::randomize($length, $char);
-	}
-
-	/**
-	 * @access protected
-	 * @inheritdoc
-	 */
     protected function formatJson($value, $flags = 64|256)
     {
         return Json::format($value, $flags);
@@ -297,7 +288,7 @@ trait TraitFormattable
 	 */
 	protected function formatXml(string $xml) : string
 	{
-		return ResponseXML::format($xml);
+		return Xml::format($xml);
 	}
 
 	/**
@@ -306,7 +297,7 @@ trait TraitFormattable
 	 */
 	protected function parseXml(string $xml, int $args = 16384|20908)
 	{
-		return ResponseXML::parse($xml, $args);
+		return Xml::parse($xml, $args);
 	}
 
 	/**
@@ -315,7 +306,7 @@ trait TraitFormattable
 	 */
 	protected function parseXmlFile(string $path, int $args = 16384|20908)
 	{
-		return ResponseXML::parseFile($path, $args);
+		return Xml::parseFile($path, $args);
 	}
 
 	/**

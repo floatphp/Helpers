@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Filesystem Component
- * @version    : 1.1.0
+ * @version    : 1.2.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -114,24 +114,31 @@ final class Logger extends MainLogger
                 ]);
                 $start = 0;
                 foreach ($strings as $key => $string) {
+
                     $temp = $string[0] ?? '';
                     $offset = $string[1] ?? 0;
+
                     if ( $key > 0 ){
                         $start = $strings[$key-1][1] ?? 0;
                     }
-                    $temp = $this->replaceString($this->parserIgnore, '', $temp);
-                    if ( ($level = $this->matchString($this->levelRegex, $temp, -1)) ) {
-                        $temp = $this->replaceString($level[0], '', $temp);
-                        $level = $level[1];
+
+                    $temp  = $this->replaceString($this->parserIgnore, '', $temp);
+                    $level = [];
+                    $match = [];
+                    if ( $this->matchString($this->levelRegex, $temp, $match) ) {
+                        $temp  = $this->replaceString($match[0], '', $temp);
+                        $level = $match[1];
                     }
-                    $date = substr($content, $start, $offset);
-                    if ( ($date = $this->matchString($this->parserRegex, $date)) ) {
+
+                    $date  = substr($content, $start, $offset);
+                    $match = [];
+                    if ( $this->matchString($this->levelRegex, $temp, $match) ) {
                         $date = $this->replaceString(['[', ']'], '', $date);
                     }
 
                     $level = !$this->isType('array', $level) ? trim($level) : 'unknown';
-                    $date = !$this->isType('bool', $date) ? trim($date) : 'undefined';
-                    $temp = trim($temp);
+                    $date  = !$this->isType('bool', $date) ? trim($date) : 'undefined';
+                    $temp  = trim($temp);
 
                     $wrapper[] = [
                         'id'      => $key + 1,

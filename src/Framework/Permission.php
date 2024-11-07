@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Framework Component
- * @version    : 1.1.0
+ * @version    : 1.2.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -31,16 +31,12 @@ final class Permission
 	 * Check whether user (current) has given roles.
 	 * 
 	 * @access public
-	 * @param mixed $role
+	 * @param string $role
 	 * @param int $userId
 	 * @return bool
 	 */
-	public static function hasRole($role = 'administrator', $userId = null) : bool
+	public static function hasRole(string $role = 'administrator', ?int $userId = null) : bool
 	{
-		if ( !$role ) {
-			return false;
-		}
-
 		if ( !$userId ) {
 			$userId = Session::get('userId');
 		}
@@ -73,11 +69,11 @@ final class Permission
 	 * Check whether user (current) has given capability.
 	 * 
 	 * @access public
-	 * @param mixed $capability
+	 * @param string $capability
 	 * @param int $userId
 	 * @return bool
 	 */
-	public static function hasCapability($capability = null, $userId = null) : bool
+	public static function hasCapability(?string $capability = null, ?int $userId = null) : bool
 	{
 		if ( !$capability ) {
 			$capability = ['read', 'create', 'write', 'delete'];

@@ -11,8 +11,32 @@
 	RewriteRule . /__BASE__/__FILE__.php [L]
 </IfModule>
 
+## Index protection
+Options All -Indexes
+
 ## Folder protection
-Options -Indexes
+<IfModule mod_headers.c>
+	<FilesMatch "^\.git">
+		Order deny,allow
+		Deny from all
+	</FilesMatch>
+</IfModule>
+
+## File protection
+<IfModule mod_headers.c>
+	<FilesMatch ".(sh)$">
+		Order Allow,Deny
+		Deny from all
+	</FilesMatch>
+	<FilesMatch "\.(zip|tar|tar\.gz|rar|7z)$">
+		Order Allow,Deny
+		Deny from all
+	</FilesMatch>
+	<FilesMatch "^(global|config)\.json$">
+		Order Allow,Deny
+		Deny from all
+	</FilesMatch>
+</IfModule>
 
 ## Bandwidth protection
 <IfModule mod_rewrite.c>
@@ -41,18 +65,7 @@ Options -Indexes
 	# RewriteRule (.+)\.(jpe?g|png)$ $1.webp [T=image/webp,E=accept:1]
 </IfModule>
 
-## UTF-8 encoding
-AddDefaultCharset utf-8
-AddCharset utf-8 .atom .css .js .json .rss .xml
-
-## CORS
-<IfModule mod_headers.c>
-	Header always set Access-Control-Allow-Origin "*"
-	Header always set Access-Control-Allow-Methods "POST, GET"
-	Header always set Access-Control-Allow-Headers: Authorization
-</IfModule>
-
-## Limit methods
+## Methods limit
 <Limit POST GET>
   	Order Allow,Deny
   	Allow from all
@@ -62,14 +75,12 @@ AddCharset utf-8 .atom .css .js .json .rss .xml
 	Deny from all
 </LimitExcept>
 
-## Disallow shell access
-<FilesMatch ".(sh)$">
-	Order Allow,Deny
-	Deny from all
-</FilesMatch>
-
-## Disallow directory browsing
-Options All -Indexes
+## CORS
+<IfModule mod_headers.c>
+	Header always set Access-Control-Allow-Origin "*"
+	Header always set Access-Control-Allow-Methods "POST, GET"
+	Header always set Access-Control-Allow-Headers: Authorization
+</IfModule>
 
 ## Protect against content-sniffing
 <IfModule mod_headers.c>
@@ -150,6 +161,10 @@ Deny from env=HTTP_SAFE_BADBOT
     php_flag session.cookie_httponly on
     php_flag session.cookie_secure on
 </IfModule>
+
+## UTF-8 encoding
+AddDefaultCharset utf-8
+AddCharset utf-8 .atom .css .js .json .rss .xml
 
 ## PHP
 # <FilesMatch \.php$>

@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Connection Component
- * @version    : 1.1.0
+ * @version    : 1.2.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -122,7 +122,7 @@ final class Settings
 	{
 		$settings = $this->getConfigValue($this->row);
 		$settings = $this->unserialize($settings);
-		
+
 		if ( $this->isType('string', $settings) ) {
 			$settings = $this->decodeJson($settings, true);
 		}
