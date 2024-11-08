@@ -15,11 +15,8 @@ declare(strict_types=1);
 
 namespace FloatPHP\Helpers\Framework\inc;
 
-use FloatPHP\Classes\{
-    Http\Server,
-	Http\Request,
-	Http\Response,
-	Http\Post
+use FloatPHP\Classes\Http\{
+    Server, Request, Response, Post
 };
 
 trait TraitRequestable
