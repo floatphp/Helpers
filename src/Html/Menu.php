@@ -85,8 +85,10 @@ final class Menu
 		$this->native = $this->menu = $this->getMenu();
 		$this->setCSS();
 
-        // Reset configuration
-        $this->resetConfig();
+		$this->getTranslatorObject($this->lang);
+
+		// Reset configuration
+		$this->resetConfig();
 	}
 
 	/**
@@ -131,7 +133,7 @@ final class Menu
 			$data = $cache->get($key, $status);
 			if ( !$status ) {
 				$data = $this->build($this->menu);
-				$cache->set($key, $data, 3600, 'menu');
+				$cache->set($key, $data, 0, 'menu');
 			}
 			$this->menu = $data;
 
@@ -194,8 +196,6 @@ final class Menu
 	 */
 	private function build(array $menu) : array
 	{
-		$this->getTranslatorObject($this->lang);
-
 		// Convert 2D
 		$temp = $menu[0] ?? false;
 		if ( !$this->isType('array', $temp) ) {
