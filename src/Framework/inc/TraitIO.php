@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace FloatPHP\Helpers\Framework\inc;
 
 use FloatPHP\Classes\Filesystem\{
-	File, Archive
+	File, Archive, Stringify, TypeCheck
 };
 
 trait TraitIO
@@ -47,6 +47,20 @@ trait TraitIO
     {
         return File::scanDir($path, $sort, $except);
     }
+
+    /**
+     * Clear directory recursively.
+	 *
+	 * @access protected
+	 * @inheritdoc
+	 */
+    protected function clearDir(string $path, $from = []) : bool
+	{
+		if ( !$this->secureRemove($path, $from) ) {
+			return false;
+		}
+		return File::clearDir($path);
+	}
 
 	/**
 	 * @access protected
@@ -173,4 +187,29 @@ trait TraitIO
 	{
 		return Archive::uncompress($archive, $to, $remove);
 	}
+
+    /**
+     * Secure remove.
+	 *
+	 * @access private
+	 * @param string $path
+	 * @param mixed $secure
+	 * @return bool
+	 */
+    private function secureRemove(string $path, $secure = []) : bool
+    {
+		if ( $secure && !TypeCheck::isArray($secure) ) {
+			$secure = (string)$secure;
+			$secure = [$secure];
+		}
+
+		$secure = ($secure) ? $secure : ['public'];
+		foreach ($secure as $include) {
+			if ( !Stringify::contains($path, $include) ) {
+				return false;
+			}
+		}
+
+		return true;
+    }
 }

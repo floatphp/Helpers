@@ -31,7 +31,7 @@ trait TraitFormattable
     use TraitSerializable;
     use TraitMapable;
     use TraitSecurable;
-    
+
 	/**
 	 * @access protected
 	 * @inheritdoc
@@ -247,6 +247,17 @@ trait TraitFormattable
 	}
 
 	/**
+	 * Get break to line.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 */
+	public function breakString() : string
+	{
+		return Stringify::break();
+	}
+
+	/**
 	 * @access protected
 	 * @inheritdoc
 	 */
@@ -391,33 +402,57 @@ trait TraitFormattable
 	}
 
 	/**
-	 * @access protected
+	 * Slice array.
+	 *
+	 * @access public
 	 * @inheritdoc
 	 */
-    protected function isType($type, $value) : bool
+	public function sliceArray(array $array, int $offset, ?int $length = null, bool $preserve = false) : array
+	{
+		return Arrayify::slice($array, $offset, $length, $preserve);
+	}
+
+	/**
+     * Check value type.
+     *
+	 * @access public
+	 * @inheritdoc
+	 */
+    public function isType(string $type, $value) : bool
     {
-        switch (Stringify::lowercase($type)) {
+        switch ($this->lowercase($type)) {
             case 'array':
+            case '[]':
                 return TypeCheck::isArray($value);
                 break;
 
+			case 'object':
+			case 'obj':
+				return TypeCheck::isObject($value);
+				break;
+
             case 'string':
+            case 'str':
                 return TypeCheck::isString($value);
                 break;
 
+            case 'integer':
             case 'int':
                 return TypeCheck::isInt($value);
                 break;
 
             case 'numeric':
+            case 'num':
                 return TypeCheck::isNumeric($value);
                 break;
 
             case 'float':
+            case 'double':
                 return TypeCheck::isFloat($value);
                 break;
 
             case 'bool':
+            case 'boolean':
                 return TypeCheck::isBool($value);
                 break;
 
@@ -437,15 +472,26 @@ trait TraitFormattable
                 return TypeCheck::isEmpty($value);
                 break;
 
+            case 'resource':
+            case 'res':
+                return TypeCheck::isResource($value);
+                break;
+
             case 'class':
                 return TypeCheck::isClass($value);
                 break;
 
+			case 'interface':
+                return TypeCheck::isInterface($value);
+                break;
+
             case 'function':
+            case 'fun':
                 return TypeCheck::isFunction($value);
                 break;
 
             case 'callable':
+            case 'call':
                 return TypeCheck::isCallable($value);
                 break;
 
@@ -455,6 +501,14 @@ trait TraitFormattable
 
             case 'url':
                 return Validator::isValidUrl($value);
+                break;
+
+            case 'date':
+                return Validator::isValidDate($value);
+                break;
+
+            case 'ip':
+                return Validator::isValidIp($value);
                 break;
         }
         return false;
