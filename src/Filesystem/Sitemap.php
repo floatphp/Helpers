@@ -95,6 +95,17 @@ class Sitemap
 	 */
 	public function setBaseUrl(?string $baseUrl = null) : self
 	{
+		if ( $baseUrl ) {
+
+			$index = $this->urls['index'];
+			$item  = $this->urls['item'];
+
+			$index = $this->replaceString('http:', $baseUrl, $index);
+			$item  = $this->replaceString('http:', $baseUrl, $item);
+
+			$this->urls = ['index' => $index, 'item' => $item];
+		}
+		
 		$this->baseUrl = true;
 		return $this;
 	}
