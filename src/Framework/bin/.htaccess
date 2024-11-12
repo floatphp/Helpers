@@ -45,6 +45,15 @@
     AddType image/webp .webp
 </IfModule>
 
+## Redirection limit
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteCond %{ENV:REDIRECT_COUNT} <2
+	RewriteRule ^ - [E=REDIRECT_COUNT:%{ENV:REDIRECT_COUNT}1]
+	RewriteCond %{ENV:REDIRECT_COUNT} >=2
+	RewriteRule ^ public/page/error.html [L]
+</IfModule>
+
 ## UTF-8 encoding
 AddDefaultCharset utf-8
 AddCharset utf-8 .atom .css .js .json .rss .xml
