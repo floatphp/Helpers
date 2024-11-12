@@ -124,6 +124,7 @@ final class Menu
 	{
 		if ( $this->useCache && !$this->debug ) {
 
+			Cache::$debug = false;
 			$cache = new Cache();
 			$key = $cache->getKey('menu', [
 				'user' => $this->user,

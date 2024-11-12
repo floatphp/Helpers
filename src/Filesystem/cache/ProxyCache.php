@@ -100,10 +100,14 @@ class ProxyCache
 	 * Purge any cache.
 	 *
 	 * @access public
+	 * @param string $group
 	 * @return bool
 	 */
-	public function purge() : bool
+	public function purge(?string $group = null) : bool
 	{
+		if ( $group ) {
+			return $this->instance->deleteItemsByTag($group);
+		}
 		return $this->instance->clear();
 	}
 

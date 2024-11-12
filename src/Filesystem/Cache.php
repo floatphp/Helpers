@@ -118,9 +118,9 @@ class Cache
 	/**
 	 * @inheritdoc
 	 */
-	public function purge() : bool
+	public function purge(?string $group = null) : bool
 	{
-		return self::$instance->purge();
+		return self::$instance->purge($group);
 	}
 
 	/**

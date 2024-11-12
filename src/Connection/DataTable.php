@@ -371,9 +371,9 @@ class DataTable extends Orm
 
 		if ( $this->useCache ) {
 
+			Cache::$debug = false;
 			$cache = new Cache();
-
-			$key = $cache->getKey($this->table, [
+			$key   = $cache->getKey($this->table, [
 				'start'    => $this->getStart(),
 				'length'   => $this->getLength(),
 				'orderby'  => $this->getOrderBy(),

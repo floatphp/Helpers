@@ -56,6 +56,7 @@ final class Transient
 
 		// Init cache
 		if ( $this->useCache ) {
+			Cache::$debug = false;
 			$this->cache = new Cache($driver);
 		}
 	}
