@@ -43,18 +43,34 @@ trait TraitAuthenticatable
 		return ( $this->isSessionRegistered() 
              && !$this->isSessionExpired() );
 	}
-	
+
 	/**
-	 * Get token access.
+	 * Get access token.
 	 *
 	 * @access protected
 	 * @param string $token
 	 * @param string $secret
 	 * @return array
 	 */
-	protected function getTokenAccess(string $token, ?string $secret = null) : array
+	protected function getAccessToken(string $token, ?string $secret = null) : array
 	{
 		$encryption = new Encryption($token, $secret);
-        return (array)$encryption->decrypt();
+        return $encryption->setPrefix()->decrypt() ?: [];
+	}
+
+	/**
+	 * Set access token.
+	 *
+	 * @access protected
+	 * @param string $user
+	 * @param string $pswd
+	 * @param string $secret
+	 * @return string
+	 */
+	protected function setAccessToken(string $user, string $pswd, ?string $secret = null) : string
+	{
+		$data = ['user' => $user, 'pswd' => $pswd];
+		$encryption = new Encryption($data, $secret);
+        return $encryption->setPrefix()->encrypt();
 	}
 }
