@@ -29,9 +29,11 @@ class Cache
 
 	/**
 	 * @access private
+	 * @var bool $validate, Validate cache value
 	 * @var object $instance, Cache instance
 	 * @var object DRIVERS, Cache drivers
 	 */
+	private $validate = false;
 	private static $instance;
 	private const DRIVERS = ['File', 'Redis'];
 
@@ -69,6 +71,17 @@ class Cache
 	}
 
 	/**
+	 * Validate cache value.
+	 *
+	 * @inheritdoc
+	 */
+	public function validate() : self
+	{
+		$this->validate = true;
+		return $this;
+	}
+
+	/**
 	 * @inheritdoc
 	 */
 	public function get(string $key, ?bool &$status = null)
@@ -91,6 +104,9 @@ class Cache
 	 */
 	public function set(string $key, $value, ?int $ttl = null, ?string $group = null) : bool
 	{
+		if ( $this->validate && !$value ) {
+			return false;
+		}
 		$key = $this->slugify($key);
 		return self::$instance->set($key, $value, $ttl, $group);
 	}
