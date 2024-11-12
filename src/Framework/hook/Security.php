@@ -22,18 +22,6 @@ use FloatPHP\Helpers\Connection\Transient;
 
 class Security extends BaseController
 {
-    /**
-     * @access protected
-     * @var int $max, Max attemps
-     * @var int $seconds, Ban seconds
-     * @var bool $address, Check for address
-     * @var bool $method, Check for method
-     */
-	protected $max;
-	protected $seconds;
-	protected $address;
-	protected $method;
-
 	/**
 	 * Force strong password.
 	 * 
@@ -42,7 +30,7 @@ class Security extends BaseController
 	 */
 	public function useStrongPassword() : self
 	{
-		$this->addFilter('authenticate-strong-password', function(){
+		$this->addFilter('auth-strong-password', function(){
 			return true;
 		});
 		return $this;
@@ -57,7 +45,7 @@ class Security extends BaseController
 	public function useTokenOnly() : self
 	{
 		if ( !Server::getBearerToken() ) {
-			$msg = $this->applyFilter('api-authenticate-method-message', 'Access forbidden');
+			$msg = $this->applyFilter('api-auth-method-message', 'Access forbidden');
 			$this->setHttpResponse($msg, [], 'error', 403);
 		}
 		return $this;
@@ -72,13 +60,11 @@ class Security extends BaseController
 	 */
 	public function useLimitedAttempt(int $max = 3) : self
 	{
-		$this->max = $max;
-
 		// Log failed authentication
 		$this->addAction('authenticate-failed', function($username) {
 			if ( !empty($username) ) {
 				$transient = new Transient();
-				$key = "authenticate-{$username}";
+				$key = "auth-{$username}";
 				if ( !($attempt = $transient->getTemp($key)) ) {
 					$transient->setTemp($key, 1, 0);
 
@@ -89,13 +75,13 @@ class Security extends BaseController
 		});
 
 		// Apply attempts limit
-		$this->addAction('authenticate', function($username) {
+		$this->addAction('authenticate', function($username) use($max) {
 			if ( !empty($username) ) {
-				$key = "authenticate-{$username}";
+				$key = "auth-{$username}";
 				$transient = new Transient();
 				$attempt = $transient->getTemp($key);
-				if ( $attempt >= $this->max ) {
-					$msg = $this->applyFilter('authenticate-attempt-message', 'Access forbidden');
+				if ( $attempt >= $max ) {
+					$msg = $this->applyFilter('auth-attempt-message', 'Access forbidden');
 					$msg = $this->translate($msg);
 					$this->setResponse($msg, [], 'error', 401);
 				}
@@ -117,44 +103,46 @@ class Security extends BaseController
 	 */
 	public function useAccessProtection(int $max = 120, int $seconds = 60, bool $address = true, bool $method = true) : self
 	{
-		$this->max = $max;
-		$this->seconds = $seconds;
-		$this->address = $address;
-		$this->method = $method;
+		$args = [
+			'max'     => $max,
+			'seconds' => $seconds,
+			'address' => $address,
+			'method'  => $method
+		];
 
-		$this->addAction('api-authenticate', function($args = []) {
+		$this->addAction('api-authenticate', function($request = []) use($args) {
 
 			// Exception
 			$exception = (array)$this->applyFilter('api-exception', []);
-			if ( Arrayify::inArray($args['username'], $exception) ) {
+			if ( Arrayify::inArray($request['username'], $exception) ) {
 				return;
 			}
 
 			// Authentication
 			$transient = new Transient();
-			$key = "api-authenticate-{$args['username']}";
+			$key = "api-auth-{$request['username']}";
 
 			// Address check
-			if ( $this->address ) {
-				$key = "{$key}-{$args['address']}";
+			if ( $args['address'] ) {
+				$key = "{$key}-{$request['address']}";
 			}
 
 			// Method check
-			if ( $this->method ) {
-				$key = "{$key}-{$args['method']}";
+			if ( $args['method'] ) {
+				$key = "{$key}-{$request['method']}";
 			}
 
 			// Attempts
 			$attempts = 0;
 			if ( !($attempts = $transient->getTemp($key)) ) {
-				$transient->setTemp($key, 1, $this->seconds);
+				$transient->setTemp($key, 1, $args['seconds']);
 				
 			} else {
-				$transient->setTemp($key, $attempts + 1, $this->seconds);
+				$transient->setTemp($key, $attempts + 1, $args['seconds']);
 			}
 
-			if ( $attempts >= $this->max && $this->max !== 0 ) {
-				$msg = $this->applyFilter('api-authenticate-attempt-message', 'Access forbidden');
+			if ( $attempts >= $args['max'] && $args['max'] !== 0 ) {
+				$msg = $this->applyFilter('api-auth-attempt-message', 'Access forbidden');
 				$this->setHttpResponse($msg, [], 'error', 429);
 			}
 		});
