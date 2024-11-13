@@ -49,9 +49,27 @@ trait TraitSecurable
 	 * @access protected
 	 * @inheritdoc
 	 */
-    protected function generateToken($length = 32, $special = false) : string
+    protected function generateToken(int $length = 32) : string
 	{
-		return Tokenizer::generate($length, $special);
+		return Tokenizer::generate($length);
+	}
+
+	/**
+	 * @access protected
+	 * @inheritdoc
+	 */
+    protected function generateHash($value) : string
+	{
+		return Tokenizer::hash($value);
+	}
+
+	/**
+	 * @access protected
+	 * @inheritdoc
+	 */
+    protected function verifyHash(string $hash, $value) : bool
+	{
+		return Tokenizer::verify($hash, $value);
 	}
 
 	/**

@@ -41,7 +41,7 @@ trait TraitAuthenticatable
 	protected function isValidSession() : bool
 	{
 		return ( $this->isSessionRegistered() 
-             && !$this->isSessionExpired() );
+		&& !$this->isSessionExpired() );
 	}
 
 	/**
@@ -55,7 +55,7 @@ trait TraitAuthenticatable
 	protected function getAccessToken(string $token, ?string $secret = null) : array
 	{
 		$encryption = new Encryption($token, $secret);
-        return $encryption->setPrefix()->decrypt() ?: [];
+		return $encryption->setPrefix()->decrypt() ?: [];
 	}
 
 	/**
@@ -71,6 +71,6 @@ trait TraitAuthenticatable
 	{
 		$data = ['user' => $user, 'pswd' => $pswd];
 		$encryption = new Encryption($data, $secret);
-        return $encryption->setPrefix()->encrypt();
+		return $encryption->setPrefix()->encrypt();
 	}
 }

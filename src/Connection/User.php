@@ -41,7 +41,7 @@ class User extends Model
 		$sql .= "WHERE `username` = :username OR `email` = :email;";
 		return $this->getRow($sql);
 	}
-	
+
 	/**
 	 * Check user secret.
 	 *

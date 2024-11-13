@@ -371,7 +371,6 @@ class DataTable extends Orm
 
 		if ( $this->useCache ) {
 
-			Cache::$debug = false;
 			$cache = new Cache();
 			$key   = $cache->getKey($this->table, [
 				'start'    => $this->getStart(),
@@ -386,10 +385,7 @@ class DataTable extends Orm
 			$data = $cache->get($key, $status);
 			if ( !$status ) {
 				$data = $this->prepare();
-				// Cache on success
-				if ( $data ) {
-					$cache->set($key, $data, 3600, $this->table);
-				}
+				$cache->validate()->set($key, $data, 0, $this->table);
 			}
 			return $data;
 		}

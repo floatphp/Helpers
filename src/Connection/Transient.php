@@ -56,7 +56,6 @@ final class Transient
 
 		// Init cache
 		if ( $this->useCache ) {
-			Cache::$debug = false;
 			$this->cache = new Cache($driver);
 		}
 	}
@@ -76,7 +75,7 @@ final class Transient
 	/**
 	 * Get temp value from database through cache,
 	 * Get cached value if persistent.
-	 * 
+	 *
 	 * @access public
 	 * @param string $key
 	 * @param mixed $default
@@ -94,7 +93,7 @@ final class Transient
 	/**
 	 * Set temp value in database,
 	 * Add cache layer if persistent.
-	 * 
+	 *
 	 * @access public
 	 * @param string $key
 	 * @param mixed $value
@@ -114,7 +113,7 @@ final class Transient
 
 	/**
 	 * Delete temp value from database and cache.
-	 * 
+	 *
 	 * @access public
 	 * @param string $key
 	 * @return bool
@@ -127,7 +126,7 @@ final class Transient
 
 	/**
 	 * Get temp value from cache.
-	 * 
+	 *
 	 * @access public
 	 * @param string $key
 	 * @return mixed
@@ -142,7 +141,7 @@ final class Transient
 
 	/**
 	 * Set temp value in cache.
-	 * 
+	 *
 	 * @access public
 	 * @param string $key
 	 * @param mixed $value
@@ -159,7 +158,7 @@ final class Transient
 
 	/**
 	 * Delete temp value from cache.
-	 * 
+	 *
 	 * @access public
 	 * @param string $key
 	 * @return bool
@@ -174,7 +173,7 @@ final class Transient
 
 	/**
 	 * Get temp value from database.
-	 * 
+	 *
 	 * @access public
 	 * @param string $key
 	 * @param mixed $default
@@ -220,7 +219,7 @@ final class Transient
 
 	/**
 	 * Set temp value in database.
-	 * 
+	 *
 	 * @access public
 	 * @param string $key
 	 * @param mixed $value
@@ -250,7 +249,7 @@ final class Transient
 
 	/**
 	 * Delete temp value from database.
-	 * 
+	 *
 	 * @access public
 	 * @param string $key
 	 * @param mixed $value
@@ -279,7 +278,7 @@ final class Transient
 
 	/**
 	 * Reset database temp row.
-	 * 
+	 *
 	 * @access public
 	 * @return bool
 	 */

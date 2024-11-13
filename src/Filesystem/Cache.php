@@ -28,20 +28,16 @@ class Cache
 	use \FloatPHP\Helpers\Framework\inc\TraitFormattable;
 
 	/**
-	 * @access private
+	 * @access protected
 	 * @var object $instance, Cache instance
-	 * @var object DRIVERS, Cache drivers
-	 */
-	private static $instance;
-	private const DRIVERS = ['File', 'Redis'];
-
-	/**
-	 * @access public
 	 * @var bool $validate, Validate cache value
 	 * @var bool $debug, Cache debug
+	 * @var object DRIVERS, Cache drivers
 	 */
-	public static $validate = false;
-	public static $debug = false;
+	protected static $instance;
+	protected $validate = false;
+	protected $debug = false;
+	protected const DRIVERS = ['File', 'Redis'];
 
 	/**
 	 * Instance cache driver.
@@ -99,7 +95,7 @@ class Cache
 	 */
 	public function set(string $key, $value, ?int $ttl = null, ?string $group = null) : bool
 	{
-		if ( (static::$validate && !$value) || static::$debug ) {
+		if ( ($this->validate && !$value) || $this->debug ) {
 			return false;
 		}
 		$key = $this->slugify($key);
@@ -121,6 +117,29 @@ class Cache
 	public function purge(?string $group = null) : bool
 	{
 		return self::$instance->purge($group);
+	}
+
+	/**
+	 * Disable cache.
+	 *
+	 * @inheritdoc
+	 */
+	public function debug(?string $group = null) : self
+	{
+		$this->debug = true;
+		$this->purge($group);
+		return $this;
+	}
+
+	/**
+	 * Validate cache value.
+	 *
+	 * @inheritdoc
+	 */
+	public function validate() : self
+	{
+		$this->validate = true;
+		return $this;
 	}
 
 	/**
