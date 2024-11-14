@@ -34,8 +34,8 @@ final class FileCache extends ProxyCache implements CacheInterface
 	/**
 	 * @inheritdoc
 	 */
-    public function __construct(array $config = [])
-    {
+	public function __construct(array $config = [])
+	{
 		if ( !static::$initialized ) {
 
 			$this->initConfig();
@@ -50,21 +50,21 @@ final class FileCache extends ProxyCache implements CacheInterface
 				'securityKey'        => 'private',
 				'cacheFileExtension' => 'txt'
 			], $config);
-	
+
 			try {
 
 				$this->instance = CacheManager::getInstance('Files', new Config($config));
-	
+
 			} catch (\Phpfastcache\Exceptions\PhpfastcacheIOException $e) {
-	
+
 				$this->clearLastError();
-				
+
 				if ( $this->isDebug() ) {
 					$this->error('File cache failed');
 					$this->debug($e->getMessage());
 				}
 			}
-			
+
 		}
-    }
+	}
 }

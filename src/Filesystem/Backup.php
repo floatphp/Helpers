@@ -252,7 +252,7 @@ final class Backup
 	 * @param string $pattern
 	 * @return void
 	 */
-	private function reset(int $keep, string $pattern)
+	private function reset(int $keep, string $pattern) : void
 	{
 		if ( !$keep ) $keep = 1;
 		$pattern = $this->formatPath($pattern);
@@ -305,6 +305,6 @@ final class Backup
 	 */
 	private function isCompressed(string $file) : bool
 	{
-		return ($this->getFileExtension($file) == 'zip');
+		return $this->getFileExtension($file) === 'zip';
 	}
 }

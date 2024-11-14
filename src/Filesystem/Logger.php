@@ -15,21 +15,16 @@ declare(strict_types=1);
 
 namespace FloatPHP\Helpers\Filesystem;
 
-use FloatPHP\Kernel\TraitConfiguration;
-use FloatPHP\Classes\Filesystem\Logger as MainLogger;
-use FloatPHP\Helpers\Framework\inc\{
-	TraitFormattable,
-	TraitIO
-};
+use FloatPHP\Classes\Filesystem\Logger as Main;
 
 /**
  * Built-in Logger factory class.
  */
-final class Logger extends MainLogger
+final class Logger extends Main
 {
-    use TraitConfiguration;
-    use TraitFormattable;
-    use TraitIO;
+    use \FloatPHP\Kernel\TraitConfiguration,
+        \FloatPHP\Helpers\Framework\inc\TraitFormattable,
+        \FloatPHP\Helpers\Framework\inc\TraitIO;
 
     /**
      * @access private
@@ -67,7 +62,7 @@ final class Logger extends MainLogger
      * @param mixed $strings
      * @return void
      */
-    public function setParserIgnore($strings)
+    public function setParserIgnore($strings) : void
     {
         $this->parserIgnore = $strings;
     }
@@ -79,7 +74,7 @@ final class Logger extends MainLogger
      * @param string $regex
      * @return void
      */
-    public function setParserRegex(string $regex)
+    public function setParserRegex(string $regex) : void
     {
         $this->parserRegex = $regex;
     }
@@ -91,7 +86,7 @@ final class Logger extends MainLogger
      * @param string $regex
      * @return void
      */
-    public function setLevelRegex(string $regex)
+    public function setLevelRegex(string $regex) : void
     {
         $this->levelRegex = $regex;
     }
@@ -110,7 +105,7 @@ final class Logger extends MainLogger
             if ( ($content = $this->readFile("{$this->path}/{$file}")) ) {
                 $strings = $this->splitString($content, [
                     'regex' => $this->parserRegex,
-                    'flags' => 1|4
+                    'flags' => 1 | 4
                 ]);
                 $start = 0;
                 foreach ($strings as $key => $string) {
@@ -118,27 +113,27 @@ final class Logger extends MainLogger
                     $temp = $string[0] ?? '';
                     $offset = $string[1] ?? 0;
 
-                    if ( $key > 0 ){
-                        $start = $strings[$key-1][1] ?? 0;
+                    if ( $key > 0 ) {
+                        $start = $strings[$key - 1][1] ?? 0;
                     }
 
-                    $temp  = $this->replaceString($this->parserIgnore, '', $temp);
+                    $temp = $this->replaceString($this->parserIgnore, '', $temp);
                     $level = [];
                     $match = [];
                     if ( $this->matchString($this->levelRegex, $temp, $match) ) {
-                        $temp  = $this->replaceString($match[0], '', $temp);
+                        $temp = $this->replaceString($match[0], '', $temp);
                         $level = $match[1];
                     }
 
-                    $date  = substr($content, $start, $offset);
+                    $date = substr($content, $start, $offset);
                     $match = [];
                     if ( $this->matchString($this->levelRegex, $temp, $match) ) {
                         $date = $this->replaceString(['[', ']'], '', $date);
                     }
 
                     $level = !$this->isType('array', $level) ? trim($level) : 'unknown';
-                    $date  = !$this->isType('bool', $date) ? trim($date) : 'undefined';
-                    $temp  = trim($temp);
+                    $date = !$this->isType('bool', $date) ? trim($date) : 'undefined';
+                    $temp = trim($temp);
 
                     $wrapper[] = [
                         'id'      => $key + 1,

@@ -12,9 +12,7 @@
  */
 
 use PHPUnit\Framework\TestCase;
-use FloatPHP\Classes\Filesystem\{
-    TypeCheck, File
-};
+use FloatPHP\Classes\Filesystem\{TypeCheck, File};
 use FloatPHP\Helpers\Filesystem\Cache;
 use FloatPHP\Helpers\Framework\Configuration;
 

@@ -37,7 +37,7 @@ trait TraitConnectable
      */
     protected function getDbObject(array $config = [], string $path = '/database', string $filename = 'db') : Db
     {
-		$this->db = new Db($config, new Logger($path, $filename));
+        $this->db = new Db($config, new Logger($path, $filename));
         return $this->db;
     }
 }

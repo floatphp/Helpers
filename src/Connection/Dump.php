@@ -21,8 +21,8 @@ use FloatPHP\Classes\{
 };
 use \mysqli;
 
-System::setTimeLimit(0);
-System::setMemoryLimit('-1');
+System::setTimeLimit(seconds: 0);
+System::setMemoryLimit(value: '-1');
 
 /**
  * MySQLi dump class.
@@ -50,7 +50,7 @@ final class Dump
 			$this->getDbAccess(),
 			$config
 		);
-		
+
 		// Reset configuration
 		$this->resetConfig();
 	}
@@ -66,10 +66,10 @@ final class Dump
 	{
 		// Init connection
 		$connection = @new mysqli(
-			$this->access['host'],
-			$this->access['user'],
-			$this->access['pswd'],
-			$this->access['db']
+			hostname: $this->access['host'],
+			username: $this->access['user'],
+			password: $this->access['pswd'],
+			database: $this->access['name']
 		);
 
 		// Check connection
@@ -99,15 +99,13 @@ final class Dump
 			// End of query
 			if ( substr(trim($line), -1, 1) == ';' ) {
 
-			    // Perform query
-			    $i = (int)$connection->query($temp);
-			    $status += $i;
-			    if ( !$i ) {
-			    	break;
-			    }
+				// Perform query
+				$i = (int)$connection->query($temp);
+				$status += $i;
+				if ( !$i ) break;
 
-			    // Reset temp
-			    $temp = '';
+				// Reset temp
+				$temp = '';
 			}
 		}
 
@@ -124,7 +122,7 @@ final class Dump
 	 */
 	public function export(string $file = 'dump.sql') : bool
 	{
-		$command  = 'mysqldump --opt';
+		$command = 'mysqldump --opt';
 		$command .= " -u {$this->access['user']}";
 
 		if ( $this->access['host'] ) {
@@ -133,10 +131,10 @@ final class Dump
 		if ( $this->access['pswd'] ) {
 			$command .= " -p {$this->access['pswd']}";
 		}
-		
-		$command .= " {$this->access['db']} > {$file}";
+
+		$command .= " {$this->access['name']} > {$file}";
 
 		exec($command, $output, $status);
-		return ($status === 0);
+		return $status === 0;
 	}
 }

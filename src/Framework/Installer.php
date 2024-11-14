@@ -34,9 +34,10 @@ final class Installer
 	 *
 	 * @access public
 	 * @param bool $db
+	 * @param bool $yaml
 	 * @return void
 	 */
-	public function setup(bool $db = true)
+	public function setup(bool $db = true) : void
 	{
 		// Setup config
 		if ( !$this->hasFile($this->getConfigFile()) ) {
@@ -72,7 +73,7 @@ final class Installer
 	 * @param string $path
 	 * @return void
 	 */
-	public function migrate($path = null)
+	public function migrate(string $path = null) : void
 	{
 		if ( !$path ) {
 			$path = $this->getMigratePath();
@@ -82,10 +83,8 @@ final class Installer
 		(new Orm())->noConnect()->setup();
 
 		// Import tables
-		$tables = glob("{$path}/*.{sql}", GLOB_BRACE);
-		if ( !$tables ) {
-			return;
-		}
+		$tables = glob(pattern: "{$path}/*.{sql}", flags: GLOB_BRACE);
+		if ( !$tables ) return;
 
 		// Create tables
 		$orm = new Orm();
@@ -107,14 +106,14 @@ final class Installer
 	public function default(array $config = []) : array
 	{
 		return $this->mergeArray([
-            '--enable-maintenance' => false,
-            '--disable-setup'      => false,
-            '--disable-database'   => false,
-            '--disable-powered-by' => false,
-            '--disable-session'    => false,
-            '--default-lang'       => 'en',
-            '--default-timezone'   => 'Europe/Paris',
-        ], $config);
+			'--enable-maintenance' => false,
+			'--disable-setup'      => false,
+			'--disable-database'   => false,
+			'--disable-powered-by' => false,
+			'--disable-session'    => false,
+			'--default-lang'       => 'en',
+			'--default-timezone'   => 'Europe/Paris',
+		], $config);
 	}
 
 	/**
@@ -125,7 +124,8 @@ final class Installer
 	 */
 	public static function isInstalled() : bool
 	{
-		return (bool)(new Transient())->get('--installed', false);
+		return (bool)(new Transient())
+			->get(key: '--installed', default: false);
 	}
 
 	/**
@@ -136,7 +136,8 @@ final class Installer
 	 */
 	public static function install() : bool
 	{
-		return (new Transient())->set('--installed', true, 0);
+		return (new Transient())
+			->set(key: '--installed', value: true, ttl: 0);
 	}
 
 	/**
@@ -147,7 +148,8 @@ final class Installer
 	 */
 	public static function reset() : bool
 	{
-		return (new Transient())->delete('--installed');
+		return (new Transient())
+			->delete(key: '--installed');
 	}
 
 	/**
@@ -156,7 +158,7 @@ final class Installer
 	 * @access private
 	 * @return void
 	 */
-	private function setTables()
+	private function setTables() : void
 	{
 		$path = $this->getMigratePath();
 		$tables = [
@@ -166,7 +168,7 @@ final class Installer
 		];
 		foreach ($tables as $sql) {
 			if ( !$this->hasFile("{$path}/{$sql}") ) {
-				$this->copyFile( dirname(__FILE__) . "/bin/{$sql}.default", "{$path}/{$sql}");
+				$this->copyFile(dirname(__FILE__) . "/bin/{$sql}.default", "{$path}/{$sql}");
 			}
 		}
 	}
@@ -177,7 +179,7 @@ final class Installer
 	 * @access private
 	 * @return void
 	 */
-	private function importRoles()
+	private function importRoles() : void
 	{
 		$path = dirname(__FILE__) . '/bin/role.default.json';
 		$roles = $this->decodeJson($this->readFile($path), true);
@@ -191,14 +193,14 @@ final class Installer
 			$r->create();
 		}
 	}
-	
+
 	/**
 	 * Setup application rewrite.
 	 *
 	 * @access private
 	 * @return void
 	 */
-	private function rewrite()
+	private function rewrite() : void
 	{
 		$htaccess = $this->readFile(dirname(__FILE__) . '/bin/.htaccess');
 
@@ -226,7 +228,7 @@ final class Installer
 				'# RewriteRule (.*) https://' => 'RewriteRule (.*) https://'
 			], $htaccess);
 		}
-		
+
 		$this->writeFile("{$this->getRoot()}/.htaccess", $htaccess);
 	}
 
@@ -236,9 +238,9 @@ final class Installer
 	 * @access private
 	 * @return void
 	 */
-	private function setConfig()
+	private function setConfig() : void
 	{
-		$config = $this->formatJson($this->getConfig(), 64|128|256);
+		$config = $this->formatJson($this->getConfig(), 64 | 128 | 256);
 		$this->writeFile($this->getConfigFile(), $config);
 	}
 }

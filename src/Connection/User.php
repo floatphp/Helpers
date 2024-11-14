@@ -37,7 +37,7 @@ class User extends Model
 	public function getUser(string $user) : array
 	{
 		$this->bind(['username' => $user, 'email' => $user]);
-		$sql  = "SELECT * FROM `{$this->table}` ";
+		$sql = "SELECT * FROM `{$this->table}` ";
 		$sql .= "WHERE `username` = :username OR `email` = :email;";
 		return $this->getRow($sql);
 	}
@@ -52,7 +52,7 @@ class User extends Model
 	public function hasSecret(string $user) : bool
 	{
 		$this->bind(['username' => $user, 'email' => $user]);
-		$sql  = "SELECT `secret` FROM `{$this->table}` ";
+		$sql = "SELECT `secret` FROM `{$this->table}` ";
 		$sql .= "WHERE `username` = :username OR `email` = :email;";
 		return ($this->getSingle($sql)) ? true : false;
 	}

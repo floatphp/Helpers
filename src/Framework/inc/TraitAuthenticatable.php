@@ -40,8 +40,8 @@ trait TraitAuthenticatable
 	 */
 	protected function isValidSession() : bool
 	{
-		return ( $this->isSessionRegistered() 
-		&& !$this->isSessionExpired() );
+		return $this->isSessionRegistered()
+			&& !$this->isSessionExpired();
 	}
 
 	/**

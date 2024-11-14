@@ -16,14 +16,12 @@ declare(strict_types=1);
 namespace FloatPHP\Helpers\Framework;
 
 use FloatPHP\Classes\{
-    Filesystem\TypeCheck,
+	Filesystem\TypeCheck,
 	Filesystem\Stringify,
 	Filesystem\Json,
-    Http\Session
+	Http\Session
 };
-use FloatPHP\Helpers\Connection\{
-	User, Role
-};
+use FloatPHP\Helpers\Connection\{User, Role};
 
 final class Permission
 {
@@ -48,9 +46,11 @@ final class Permission
 		$slug = Stringify::lowercase($r->getSlug($roleId));
 
 		if ( TypeCheck::isArray($role) ) {
+
 			foreach ($role as $key => $value) {
 				$role[$key] = Stringify::lowercase($value);
 			}
+
 			if ( Stringify::contains($role, $slug) ) {
 				return true;
 			}
@@ -91,7 +91,7 @@ final class Permission
 
 		foreach ((array)$capability as $cap) {
 			$cap = Stringify::lowercase($cap);
-			if ( !Stringify::contains($capabilities, $cap) ) {
+			if ( !Stringify::contains(string: $capabilities, search: $cap) ) {
 				return false;
 			}
 		}

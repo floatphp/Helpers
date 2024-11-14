@@ -19,13 +19,13 @@ final class Configurator
 {
 	use \FloatPHP\Kernel\TraitConfiguration;
 
-    /**
+	/**
 	 * Init configuration.
-     */
-    public function __construct()
-    {
-        $this->initConfig();
-    }
+	 */
+	public function __construct()
+	{
+		$this->initConfig();
+	}
 
 	/**
 	 * @access public

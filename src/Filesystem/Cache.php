@@ -16,9 +16,7 @@ declare(strict_types=1);
 namespace FloatPHP\Helpers\Filesystem;
 
 use FloatPHP\Exceptions\Helpers\CacheException;
-use FloatPHP\Helpers\Filesystem\cache\{
-	FileCache, RedisCache
-};
+use FloatPHP\Helpers\Filesystem\cache\{FileCache, RedisCache};
 
 /**
  * Built-in cache factory.
@@ -68,14 +66,14 @@ class Cache
 					CacheException::invalidCacheInstance()
 				);
 			}
-			
+
 		}
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function get(string $key, ?bool &$status = null)
+	public function get(string $key, ?bool &$status = null) : mixed
 	{
 		$key = $this->slugify($key);
 		return self::$instance->get($key, $status);
@@ -156,9 +154,11 @@ class Cache
 
 		foreach ($args as $name => $value) {
 
-			if ( $this->isType('array', $value) 
-			  || $this->isType('null', $value) 
-			  || $this->isType('empty', $value) ) {
+			if (
+				$this->isType('array', $value)
+				|| $this->isType('null', $value)
+				|| $this->isType('empty', $value)
+			) {
 				continue;
 			}
 

@@ -74,7 +74,7 @@ class Config extends Orm
 	public function getValue(string $key) : string
 	{
 		$this->bind(["{$this->keyColumn}" => $key]);
-		$sql  = "SELECT `{$this->valueColumn}` FROM `{$this->table}` ";
+		$sql = "SELECT `{$this->valueColumn}` FROM `{$this->table}` ";
 		$sql .= "WHERE `{$this->keyColumn}` LIKE :{$this->keyColumn};";
 		return (string)$this->getSingle($sql);
 	}
@@ -96,7 +96,7 @@ class Config extends Orm
 			"{$this->keyColumn}"   => $key,
 			"{$this->valueColumn}" => $value
 		]);
-		$sql  = "INSERT INTO `{$this->table}` (`$this->keyColumn`, `{$this->valueColumn}`) ";
+		$sql = "INSERT INTO `{$this->table}` (`$this->keyColumn`, `{$this->valueColumn}`) ";
 		$sql .= "VALUES(:{$this->keyColumn}, :{$this->valueColumn});";
 		return (bool)$this->execute($sql);
 	}
@@ -115,7 +115,7 @@ class Config extends Orm
 			"{$this->keyColumn}"   => $key,
 			"{$this->valueColumn}" => $value
 		]);
-		$sql  = "UPDATE `{$this->table}` SET `{$this->valueColumn}` = :{$this->valueColumn} ";
+		$sql = "UPDATE `{$this->table}` SET `{$this->valueColumn}` = :{$this->valueColumn} ";
 		$sql .= "WHERE `{$this->keyColumn}` LIKE :{$this->keyColumn};";
 		return (bool)$this->execute($sql);
 	}
@@ -130,7 +130,7 @@ class Config extends Orm
 	public function deleteValue(string $key) : bool
 	{
 		$this->bind(["{$this->keyColumn}" => $key]);
-		$sql  = "DELETE FROM `{$this->table}` ";
+		$sql = "DELETE FROM `{$this->table}` ";
 		$sql .= "WHERE `{$this->keyColumn}` LIKE :{$this->keyColumn};";
 		return (bool)$this->execute($sql);
 	}
@@ -145,7 +145,7 @@ class Config extends Orm
 	public function hasValue(string $key) : bool
 	{
 		$this->bind(["{$this->keyColumn}" => $key]);
-		$sql  = "SELECT COUNT('{$this->keyColumn}') FROM `{$this->table}` ";
+		$sql = "SELECT COUNT('{$this->keyColumn}') FROM `{$this->table}` ";
 		$sql .= "WHERE `{$this->keyColumn}` LIKE :{$this->keyColumn};";
 		return (bool)$this->getSingle($sql);
 	}
@@ -160,7 +160,7 @@ class Config extends Orm
 	public function getId(string $key) : int
 	{
 		$this->bind(["{$this->keyColumn}" => $key]);
-		$sql  = "SELECT `{$this->key}` FROM `{$this->table}` ";
+		$sql = "SELECT `{$this->key}` FROM `{$this->table}` ";
 		$sql .= "WHERE `{$this->keyColumn}` LIKE :{$this->keyColumn};";
 		return (int)$this->getSingle($sql);
 	}

@@ -35,6 +35,9 @@ class Loader
 
 	/**
 	 * Init loader.
+	 * @access public
+	 * @param string $baseDir
+	 * @param string $pattern
 	 */
 	public function __construct(string $baseDir = self::BASEDIR, string $pattern = self::PATTERN)
 	{
@@ -51,7 +54,7 @@ class Loader
 	 * @param mixed $args
 	 * @return mixed
 	 */
-	public function instance($path, $className, ...$args)
+	public function instance($path, $className, ...$args) : mixed
 	{
 		$path = $this->format($path);
 		$dir = "{$this->getRoot()}/{$this->baseDir}/{$path}";
@@ -77,7 +80,7 @@ class Loader
 	 * @param mixed $args
 	 * @return mixed
 	 */
-	public final function i($path, $className, ...$args)
+	public final function i($path, $className, ...$args) : mixed
 	{
 		return $this->instance($path, $className, ...$args);
 	}
@@ -90,7 +93,7 @@ class Loader
 	 * @param string $base
 	 * @return array
 	 */
-	protected function scan(string $dir, string $base)
+	protected function scan(string $dir, string $base) : array
 	{
 		$files = $this->scanDir($dir);
 		$namespace = $this->format("{$this->baseDir}/{$base}", true);
@@ -113,15 +116,15 @@ class Loader
 	 * @param bool $namespace
 	 * @return string
 	 */
-	protected function format(string $path, bool $namespace = false)
+	protected function format(string $path, bool $namespace = false) : mixed
 	{
-        $path = ltrim($path, '/');
-        $path = rtrim($path, '/');
-        $path = ltrim($path, '\\');
-        $path = rtrim($path, '\\');
-        if ( $namespace ) {
-        	$path = $this->replaceString('/', '\\', $path);
-        }
-        return $path;
+		$path = ltrim($path, '/');
+		$path = rtrim($path, '/');
+		$path = ltrim($path, '\\');
+		$path = rtrim($path, '\\');
+		if ( $namespace ) {
+			$path = $this->replaceString('/', '\\', $path);
+		}
+		return $path;
 	}
 }

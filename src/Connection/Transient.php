@@ -38,11 +38,12 @@ final class Transient
 	 */
 	private $row;
 	private $cache;
-	private const ROW = '--temp';
+	private const ROW    = '--temp';
 	private const DRIVER = 'File';
-	private const TTL = 300;
+	private const TTL    = 300;
 
 	/**
+	 * @access public
 	 * @param string $row
 	 * @param string $driver
 	 */
@@ -81,7 +82,7 @@ final class Transient
 	 * @param mixed $default
 	 * @return mixed
 	 */
-	public function get(string $key, $default = null)
+	public function get(string $key, $default = null) : mixed
 	{
 		$value = $this->getTemp($key, $default);
 		if ( $this->isType('null', $value) ) {
@@ -131,7 +132,7 @@ final class Transient
 	 * @param string $key
 	 * @return mixed
 	 */
-	public function getTemp(string $key)
+	public function getTemp(string $key) : mixed
 	{
 		if ( !$this->useCache ) {
 			return null;
@@ -180,7 +181,7 @@ final class Transient
 	 * @param bool $persistent
 	 * @return mixed
 	 */
-	public function getBaseTemp(string $key, $default = null, bool $persistent = false)
+	public function getBaseTemp(string $key, $default = null, bool $persistent = false) : mixed
 	{
 		$temp = $this->getConfigValue($this->row);
 
@@ -196,12 +197,12 @@ final class Transient
 			$value = $temp[$key]['value'];
 
 			if ( isset($temp[$key]['created']) ) {
-		        if ( $temp[$key]['created'] < $this->getTimeNow() ) {
-		        	unset($temp[$key]);
-		        	$temp = $this->serialize($temp);
-		        	$this->setConfigValue($this->row, $temp);
-		            return null;
-		        }
+				if ( $temp[$key]['created'] < $this->getTimeNow() ) {
+					unset($temp[$key]);
+					$temp = $this->serialize($temp);
+					$this->setConfigValue($this->row, $temp);
+					return null;
+				}
 
 			} else {
 				if ( $persistent ) {
@@ -229,10 +230,10 @@ final class Transient
 	public function setBaseTemp(string $key, $value = true, int $ttl = self::TTL) : bool
 	{
 		$temp = $this->getConfigValue($this->row);
-		
+
 		if ( empty($temp) ) {
 			$temp = [];
-			
+
 		} else {
 			$temp = $this->unserialize($temp);
 		}

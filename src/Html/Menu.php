@@ -140,7 +140,7 @@ final class Menu
 		} else {
 			$this->menu = $this->build($this->menu);
 		}
-		
+
 		return $this;
 	}
 
@@ -177,7 +177,7 @@ final class Menu
 	 * @param array $css
 	 * @return void
 	 */
-	public function setCSS($css = [])
+	public function setCSS($css = []) : void
 	{
 		$this->itemClass = $css['item'] ?? self::ITEM;
 		$this->linkClass = $css['link'] ?? self::LINK;
@@ -205,8 +205,7 @@ final class Menu
 		foreach ($menu as $key => $item) {
 
 			// Check 2D
-			if ( !$this->isType('int', $key) 
-			  && !$this->isType('array', $item) ) {
+			if ( !$this->isType('int', $key) && !$this->isType('array', $item) ) {
 				continue;
 			}
 
@@ -246,7 +245,7 @@ final class Menu
 	 * @access private
 	 * @return void
 	 */
-	private function setActive()
+	private function setActive() : void
 	{
 		foreach ($this->menu as $key => $item) {
 			if ( isset($item['type']) && $item['type'] == 'menu' ) {
@@ -260,7 +259,7 @@ final class Menu
 				$this->menu[$key]['link-class'] = $linkClass;
 
 				if ( $sub !== false ) {
-					
+
 					// Activate first level menu sub class
 					$this->menu[$key]['link-class'] .= " {$this->linkSubClass}";
 

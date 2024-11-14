@@ -31,16 +31,16 @@ class DataTable extends Orm
 		\FloatPHP\Helpers\Framework\inc\TraitTranslatable,
 		\FloatPHP\Helpers\Framework\inc\TraitLoggable;
 
-    /**
-     * @access protected
-     * @var array $columns, Table columns
-     * @var array $request, Table request
-     * @var array $search, Search binded data
-     * @var array $match, Custom columns keys
-     * @var int $total, Table total
-     * @var int $filtered, Search count
-     * @var int $chars, Search length
-     */
+	/**
+	 * @access protected
+	 * @var array $columns, Table columns
+	 * @var array $request, Table request
+	 * @var array $search, Search binded data
+	 * @var array $match, Custom columns keys
+	 * @var int $total, Table total
+	 * @var int $filtered, Search count
+	 * @var int $chars, Search length
+	 */
 	protected $columns = [];
 	protected $request = [];
 	protected $search = [];
@@ -97,12 +97,12 @@ class DataTable extends Orm
 	{
 		// Init ORM
 		parent::__construct();
-		
+
 		// Set table
-		$this->table   = ($table) ? $table : (new Catcher())->key;
-		$this->key     = ($key) ? $key : "{$this->table}Id";
-		$this->columns = ($columns) ? $columns : $this->columns();
-		
+		$this->table = $table ? $table : (new Catcher())->key;
+		$this->key = $key ?: "{$this->table}Id";
+		$this->columns = $columns ? $columns : $this->columns();
+
 		// Set request
 		$this->request = $this->getRequest();
 
@@ -136,7 +136,7 @@ class DataTable extends Orm
 	 * @param array $match
 	 * @return void
 	 */
-	protected function match(array $match = [])
+	protected function match(array $match = []) : void
 	{
 		$this->match = $match;
 	}
@@ -164,8 +164,8 @@ class DataTable extends Orm
 	 */
 	protected function getStart() : int
 	{
-		return isset($this->request['start']) 
-		? intval($this->request['start']) : 0;
+		return isset($this->request['start'])
+			? intval($this->request['start']) : 0;
 	}
 
 	/**
@@ -176,8 +176,8 @@ class DataTable extends Orm
 	 */
 	protected function getLength() : int
 	{
-		return isset($this->request['length']) 
-		? intval($this->request['length']) : 1;
+		return isset($this->request['length'])
+			? intval($this->request['length']) : 1;
 	}
 
 	/**
@@ -188,8 +188,8 @@ class DataTable extends Orm
 	 */
 	protected function getDraw() : int
 	{
-		return isset($this->request['draw']) 
-		? intval($this->request['draw']) : 0;
+		return isset($this->request['draw'])
+			? intval($this->request['draw']) : 0;
 	}
 
 	/**
@@ -307,29 +307,29 @@ class DataTable extends Orm
 			$where = '';
 			$columns = $this->columns;
 
-		    // Set where clause
+			// Set where clause
 			if ( $this->match ) {
 				$columns = $this->match;
 			}
 
-		    foreach ($columns as $key => $column) {
-		    	if ( $column !== $this->key ) {
-			   		if ( isset($this->request['columns'][$key]) ) {
-			   			$option = $this->request['columns'][$key];
+			foreach ($columns as $key => $column) {
+				if ( $column !== $this->key ) {
+					if ( isset($this->request['columns'][$key]) ) {
+						$option = $this->request['columns'][$key];
 						if ( isset($option['searchable']) && $option['searchable'] == 'true' ) {
 							$this->search[$column] = $this->getSearchPattern($search);
 							$where .= "(`{$column}` LIKE :{$column}) OR ";
 						}
-			   		}
-		    	}
-		    }
+					}
+				}
+			}
 
-		    // Format where clause
-		    if ( !empty($where) ) {
-		    	$where = substr(trim($where), 0, -3);
-		    	$where = "WHERE {$where}";
-		    	$sql .= " {$where} ";
-		    }
+			// Format where clause
+			if ( !empty($where) ) {
+				$where = substr(trim($where), 0, -3);
+				$where = "WHERE {$where}";
+				$sql .= " {$where} ";
+			}
 		}
 
 		return $sql;
@@ -372,7 +372,7 @@ class DataTable extends Orm
 		if ( $this->useCache ) {
 
 			$cache = new Cache();
-			$key   = $cache->getKey($this->table, [
+			$key = $cache->getKey($this->table, [
 				'start'    => $this->getStart(),
 				'length'   => $this->getLength(),
 				'orderby'  => $this->getOrderBy(),
@@ -445,7 +445,7 @@ class DataTable extends Orm
 	protected function hasAction() : bool
 	{
 		if ( isset($this->request['action']) ) {
-			return ($this->request['action'] == 'true');
+			return $this->request['action'] === 'true';
 		}
 		return false;
 	}
@@ -475,7 +475,7 @@ class DataTable extends Orm
 	 */
 	protected function formatData(array $data = []) : array
 	{
-		return $this->mapArray('values', $data);
+		return $this->mapArray(function: 'values', data: $data);
 	}
 
 	/**

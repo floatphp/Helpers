@@ -17,8 +17,8 @@ namespace FloatPHP\Helpers\Filesystem;
 
 use FloatPHP\Classes\Server\System;
 
-System::setTimeLimit(0);
-System::setMemoryLimit('-1');
+System::setTimeLimit(seconds: 0);
+System::setMemoryLimit(value: '-1');
 
 class Sitemap
 {
@@ -50,14 +50,14 @@ class Sitemap
 	 * @var bool $slash
 	 * @var bool $robot
 	 */
-    protected $paths = [];
-    protected $urls = [];
-    protected $counter = 0;
-    protected $limit = 0;
-    protected $baseUrl = false;
-    protected $prefix;
-    protected $slash = false;
-    protected $robot = true;
+	protected $paths = [];
+	protected $urls = [];
+	protected $counter = 0;
+	protected $limit = 0;
+	protected $baseUrl = false;
+	protected $prefix;
+	protected $slash = false;
+	protected $robot = true;
 
 	/**
 	 * Init sitemap.
@@ -68,8 +68,8 @@ class Sitemap
 	 */
 	public function __construct(int $limit = self::LIMIT, bool $reset = true)
 	{
-		$this->limit = ($limit > self::LIMIT) 
-		? self::LIMIT : $limit;
+		$this->limit = ($limit > self::LIMIT)
+			? self::LIMIT : $limit;
 
 		$this->initConfig();
 		$this->paths = [
@@ -98,14 +98,14 @@ class Sitemap
 		if ( $baseUrl ) {
 
 			$index = $this->urls['index'];
-			$item  = $this->urls['item'];
+			$item = $this->urls['item'];
 
 			$index = $this->replaceString('http:', $baseUrl, $index);
-			$item  = $this->replaceString('http:', $baseUrl, $item);
+			$item = $this->replaceString('http:', $baseUrl, $item);
 
 			$this->urls = ['index' => $index, 'item' => $item];
 		}
-		
+
 		$this->baseUrl = true;
 		return $this;
 	}
@@ -208,7 +208,7 @@ class Sitemap
 		}
 
 		$name = static::NAME;
-		$ext  = static::EXT;
+		$ext = static::EXT;
 		$base = $this->untrailingSlash(
 			$this->urls['index']
 		);
@@ -218,7 +218,7 @@ class Sitemap
 
 		$this->write($file, "User-Agent: *");
 		$this->write($file, "Sitemap: {$url}", true);
-		
+
 		return true;
 	}
 
@@ -239,7 +239,7 @@ class Sitemap
 			$this->paths['item']
 		);
 
-		$ext  = static::EXT;
+		$ext = static::EXT;
 		$name = static::NAME;
 		$name = "{$path}/{$name}";
 
@@ -275,7 +275,7 @@ class Sitemap
 	protected function generateIndex() : bool
 	{
 		$name = static::NAME;
-		$ext  = static::EXT;
+		$ext = static::EXT;
 
 		$file = $this->untrailingSlash(
 			$this->paths['index']
@@ -290,7 +290,7 @@ class Sitemap
 
 		$this->setHeader($file, true);
 		for ($i = 0; $i < $this->counter; $i++) {
-			$n = $i+1;
+			$n = $i + 1;
 			$this->setUrl($file, "{$name}-{$n}.{$ext}", true);
 		}
 		$this->setFooter($file, true);
@@ -306,7 +306,7 @@ class Sitemap
 	 * @param bool $index
 	 * @return void
 	 */
-	protected function setHeader($file, bool $index = false)
+	protected function setHeader($file, bool $index = false) : void
 	{
 		$this->write($file, static::TAG);
 
@@ -326,7 +326,7 @@ class Sitemap
 	 * @param bool $index
 	 * @return void
 	 */
-	protected function setFooter($file, bool $index = false)
+	protected function setFooter($file, bool $index = false) : void
 	{
 		$tag = '</urlset>';
 		if ( $index ) {
@@ -345,15 +345,15 @@ class Sitemap
 	 * @param bool $index
 	 * @return void
 	 */
-	protected function setUrl($file, string $url, bool $index = false)
+	protected function setUrl($file, string $url, bool $index = false) : void
 	{
 		$tag = 'url';
 
 		if ( $index ) {
 
-			$tag  = 'sitemap';
+			$tag = 'sitemap';
 			$base = $this->urls['item'];
-			$url  = "{$base}/{$url}";
+			$url = "{$base}/{$url}";
 
 		} else {
 
@@ -394,7 +394,7 @@ class Sitemap
 	 * @param resource $file
 	 * @return mixed
 	 */
-	protected function open($file)
+	protected function open($file) : mixed
 	{
 		return @fopen($file, 'w');
 	}
@@ -408,7 +408,7 @@ class Sitemap
 	 * @param bool $close
 	 * @return void
 	 */
-	protected function write($file, string $content, bool $close = false)
+	protected function write($file, string $content, bool $close = false) : void
 	{
 		@fwrite($file, "{$content}{$this->breakString()}");
 		if ( $close ) {

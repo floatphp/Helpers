@@ -39,9 +39,9 @@ class ProxyCache
 	 * @param bool $status
 	 * @return mixed
 	 */
-	public function get(string $key, ?bool &$status = null)
+	public function get(string $key, ?bool &$status = null) : mixed
 	{
-		$data   = $this->getItem($key)->get();
+		$data = $this->getItem($key)->get();
 		$status = $this->has($key);
 		return $data;
 	}

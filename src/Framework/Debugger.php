@@ -15,21 +15,19 @@ declare(strict_types=1);
 
 namespace FloatPHP\Helpers\Framework;
 
-use FloatPHP\Classes\{
-	Server\System,
-	Filesystem\Converter
-};
+use FloatPHP\Classes\Server\System;
+use FloatPHP\Classes\Filesystem\Converter;
 use FloatPHP\Helpers\Connection\Transient;
 
 final class Debugger
 {
 	/**
 	 * Init debug execution time.
-	 * 
+	 *
 	 * @access public
 	 * @return void
 	 */
-	public static function init()
+	public static function init() : void
 	{
 		if ( self::enabled() ) {
 			global $appStartTime;
@@ -39,41 +37,41 @@ final class Debugger
 
 	/**
 	 * Set debug execution time.
-	 * 
+	 *
 	 * @access public
 	 * @return void
 	 */
-	public static function setExecutionTime()
+	public static function setExecutionTime() : void
 	{
 		if ( self::enabled() ) {
 			global $appStartTime;
 			if ( isset($appStartTime) ) {
 				$time = (microtime(true) - $appStartTime);
 				$time = Converter::toFloat($time, 3);
-				(new Transient())->setTemp('--execution-time', $time, 0);
+				(new Transient())->setTemp(key: '--execution-time', value: $time, ttl: 0);
 			}
 		}
 	}
 
 	/**
 	 * Get debug execution time.
-	 * 
+	 *
 	 * @access public
 	 * @return mixed
 	 */
-	public static function getExecutionTime()
+	public static function getExecutionTime() : mixed
 	{
-		return (new Transient())->getTemp('--execution-time', 0);
+		return (new Transient())->getTemp(key: '--execution-time');
 	}
 
 	/**
 	 * Check xdebug status.
-	 * 
+	 *
 	 * @access public
 	 * @return bool
 	 */
 	public static function enabled() : bool
 	{
-		return (bool)System::getIni('xdebug.mode');
+		return (bool)System::getIni(option: 'xdebug.mode');
 	}
 }

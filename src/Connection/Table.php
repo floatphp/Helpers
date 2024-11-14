@@ -45,7 +45,7 @@ final class Table extends Orm
 		parent::__construct();
 
 		// Set table
-		$this->table = (new Catcher(['--key' => $table]))->key;
+		$this->table = (new Catcher(request: ['--key' => $table]))->key;
 
 		// Set key
 		$this->key = "{$this->table}Id";
@@ -65,9 +65,9 @@ final class Table extends Orm
 	{
 		// Check table
 		if ( !$this->hasTable() ) return false;
-		
+
 		// Exclude table
-		if ( $this->inArray($this->table, $this->exclude) ) {
+		if ( $this->inArray(value: $this->table, array: $this->exclude) ) {
 			return false;
 		}
 
@@ -81,7 +81,7 @@ final class Table extends Orm
 			}
 			return $backup->encrypt()->export($data, $file);
 		}
-		
+
 		return false;
 	}
 

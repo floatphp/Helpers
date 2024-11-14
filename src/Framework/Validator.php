@@ -29,18 +29,18 @@ final class Validator
 	 * @return void
 	 * @throws ConfigurationException
 	 */
-	public static function checkConfig($config)
+	public static function checkConfig($config) : void
 	{
 		$error = self::isValidConfig($config);
 		if ( TypeCheck::isString($error) ) {
-	        throw new ConfigurationException(
-	            ConfigurationException::invalidApplicationConfiguration($error)
-	        );
+			throw new ConfigurationException(
+				ConfigurationException::invalidApplicationConfiguration($error)
+			);
 
 		} elseif ( $error === false ) {
-	        throw new ConfigurationException(
-	            ConfigurationException::invalidApplicationConfigurationFile()
-	        );
+			throw new ConfigurationException(
+				ConfigurationException::invalidApplicationConfigurationFile()
+			);
 		}
 	}
 
@@ -52,18 +52,18 @@ final class Validator
 	 * @return void
 	 * @throws ConfigurationException
 	 */
-	public static function checkModuleConfig($config)
+	public static function checkModuleConfig($config) : void
 	{
 		$error = self::isValidConfig($config, 'module.schema.json');
 		if ( TypeCheck::isString($error) ) {
-	        throw new ConfigurationException(
-	            ConfigurationException::invalidModuleConfiguration($error)
-	        );
+			throw new ConfigurationException(
+				ConfigurationException::invalidModuleConfiguration($error)
+			);
 
 		} elseif ( $error === false ) {
-	        throw new ConfigurationException(
-	            ConfigurationException::invalidModuleConfigurationFile()
-	        );
+			throw new ConfigurationException(
+				ConfigurationException::invalidModuleConfigurationFile()
+			);
 		}
 	}
 
@@ -75,18 +75,18 @@ final class Validator
 	 * @return void
 	 * @throws ConfigurationException
 	 */
-	public static function checkRouteConfig($config)
+	public static function checkRouteConfig($config) : void
 	{
 		$error = self::isValidConfig($config, 'route.schema.json');
 		if ( TypeCheck::isString($error) ) {
-	        throw new ConfigurationException(
-	            ConfigurationException::invalidRouteConfiguration($error)
-	        );
+			throw new ConfigurationException(
+				ConfigurationException::invalidRouteConfiguration($error)
+			);
 
 		} elseif ( $error === false ) {
-	        throw new ConfigurationException(
-	            ConfigurationException::invalidRouteConfigurationFile()
-	        );
+			throw new ConfigurationException(
+				ConfigurationException::invalidRouteConfigurationFile()
+			);
 		}
 	}
 
@@ -98,12 +98,12 @@ final class Validator
 	 * @return void
 	 * @throws ConfigurationException
 	 */
-	public static function checkDatabaseConfig($access)
+	public static function checkDatabaseConfig($access) : void
 	{
 		if ( !isset($access['default']) || !isset($access['root']) ) {
-	        throw new ConfigurationException(
-	            ConfigurationException::invalidDatabaseConfiguration()
-	        );
+			throw new ConfigurationException(
+				ConfigurationException::invalidDatabaseConfiguration()
+			);
 		}
 	}
 
@@ -115,22 +115,22 @@ final class Validator
 	 * @var string $schema
 	 * @return mixed
 	 */
-	private static function isValidConfig($config, $schema = 'config.schema.json')
+	private static function isValidConfig($config, $schema = 'config.schema.json') : mixed
 	{
 		$validator = new JsonValidator;
-		$validator->validate($config, (object)[
-			'$ref' => 'file://' . dirname(__FILE__). '/bin/' . $schema
+		$validator->validate(value: $config, schema: (object)[
+			'$ref' => 'file://' . dirname(__FILE__) . '/bin/' . $schema
 		]);
+
 		if ( $validator->isValid() ) {
 			return true;
-
-		} else {
-			$errors = [];
-		    foreach ($validator->getErrors() as $error) {
-		        $errors[] = sprintf("[%s] %s", $error['property'], $error['message']);
-		    }
-		    return implode("\n", $errors);
 		}
-		return false;
+
+		$errors = [];
+		foreach ($validator->getErrors() as $error) {
+			$errors[] = sprintf("[%s] %s", $error['property'], $error['message']);
+		}
+
+		return implode("\n", $errors);
 	}
 }

@@ -34,8 +34,8 @@ final class RedisCache extends ProxyCache implements CacheInterface
 	/**
 	 * @inheritdoc
 	 */
-    public function __construct(array $config = [])
-    {
+	public function __construct(array $config = [])
+	{
 		if ( !static::$initialized ) {
 
 			$this->initConfig();
@@ -49,15 +49,15 @@ final class RedisCache extends ProxyCache implements CacheInterface
 				'timeout'    => 1,
 				'defaultTtl' => $this->getCacheTTL()
 			], $config);
-	
+
 			try {
 				$this->instance = CacheManager::getInstance('Redis', new Config($config));
-	
+
 			} catch (
 				\Phpfastcache\Exceptions\PhpfastcacheDriverConnectException |
 				\Phpfastcache\Exceptions\PhpfastcacheDriverCheckException $e
 			) {
-	
+
 				$this->clearLastError();
 
 				if ( $this->isDebug() ) {
@@ -69,7 +69,7 @@ final class RedisCache extends ProxyCache implements CacheInterface
 			if ( !$this->instance ) {
 				$this->instance = new FileCache();
 			}
-			
+
 		}
-    }
+	}
 }

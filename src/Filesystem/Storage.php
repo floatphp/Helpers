@@ -27,21 +27,21 @@ final class Storage
 		\FloatPHP\Helpers\Framework\inc\TraitThrowable,
 		\FloatPHP\Helpers\Framework\inc\TraitLoggable;
 
-    /**
-     * @access private
+	/**
+	 * @access private
 	 * @var bool $initialized
-     * @var object $instance, Storage instance
-     */
+	 * @var object $instance, Storage instance
+	 */
 	private static $initialized = false;
-    private $instance;
+	private $instance;
 
 	/**
 	 * Init storage.
 	 *
 	 * @inheritdoc
 	 */
-    public function __construct(array $config = [])
-    {
+	public function __construct(array $config = [])
+	{
 		if ( !static::$initialized ) {
 
 			$this->initConfig();
@@ -60,14 +60,14 @@ final class Storage
 				}
 
 				$table = $config['table'];
-				$key   = $config['key'] ?: "{$table}Id";
+				$key = $config['key'] ?: "{$table}Id";
 
 				$this->instance = new Store($table, $dir, [
 					'timeout'            => false,
 					'primary_key'        => $key,
 					'folder_permissions' => 755
 				]);
-	
+
 			} catch (\SleekDB\Exceptions\IOException $e) {
 
 				$this->clearLastError();
@@ -79,58 +79,58 @@ final class Storage
 
 			}
 
-        	$this->resetConfig();
+			$this->resetConfig();
 
 		}
-    }
+	}
 
-    /**
-     * Insert row.
-     *
-     * @access public
-     * @param array $data
-     * @return array
-     */
-    public function insert(array $data) : array
+	/**
+	 * Insert row.
+	 *
+	 * @access public
+	 * @param array $data
+	 * @return array
+	 */
+	public function insert(array $data) : array
 	{
 		return $this->getInstance()->insert($data);
 	}
 
-    /**
-     * Fetch row.
-     *
-     * @access public
-     * @param array $where
-     * @return array
-     */
-    public function fetch(array $where) : array
+	/**
+	 * Fetch row.
+	 *
+	 * @access public
+	 * @param array $where
+	 * @return array
+	 */
+	public function fetch(array $where) : array
 	{
 		$query = $this->getInstance()->createQueryBuilder();
 		$query->where($where)->limit(1);
 		return $query->getQuery()->fetch();
 	}
 
-    /**
-     * Update row by Id.
-     *
-     * @access public
-     * @param int $id
-     * @param array $data
-     * @return bool
-     */
-    public function update(int $id, array $data) : bool
+	/**
+	 * Update row by Id.
+	 *
+	 * @access public
+	 * @param int $id
+	 * @param array $data
+	 * @return bool
+	 */
+	public function update(int $id, array $data) : bool
 	{
 		return (bool)$this->getInstance()->updateById($id, $data);
 	}
 
-    /**
-     * Delete row by Id.
-     *
-     * @access public
-     * @param int $id
-     * @return bool
-     */
-    public function delete(int $id) : bool
+	/**
+	 * Delete row by Id.
+	 *
+	 * @access public
+	 * @param int $id
+	 * @return bool
+	 */
+	public function delete(int $id) : bool
 	{
 		return $this->getInstance()->deleteById($id);
 	}
@@ -186,17 +186,17 @@ final class Storage
 	public function searchOne(array $where) : array
 	{
 		$row = $this->getInstance()->findOneBy($where);
-		return ($row) ? $row : [];
+		return $row ?: [];
 	}
 
-    /**
-     * Check row.
-     *
-     * @access public
-     * @param array $where
-     * @return bool
-     */
-    public function exists(array $where) : bool
+	/**
+	 * Check row.
+	 *
+	 * @access public
+	 * @param array $where
+	 * @return bool
+	 */
+	public function exists(array $where) : bool
 	{
 		$query = $this->getInstance()->createQueryBuilder();
 		return $query->where($where)->getQuery()->exists();

@@ -45,13 +45,13 @@ final class Form extends Main
 		$options = $this->mergeArray([
 			'form'   => false,
 			'submit' => false
-        ], $options);
+		], $options);
 
 		$this->path = "{$this->getAdminUploadPath()}/forms";
 		parent::__construct($options, $atts);
-		
-        // Reset configuration
-        $this->resetConfig();
+
+		// Reset configuration
+		$this->resetConfig();
 	}
 
 	/**
@@ -92,8 +92,10 @@ final class Form extends Main
 	{
 		$output = [];
 		foreach ($forms as $name => $inputs) {
-			if ( $this->isType('array', $inputs) 
-			  && $this->isType('string', $name) ) {
+			if (
+				$this->isType('array', $inputs)
+				&& $this->isType('string', $name)
+			) {
 				$output[$name] = $this->generate($inputs);
 			}
 		}
@@ -125,7 +127,7 @@ final class Form extends Main
 		}
 		return $wrapper;
 	}
-	
+
 	/**
 	 * Save multiple forms.
 	 *
@@ -143,7 +145,7 @@ final class Form extends Main
 		], $filename);
 
 		$path = $this->formatPath("{$this->path}/{$filename}{$ext}");
-		$schema = $this->formatJson($forms, 64|128|256);
+		$schema = $this->formatJson($forms, 64 | 128 | 256);
 		return $this->writeFile($path, $schema);
 	}
 
@@ -196,7 +198,7 @@ final class Form extends Main
 				'inputs'     => $this->getInputs()
 			]
 		];
-		return $this->formatJson($data, 64|128|256);
+		return $this->formatJson($data, 64 | 128 | 256);
 	}
 
 	/**
@@ -287,7 +289,7 @@ final class Form extends Main
 				}
 			}
 		}
-		
+
 		return $inputs;
 	}
 

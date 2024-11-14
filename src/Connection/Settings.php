@@ -35,6 +35,7 @@ final class Settings
 	/**
 	 * Set settings row group.
 	 *
+	 * @access public
 	 * @param string $row
 	 */
 	public function __construct(string $row = self::ROW)
@@ -54,7 +55,7 @@ final class Settings
 	 * @param mixed $default
 	 * @return mixed
 	 */
-	public function get(?string $key = null, $default = null)
+	public function get(?string $key = null, $default = null) : mixed
 	{
 		$settings = $this->getValues();
 		if ( !$this->isType('null', $key) ) {

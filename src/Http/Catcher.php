@@ -38,11 +38,11 @@ final class Catcher
 	 * @param array $request
 	 * @param string $group
 	 */
-    public function __construct(?array $request = [], ?string $group = null)
-    {
+	public function __construct(?array $request = [], ?string $group = null)
+	{
 		$this->group = $group;
 		$this->extract($request);
-    }
+	}
 
 	/**
 	 * Get request var.
@@ -50,7 +50,7 @@ final class Catcher
 	 * @param string $name
 	 * @return mixed
 	 */
-	public function __get(string $name)
+	public function __get(string $name) : mixed
 	{
 		return $this->vars["--{$name}"] ?? null;
 	}
@@ -62,7 +62,7 @@ final class Catcher
 	 * @param array $request
 	 * @return void
 	 */
-	private function extract(?array $request = [])
+	private function extract(?array $request = []) : void
 	{
 		// Set default request
 		$default = (array)$this->getRequest($this->group);
@@ -90,11 +90,11 @@ final class Catcher
 			$url = $this->parseUrl($url);
 			$path = $url['path'] ?? false;
 
-            if ( strpos($path, '/admin/') == 0 ) {
-	        	$path = $this->removeString('/admin/', $path);
-	        	$vars = explode('/', $path);
-	        	$this->vars['--key'] = $vars[0] ?? false;
-            }
+			if ( strpos($path, '/admin/') == 0 ) {
+				$path = $this->removeString('/admin/', $path);
+				$vars = explode('/', $path);
+				$this->vars['--key'] = $vars[0] ?? false;
+			}
 		}
 
 		// Format key

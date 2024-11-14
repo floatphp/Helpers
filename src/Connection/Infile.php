@@ -15,12 +15,13 @@ declare(strict_types=1);
 
 namespace FloatPHP\Helpers\Connection;
 
+use FloatPHP\Classes\Filesystem\Arrayify;
 use FloatPHP\Classes\Server\System;
 use \PDOException;
 use \PDO;
 
-System::setTimeLimit(0);
-System::setMemoryLimit('-1');
+System::setTimeLimit(seconds: 0);
+System::setMemoryLimit(value: '-1');
 
 /**
  * MySQL infile class.
@@ -40,10 +41,10 @@ class Infile
      */
     public function __construct($config = [])
     {
-        $this->config = array_merge([
-            'db'        => '',
+        $this->config = Arrayify::merge([
             'host'      => 'localhost',
             'port'      => 3306,
+            'name'      => '',
             'user'      => 'root',
             'pswd'      => '',
             'charset'   => false,
@@ -65,20 +66,20 @@ class Infile
      * @access public
      * @return void
      */
-    public function execute()
+    public function execute() : void
     {
         try {
 
             $start = microtime(true);
 
             // Set PDO params
-            $dsn  = "mysql:dbname={$this->config['db']};";
+            $dsn = "mysql:dbname={$this->config['name']};";
             $dsn .= "host={$this->config['host']};";
             $dsn .= "port={$this->config['port']}";
 
             // Init PDO INFILE
-            $pdo = new PDO($dsn,$this->config['user'], $this->config['pswd'], [
-                PDO::MYSQL_ATTR_LOCAL_INFILE  => true
+            $pdo = new PDO($dsn, $this->config['user'], $this->config['pswd'], [
+                PDO::MYSQL_ATTR_LOCAL_INFILE => true
             ]);
 
             // Truncate table
@@ -90,8 +91,8 @@ class Infile
             $pdo->exec($this->buildQuery());
 
             if ( $this->config['debug'] ) {
-                $end = microtime(true); 
-                $time = ($end - $start);
+                $end = microtime(true);
+                $time = $end - $start;
                 echo "Executed in : {$time} seconds\n";
             }
 
@@ -107,14 +108,14 @@ class Infile
      * @access private
      * @return string
      */
-    private function buildQuery()
+    private function buildQuery() : string
     {
-        $query  = "LOAD DATA INFILE '{$this->config['file']}' ";
+        $query = "LOAD DATA INFILE '{$this->config['file']}' ";
 
         if ( $this->config['action'] ) {
             $query .= "{$this->config['action']} ";
         }
-        
+
         $query .= "INTO TABLE `{$this->config['table']}` ";
 
         if ( $this->config['charset'] ) {

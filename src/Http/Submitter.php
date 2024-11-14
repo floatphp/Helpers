@@ -35,22 +35,21 @@ final class Submitter
 	/**
 	 * Init input.
 	 * 
+	 * @access public
 	 * @param string $group
-	 * @uses initConfig()
-	 * @uses resetConfig()
 	 */
-    public function __construct(?string $group = null)
-    {
-        // Init configuration
-        $this->initConfig();
+	public function __construct(?string $group = null)
+	{
+		// Init configuration
+		$this->initConfig();
 
 		// Set input
-		$this->group = (new Catcher(['--key' => $group]))->key;
+		$this->group = (new Catcher(request: ['--key' => $group]))->key;
 		$this->vars = $this->getVars();
 
-        // Reset configuration
-        $this->resetConfig();
-    }
+		// Reset configuration
+		$this->resetConfig();
+	}
 
 	/**
 	 * Format request input.
@@ -111,7 +110,7 @@ final class Submitter
 						$item = $this->formatSpace((string)$item);
 						if ( empty($item) ) {
 							unset($list[$n]);
-							
+
 						} else {
 							$list[$n] = $this->formatSpace((string)$item);
 						}
@@ -157,7 +156,7 @@ final class Submitter
 				$input[$key] = $value;
 			}
 		}
-		
+
 		return $input;
 	}
 

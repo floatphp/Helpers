@@ -23,11 +23,9 @@ use FloatPHP\Classes\Filesystem\Translation;
 final class Translator extends Translation
 {
     use \FloatPHP\Kernel\TraitConfiguration;
-    
-	/**
+
+    /**
      * @inheritdoc
-     * @uses initConfig()
-     * @uses resetConfig()
      */
     public function __construct(?string $locale = null)
     {
@@ -42,7 +40,7 @@ final class Translator extends Translation
             $logger = new Logger('core');
             $logger->warning("Invalid language locale [{$locale}]");
         }
-        
+
         // Reset configuration
         $this->resetConfig();
     }

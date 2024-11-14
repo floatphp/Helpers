@@ -30,7 +30,7 @@ class Sqalar extends \ArrayObject
 	 * @todo $operator, // Operator (like, =, >, <, contain)
 	 */
 	private $db;
-	private $data = []; 
+	private $data = [];
 	private $result = [];
 	private $columns = [];
 	private $where = [];
@@ -90,7 +90,7 @@ class Sqalar extends \ArrayObject
 	 * @access private
 	 * @return void
 	 */
-	private function selectDefault()
+	private function selectDefault() : void
 	{
 		if ( isset($this->db[0]) ) {
 			$this->columns = array_keys($this->db[0]);
@@ -145,7 +145,7 @@ class Sqalar extends \ArrayObject
 	 * @param string $column
 	 * @return object
 	 * @todo
-	 */ 
+	 */
 	public function distinct(string $column) : self
 	{
 		// ...
@@ -182,7 +182,7 @@ class Sqalar extends \ArrayObject
 			foreach ($this->db as $k => $v) {
 				if ( is_array($v) ) {
 					foreach ($v as $k2 => $v2) {
-						if ($k2 == $col) {
+						if ( $k2 == $col ) {
 							$sortable[$k] = $v2;
 						}
 					}
@@ -219,7 +219,7 @@ class Sqalar extends \ArrayObject
 	 * @param string $response
 	 * @return mixed
 	 */
-	public function query(?string $response = null)
+	public function query(?string $response = null) : mixed
 	{
 		if ( $response == 'json' ) {
 			return json_encode($this->buildQuery());
@@ -233,7 +233,7 @@ class Sqalar extends \ArrayObject
 	 * @access protected
 	 * @return mixed
 	 */
-	protected function buildQuery()
+	protected function buildQuery() : mixed
 	{
 		if ( $this->isMultipleWhere($this->where) ) {
 
@@ -243,7 +243,7 @@ class Sqalar extends \ArrayObject
 
 			foreach ($this->db as $key => $row) {
 
-				if (empty($row)) return;
+				if ( empty($row) ) return;
 
 				foreach ($this->where as $where) {
 
@@ -261,67 +261,67 @@ class Sqalar extends \ArrayObject
 					// Start Operator
 					switch (strtolower($where['link'])) {
 						case '=': // int
-							if ($source === $search)
+							if ( $source === $search )
 								$this->data[$key] = $this->db[$key];
 							break;
 
 						case 'like': // int|string
-							if ($source == $search)
+							if ( $source == $search )
 								$this->data[$key] = $this->db[$key];
 							break;
 
 						case '%=': // int|string
-							if (strcasecmp($source, $search) == 0)
+							if ( strcasecmp($source, $search) == 0 )
 								$this->data[$key] = $this->db[$key];
 							break;
 
 						case '%like': // int|string
-							if (strcasecmp($source, $search) == 0)
+							if ( strcasecmp($source, $search) == 0 )
 								$this->data[$key] = $this->db[$key];
 							break;
 
 						case '!=': // int|string
-							if ($source !== $search)
+							if ( $source !== $search )
 								$this->data[$key] = $this->db[$key];
 							break;
 
 						case '!like': // int|string
-							if ($source !== $search)
+							if ( $source !== $search )
 								$this->data[$key] = $this->db[$key];
 							break;
 
 						case 'in': // string
-							if (strpos($source, $search) !== false)
+							if ( strpos($source, $search) !== false )
 								$this->data[$key] = $this->db[$key];
 							break;
 
 						case '%in': // string
-							if (strpos(strtolower($source), strtolower($search)) !== false)
+							if ( strpos(strtolower($source), strtolower($search)) !== false )
 								$this->data[$key] = $this->db[$key];
 							break;
 
 						case '!in': // string
-							if (strpos($source, $search) == false)
+							if ( strpos($source, $search) == false )
 								$this->data[$key] = $this->db[$key];
 							break;
 
 						case '<': // string|int
-							if ($source < $search)
+							if ( $source < $search )
 								$this->data[$key] = $this->db[$key];
 							break;
 
 						case '<=': // string|int
-							if ($source <= $search)
+							if ( $source <= $search )
 								$this->data[$key] = $this->db[$key];
 							break;
 
 						case '>': // string|int
-							if ($source > $search)
+							if ( $source > $search )
 								$this->data[$key] = $this->db[$key];
 							break;
 
 						case '>=': // string|int
-							if ($source >= $search)
+							if ( $source >= $search )
 								$this->data[$key] = $this->db[$key];
 							break;
 
@@ -332,7 +332,7 @@ class Sqalar extends \ArrayObject
 				}
 			}
 
-		} elseif ($this->isSingleWhere($this->where)) {
+		} elseif ( $this->isSingleWhere($this->where) ) {
 
 			foreach ($this->db as $key => $row) {
 
@@ -396,7 +396,7 @@ class Sqalar extends \ArrayObject
 	 */
 	private function isValidColumn(array $column) : bool
 	{
-		return ($column && $column[0] != '*');
+		return $column && $column[0] != '*';
 	}
 
 	/**
@@ -409,7 +409,7 @@ class Sqalar extends \ArrayObject
 	private function isMultipleWhere(array $where) : bool
 	{
 		return $this->isValidWhere($where)
-		&& $this->isMultiple($where);
+			&& $this->isMultiple($where);
 	}
 
 	/**
@@ -421,8 +421,8 @@ class Sqalar extends \ArrayObject
 	 */
 	private function isSingleWhere(array $where) : bool
 	{
-		return $this->isValidWhere($where) 
-		&& !$this->isMultiple($where);
+		return $this->isValidWhere($where)
+			&& !$this->isMultiple($where);
 	}
 
 	/**
@@ -434,7 +434,7 @@ class Sqalar extends \ArrayObject
 	 */
 	private function isValidWhere(array $where) : bool
 	{
-		return ($where && is_array($where));
+		return $where && is_array($where);
 	}
 
 	/**
@@ -471,7 +471,7 @@ class Sqalar extends \ArrayObject
 		foreach ($array as $value) {
 			if ( is_array($value) ) {
 				$depth = $this->depth($value) + 1;
-				if ($depth > $max) {
+				if ( $depth > $max ) {
 					$max = $depth;
 				}
 			}
