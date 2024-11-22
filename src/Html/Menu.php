@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Html Component
- * @version    : 1.2.x
+ * @version    : 1.3.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -315,14 +315,14 @@ final class Menu
 
 	/**
 	 * Check whether menu is active.
-	 * 
+	 *
 	 * @access private
 	 * @param string $url
 	 * @return bool
 	 */
 	private function isActive($url = '') : bool
 	{
-		if ( $this->searchString($this->getServer('request-uri'), $url) ) {
+		if ( $this->hasString($this->getServer('request-uri'), $url) ) {
 			return true;
 		}
 		return false;

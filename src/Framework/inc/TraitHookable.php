@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Framework Component
- * @version    : 1.2.x
+ * @version    : 1.3.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -15,10 +15,7 @@ declare(strict_types=1);
 
 namespace FloatPHP\Helpers\Framework\inc;
 
-use FloatPHP\Classes\{
-    Html\Hook,
-    Html\Shortcode
-};
+use FloatPHP\Classes\Html\{Hook, Shortcode};
 
 trait TraitHookable
 {
@@ -26,7 +23,7 @@ trait TraitHookable
 	 * @access protected
 	 * @inheritdoc
 	 */
-	protected function addAction($hook, $method, $priority = 10, $args = 1)
+	protected function addAction($hook, $method, $priority = 10, $args = 1) : mixed
 	{
 		return Hook::getInstance()->addAction($hook, $method, $priority, $args);
 	}
@@ -35,7 +32,7 @@ trait TraitHookable
 	 * @access protected
 	 * @inheritdoc
 	 */
-	protected function removeAction($hook, $method, $priority = 10)
+	protected function removeAction($hook, $method, $priority = 10) : mixed
 	{
 		return Hook::getInstance()->removeAction($hook, $method, $priority);
 	}
@@ -44,7 +41,7 @@ trait TraitHookable
 	 * @access protected
 	 * @inheritdoc
 	 */
-	protected function doAction($tag, $args = null)
+	protected function doAction($tag, $args = null) : mixed
 	{
 		return Hook::getInstance()->doAction($tag, $args);
 	}
@@ -53,7 +50,7 @@ trait TraitHookable
 	 * @access protected
 	 * @inheritdoc
 	 */
-	protected function hasAction($tag, $args = null)
+	protected function hasAction($tag, $args = null) : mixed
 	{
 		return Hook::getInstance()->hasAction($tag, $args);
 	}
@@ -62,7 +59,7 @@ trait TraitHookable
 	 * @access protected
 	 * @inheritdoc
 	 */
-	protected function addFilter($hook, $method, $priority = 10, $args = 1)
+	protected function addFilter($hook, $method, $priority = 10, $args = 1) : mixed
 	{
 		return Hook::getInstance()->addFilter($hook, $method, $priority, $args);
 	}
@@ -80,7 +77,7 @@ trait TraitHookable
 	 * @access protected
 	 * @inheritdoc
 	 */
-	protected function applyFilter($hook, $value, $args = null)
+	protected function applyFilter($hook, $value, $args = null) : mixed
 	{
 		return Hook::getInstance()->applyFilter($hook, $value, $args);
 	}
@@ -98,16 +95,16 @@ trait TraitHookable
 	 * @access protected
 	 * @inheritdoc
 	 */
-	protected function addShortcode($tag, $callback)
+	protected function addShortcode($tag, $callback) : mixed
 	{
-		return Shortcode::getInstance()->addShortcode($tag,$callback);
+		return Shortcode::getInstance()->addShortcode($tag, $callback);
 	}
 
 	/**
 	 * @access protected
 	 * @inheritdoc
 	 */
-	protected function renderShortcode($content, $ignoreHTML = false)
+	protected function renderShortcode($content, $ignoreHTML = false) : void
 	{
 		echo $this->doShortcode($content, $ignoreHTML);
 	}
@@ -116,7 +113,7 @@ trait TraitHookable
 	 * @access protected
 	 * @inheritdoc
 	 */
-	protected function doShortcode($content, $ignoreHTML = false)
+	protected function doShortcode($content, $ignoreHTML = false) : mixed
 	{
 		return Shortcode::getInstance()->doShortcode($content, $ignoreHTML);
 	}
@@ -125,7 +122,7 @@ trait TraitHookable
 	 * @access protected
 	 * @inheritdoc
 	 */
-	protected function removeShortcode($tag)
+	protected function removeShortcode($tag) : mixed
 	{
 		return Shortcode::getInstance()->removeShortcode($tag);
 	}
@@ -143,7 +140,7 @@ trait TraitHookable
 	 * @access protected
 	 * @inheritdoc
 	 */
-	protected function shortcodeAtts($pairs, $atts, $shortcode = '')
+	protected function shortcodeAtts($pairs, $atts, $shortcode = '') : mixed
 	{
 		return Shortcode::getInstance()->shortcodeAtts($pairs, $atts, $shortcode);
 	}
@@ -152,7 +149,7 @@ trait TraitHookable
 	 * @access protected
 	 * @inheritdoc
 	 */
-	protected function stripShortcodes($content)
+	protected function stripShortcodes($content) : mixed
 	{
 		return Shortcode::getInstance()->stripShortcodes($content);
 	}
@@ -161,7 +158,7 @@ trait TraitHookable
 	 * @access protected
 	 * @inheritdoc
 	 */
-	protected function spinText($content)
+	protected function spinText($content) : string
 	{
 		return Shortcode::spin($content);
 	}

@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Framework Component
- * @version    : 1.2.x
+ * @version    : 1.3.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -23,26 +23,26 @@ trait TraitSerializable
 	 * @access protected
 	 * @inheritdoc
 	 */
-    protected function serialize($value)
-    {
-        return Stringify::serialize($value);
-    }
+	protected function serialize($value) : mixed
+	{
+		return Stringify::serialize($value);
+	}
 
 	/**
 	 * @access protected
 	 * @inheritdoc
 	 */
-    protected function unserialize($value)
-    {
-        return Stringify::unserialize($value);
-    }
+	protected function unserialize($value) : mixed
+	{
+		return Stringify::unserialize($value);
+	}
 
 	/**
 	 * @access protected
 	 * @inheritdoc
 	 */
 	protected function isSerialized($value) : bool
-    {
-        return Stringify::isSerialized($value);
-    }
+	{
+		return Stringify::isSerialized($value);
+	}
 }

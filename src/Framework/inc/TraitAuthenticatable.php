@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Framework Component
- * @version    : 1.2.x
+ * @version    : 1.3.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -23,7 +23,7 @@ trait TraitAuthenticatable
 
 	/**
 	 * Check whether user is authenticated.
-	 * 
+	 *
 	 * @access public
 	 * @return bool
 	 */
@@ -34,7 +34,7 @@ trait TraitAuthenticatable
 
 	/**
 	 * Check whether session is valid.
-	 * 
+	 *
 	 * @access protected
 	 * @return bool
 	 */

@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Framework Component
- * @version    : 1.2.x
+ * @version    : 1.3.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -16,8 +16,8 @@ declare(strict_types=1);
 namespace FloatPHP\Helpers\Framework\inc;
 
 use FloatPHP\Classes\{
-    Http\Session,
-    Http\Cookie
+	Http\Session,
+	Http\Cookie
 };
 
 trait TraitSessionable
@@ -26,52 +26,52 @@ trait TraitSessionable
 	 * @access protected
 	 * @inheritdoc
 	 */
-    protected function startSession()
-    {
-        new Session();
-    }
+	protected function startSession() : void
+	{
+		new Session();
+	}
 
 	/**
 	 * @access protected
 	 * @inheritdoc
 	 */
-    protected function setSession($key, $value = null)
-    {
-        Session::set($key, $value);
-    }
+	protected function setSession($key, $value = null) : void
+	{
+		Session::set($key, $value);
+	}
 
 	/**
 	 * @access protected
 	 * @inheritdoc
 	 */
-    protected function getSession($key = null)
-    {
-        return Session::get($key);
-    }
+	protected function getSession($key = null) : mixed
+	{
+		return Session::get($key);
+	}
 
 	/**
 	 * @access protected
 	 * @inheritdoc
 	 */
-    protected function hasSession($key = null) : bool
-    {
-        return Session::isSetted($key);
-    }
+	protected function hasSession($key = null) : bool
+	{
+		return Session::isSetted($key);
+	}
 
 	/**
 	 * @access protected
 	 * @inheritdoc
 	 */
-    protected function registerSession($time = 60)
-    {
-        Session::register($time);
-    }
+	protected function registerSession($time = 60) : void
+	{
+		Session::register($time);
+	}
 
 	/**
 	 * @access protected
 	 * @inheritdoc
 	 */
-    protected function isSessionRegistered() : bool
+	protected function isSessionRegistered() : bool
 	{
 		return Session::isRegistered();
 	}
@@ -80,7 +80,7 @@ trait TraitSessionable
 	 * @access protected
 	 * @inheritdoc
 	 */
-    protected function isSessionExpired() : bool
+	protected function isSessionExpired() : bool
 	{
 		return Session::isExpired();
 	}
@@ -89,53 +89,53 @@ trait TraitSessionable
 	 * @access protected
 	 * @inheritdoc
 	 */
-    protected function closeSession() : bool
-    {
-        return Session::close();
-    }
-
-	/**
-	 * @access protected
-	 * @inheritdoc
-	 */
-    protected function endSession() : bool
-    {
-        return Session::end();
-    }
-
-	/**
-	 * @access protected
-	 * @inheritdoc
-	 */
-	protected function getCookie(?string $key = null)
+	protected function closeSession() : bool
 	{
-        return Cookie::get($key);
+		return Session::close();
 	}
 
 	/**
 	 * @access protected
 	 * @inheritdoc
 	 */
-	protected function setCookie(string $key, $value = '', $options = [])
+	protected function endSession() : bool
+	{
+		return Session::end();
+	}
+
+	/**
+	 * @access protected
+	 * @inheritdoc
+	 */
+	protected function getCookie(?string $key = null) : mixed
+	{
+		return Cookie::get($key);
+	}
+
+	/**
+	 * @access protected
+	 * @inheritdoc
+	 */
+	protected function setCookie(string $key, $value = '', $options = []) : bool
 	{
 		return Cookie::set($key, $value, $options);
 	}
-	
+
 	/**
 	 * @access protected
 	 * @inheritdoc
 	 */
-	protected function hasCookie(?string $key = null)
+	protected function hasCookie(?string $key = null) : bool
 	{
-        return Cookie::isSetted($key);
+		return Cookie::isSetted($key);
 	}
 
 	/**
 	 * @access protected
 	 * @inheritdoc
 	 */
-    protected function clearCookie() : bool
-    {
-        return Cookie::clear();
-    }
+	protected function clearCookie() : bool
+	{
+		return Cookie::clear();
+	}
 }

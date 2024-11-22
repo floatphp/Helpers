@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Framework Component
- * @version    : 1.2.x
+ * @version    : 1.3.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -21,7 +21,7 @@ trait TraitCacheable
      * @access protected
      * @var bool $useCache, Cache status
      */
-	protected $useCache = true;
+    protected $useCache = true;
 
     /**
      * Disable cache.

@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Filesystem Component
- * @version    : 1.2.x
+ * @version    : 1.3.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -177,7 +177,7 @@ final class Backup
 		}
 
 		// Check backup
-		if ( !$this->hasFile($backup) ) {
+		if ( !$this->isFile($backup) ) {
 			return false;
 		}
 

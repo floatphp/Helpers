@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Framework Component
- * @version    : 1.2.x
+ * @version    : 1.3.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -15,12 +15,8 @@ declare(strict_types=1);
 
 namespace FloatPHP\Helpers\Framework;
 
-use FloatPHP\Classes\{
-	Filesystem\TypeCheck,
-	Filesystem\Stringify,
-	Filesystem\Json,
-	Http\Session
-};
+use FloatPHP\Classes\Filesystem\{TypeCheck, Stringify, Json};
+use FloatPHP\Classes\Http\Session;
 use FloatPHP\Helpers\Connection\{User, Role};
 
 final class Permission
@@ -29,11 +25,11 @@ final class Permission
 	 * Check whether user (current) has given roles.
 	 * 
 	 * @access public
-	 * @param string $role
+	 * @param mixed $role
 	 * @param int $userId
 	 * @return bool
 	 */
-	public static function hasRole(string $role = 'administrator', ?int $userId = null) : bool
+	public static function hasRole($role = 'administrator', ?int $userId = null) : bool
 	{
 		if ( !$userId ) {
 			$userId = Session::get('userId');

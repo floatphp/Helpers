@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Filesystem Component
- * @version    : 1.2.x
+ * @version    : 1.3.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -61,7 +61,7 @@ class Cache
 				self::$instance = new FileCache($config);
 			}
 
-			if ( !$this->hasItem('interface', self::$instance, 'Cache') ) {
+			if ( !$this->hasObject('interface', self::$instance, 'Cache') ) {
 				throw new CacheException(
 					CacheException::invalidCacheInstance()
 				);

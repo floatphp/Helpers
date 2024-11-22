@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Framework Component
- * @version    : 1.2.x
+ * @version    : 1.3.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -23,7 +23,7 @@ trait TraitThrowable
 	 * @access public
 	 * @inheritdoc
 	 */
-	public function getLastError()
+	public function getLastError() : void
 	{
 		Exception::getLastError();
 	}
@@ -41,7 +41,7 @@ trait TraitThrowable
 	 * @access protected
 	 * @inheritdoc
 	 */
-	protected function handleException($callable)
+	protected function handleException($callable) : void
 	{
 		Exception::handle($callable);
 	}
@@ -50,7 +50,7 @@ trait TraitThrowable
 	 * @access protected
 	 * @inheritdoc
 	 */
-	protected function clearLastError()
+	protected function clearLastError() : void
 	{
 		Exception::clearLastError();
 	}

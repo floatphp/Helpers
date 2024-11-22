@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Filesystem Component
- * @version    : 1.2.x
+ * @version    : 1.3.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -17,8 +17,8 @@ namespace FloatPHP\Helpers\Filesystem;
 
 use FloatPHP\Classes\Server\System;
 
-System::setTimeLimit(seconds: 0);
-System::setMemoryLimit(value: '-1');
+System::setTimeLimit(0);
+System::setMemoryLimit('-1');
 
 class Sitemap
 {

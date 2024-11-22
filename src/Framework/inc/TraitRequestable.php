@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Framework Component
- * @version    : 1.2.x
+ * @version    : 1.3.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -15,9 +15,7 @@ declare(strict_types=1);
 
 namespace FloatPHP\Helpers\Framework\inc;
 
-use FloatPHP\Classes\Http\{
-    Server, Request, Response, Post
-};
+use FloatPHP\Classes\Http\{Server, Request, Response, Post};
 
 trait TraitRequestable
 {
@@ -25,55 +23,55 @@ trait TraitRequestable
 	 * @access protected
 	 * @inheritdoc
 	 */
-	protected function getRequest($key = null)
-    {
-        return Request::get($key);
-    }
+	protected function getRequest($key = null) : mixed
+	{
+		return Request::get($key);
+	}
 
 	/**
 	 * @access protected
 	 * @inheritdoc
 	 */
-	protected function hasRequest($key = null)
-    {
-        return Request::isSetted($key);
-    }
+	protected function hasRequest($key = null) : bool
+	{
+		return Request::isSetted($key);
+	}
 
 	/**
 	 * @access protected
 	 * @inheritdoc
 	 */
-	protected function setResponse(string $msg = '', array $content = [], string $status = 'success', int $code = 200)
+	protected function setResponse(string $msg = '', array $content = [], string $status = 'success', int $code = 200) : void
 	{
 		Response::set($msg, $content, $status, $code);
 	}
-	
-	/**
-	 * @access protected
-	 * @inheritdoc
-	 */
-	protected function getPost($key = null)
-    {
-        return Post::get($key);
-    }
 
 	/**
 	 * @access protected
 	 * @inheritdoc
 	 */
-	protected function getServer($key = null)
-    {
-        return Server::get($key);
-    }
+	protected function getPost($key = null) : mixed
+	{
+		return Post::get($key);
+	}
+
+	/**
+	 * @access protected
+	 * @inheritdoc
+	 */
+	protected function getServer($key = null) : mixed
+	{
+		return Server::get($key);
+	}
 
 	/**
 	 * @access protected
 	 * @inheritdoc
 	 */
 	protected function getServerBaseUrl() : string
-    {
-        return Server::getBaseUrl();
-    }
+	{
+		return Server::getBaseUrl();
+	}
 
 	/**
 	 * @access protected
@@ -88,7 +86,7 @@ trait TraitRequestable
 	 * @access protected
 	 * @inheritdoc
 	 */
-	protected function getServerIp($domain = null)
+	protected function getServerIp($domain = null) : mixed
 	{
 		return Server::getIp($domain);
 	}
@@ -97,7 +95,7 @@ trait TraitRequestable
 	 * @access protected
 	 * @inheritdoc
 	 */
-	protected function isBasicAuth()
+	protected function isBasicAuth() : bool
 	{
 		return Server::isBasicAuth();
 	}
@@ -124,16 +122,16 @@ trait TraitRequestable
 	 * @access protected
 	 * @inheritdoc
 	 */
-    protected function getBearerToken()
-    {
-        return Server::getBearerToken();
-    }
+	protected function getBearerToken() : string
+	{
+		return Server::getBearerToken();
+	}
 
 	/**
 	 * @access protected
 	 * @inheritdoc
 	 */
-	protected function redirect(string $url = '/', int $code = 0)
+	protected function redirect(string $url = '/', int $code = 0) : void
 	{
 		Server::redirect($url, $code);
 	}

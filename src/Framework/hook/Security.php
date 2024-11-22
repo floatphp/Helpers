@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Framework Component
- * @version    : 1.2.x
+ * @version    : 1.3.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -30,7 +30,7 @@ class Security extends BaseController
 	 */
 	public function useStrongPassword() : self
 	{
-		$this->addFilter('auth-strong-pswd', function () {
+		$this->addFilter('auth-strong-pswd', function () : bool {
 			return true;
 		});
 		return $this;

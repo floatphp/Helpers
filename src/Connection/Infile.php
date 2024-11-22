@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Connection Component
- * @version    : 1.2.x
+ * @version    : 1.3.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -20,8 +20,8 @@ use FloatPHP\Classes\Server\System;
 use \PDOException;
 use \PDO;
 
-System::setTimeLimit(seconds: 0);
-System::setMemoryLimit(value: '-1');
+System::setTimeLimit(0);
+System::setMemoryLimit('-1');
 
 /**
  * MySQL infile class.

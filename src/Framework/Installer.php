@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Framework Component
- * @version    : 1.2.x
+ * @version    : 1.3.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -16,10 +16,7 @@ declare(strict_types=1);
 namespace FloatPHP\Helpers\Framework;
 
 use FloatPHP\Kernel\Orm;
-use FloatPHP\Helpers\{
-	Connection\Transient,
-	Connection\Role
-};
+use FloatPHP\Helpers\Connection\{Transient, Role};
 
 /**
  * Framwork application installer.
@@ -40,7 +37,7 @@ final class Installer
 	public function setup(bool $db = true) : void
 	{
 		// Setup config
-		if ( !$this->hasFile($this->getConfigFile()) ) {
+		if ( !$this->isFile($this->getConfigFile()) ) {
 			$this->setConfig();
 		}
 
@@ -54,12 +51,12 @@ final class Installer
 		}
 
 		// Setup rewrite
-		if ( !$this->hasFile("{$this->getRoot()}/.htaccess") ) {
+		if ( !$this->isFile("{$this->getRoot()}/.htaccess") ) {
 			$this->rewrite();
 		}
 
 		// Setup security
-		if ( !$this->hasFile("{$this->getAppDir()}/.htaccess") ) {
+		if ( !$this->isFile("{$this->getAppDir()}/.htaccess") ) {
 			$this->writeFile("{$this->getAppDir()}/.htaccess", 'deny from all');
 		}
 
@@ -167,7 +164,7 @@ final class Installer
 			'role.sql'
 		];
 		foreach ($tables as $sql) {
-			if ( !$this->hasFile("{$path}/{$sql}") ) {
+			if ( !$this->isFile("{$path}/{$sql}") ) {
 				$this->copyFile(dirname(__FILE__) . "/bin/{$sql}.default", "{$path}/{$sql}");
 			}
 		}

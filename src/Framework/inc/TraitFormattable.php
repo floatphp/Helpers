@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Framework Component
- * @version    : 1.2.x
+ * @version    : 1.3.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -26,98 +26,212 @@ use FloatPHP\Classes\{
 	Server\System
 };
 
+/**
+ * Define formatting functions.
+ */
 trait TraitFormattable
 {
-	use TraitSerializable;
-	use TraitMapable;
-	use TraitSecurable;
+	use TraitSerializable,
+		TraitMappable,
+		TraitSecurable;
 
 	/**
-	 * @access protected
+	 * Format path.
+	 *
+	 * @access public
 	 * @inheritdoc
 	 */
-	protected function formatKey(string $key) : string
-	{
-		return Stringify::formatKey($key);
-	}
-
-	/**
-	 * @access protected
-	 * @inheritdoc
-	 */
-	protected function formatPath(string $path, bool $untrailing = false) : string
+	public function formatPath(string $path, bool $untrailing = false) : string
 	{
 		return Stringify::formatPath($path, $untrailing);
 	}
 
 	/**
-	 * @access protected
+	 * Format key.
+	 *
+	 * @access public
 	 * @inheritdoc
 	 */
-	protected function lowercase(string $string) : string
+	public function formatKey(string $key) : string
+	{
+		return Stringify::formatKey($key);
+	}
+
+	/**
+	 * Format whitespaces.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 */
+	public function formatSpace(string $string) : string
+	{
+		return Stringify::formatSpace($string);
+	}
+
+	/**
+	 * Strip spaces in string.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 */
+	public function stripSpace(string $string) : string
+	{
+		return Stringify::stripSpace($string);
+	}
+
+	/**
+	 * Lowercase string.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 */
+	public function lowercase(string $string) : string
 	{
 		return Stringify::lowercase($string);
 	}
 
 	/**
-	 * @access protected
+	 * Uppercase string.
+	 *
+	 * @access public
 	 * @inheritdoc
 	 */
-	protected function uppercase(string $string) : string
+	public function uppercase(string $string) : string
 	{
 		return Stringify::uppercase($string);
 	}
 
 	/**
-	 * @access protected
+	 * Capitalize string.
+	 *
+	 * @access public
 	 * @inheritdoc
 	 */
-	protected function capitalize(string $string) : string
+	public function capitalize(string $string) : string
 	{
 		return Stringify::capitalize($string);
 	}
 
 	/**
-	 * @access protected
+	 * Camelcase string.
+	 *
+	 * @access public
 	 * @inheritdoc
 	 */
-	protected function slugify(string $string) : string
+	public function camelcase(string $string) : string
+	{
+		return Stringify::camelcase($string);
+	}
+
+	/**
+	 * Slugify string.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 */
+	public function slugify(string $string) : string
 	{
 		return Stringify::slugify($string);
 	}
 
 	/**
-	 * @access protected
+	 * Format dash (hyphen) into underscore.
+	 *
+	 * @access public
 	 * @inheritdoc
 	 */
-	protected function untrailingSlash(string $string) : string
+	public function undash(string $string, bool $isGlobal = false) : string
+	{
+		return Stringify::undash($string, $isGlobal);
+	}
+
+	/**
+	 * Remove slashes from value.
+	 *
+	 * @param mixed $value
+	 * @return mixed
+	 */
+	public function unSlash($value)
+	{
+		return Stringify::unSlash($value);
+	}
+
+	/**
+	 * Strip slashes in quotes or single quotes.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 */
+	public function stripSlash($value)
+	{
+		return Stringify::deepStripSlash($value);
+	}
+
+	/**
+	 * Add slashes to value.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 */
+	public function slash($value)
+	{
+		return Stringify::slash($value);
+	}
+
+	/**
+	 * Remove trailing slashes and backslashes if exist.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 */
+	public function untrailingSlash(string $string) : string
 	{
 		return Stringify::untrailingSlash($string);
 	}
 
 	/**
-	 * @access protected
+	 * Append trailing slashes.
+	 *
+	 * @access public
 	 * @inheritdoc
 	 */
-	protected function trailingSlash(string $string) : string
+	public function trailingSlash(string $string) : string
 	{
 		return Stringify::trailingSlash($string);
 	}
 
 	/**
-	 * @access protected
+	 * Search string.
+	 *
+	 * @access public
 	 * @inheritdoc
 	 */
-	protected function searchString($string, $search) : bool
+	public function hasString($string, $search) : bool
 	{
 		return Stringify::contains($string, $search);
 	}
 
 	/**
-	 * @access protected
+	 * Remove string in other string.
+	 *
+	 * @access public
 	 * @inheritdoc
 	 */
-	protected function replaceString($search, $replace, $subject, $regex = false)
+	public function removeString(string $search, string $subject, bool $regex = false) : string
+	{
+		if ( $regex ) {
+			return Stringify::removeRegex($search, $subject);
+		}
+		return Stringify::remove($search, $subject);
+	}
+
+	/**
+	 * Search replace string(s).
+	 *
+	 * @access public
+	 * @inheritdoc
+	 */
+	public function replaceString($search, $replace, $subject, bool $regex = false)
 	{
 		if ( $regex ) {
 			return Stringify::replaceRegex($search, $replace, $subject);
@@ -126,55 +240,67 @@ trait TraitFormattable
 	}
 
 	/**
-	 * @access protected
+	 * Search replace substring(s).
+	 *
+	 * @access public
 	 * @inheritdoc
 	 */
-	protected function replaceSubString($search, $replace, $offset = 0, $length = null)
+	public function replaceSubString($search, $replace, $offset = 0, $length = null)
 	{
 		return Stringify::subreplace($search, $replace, $offset, $length);
 	}
 
 	/**
-	 * @access protected
+	 * Search replace string(s) using array.
+	 *
+	 * @access public
 	 * @inheritdoc
 	 */
-	protected function replaceStringArray(array $replace, string $subject) : string
+	public function replaceStringArray(array $replace, string $subject) : string
 	{
 		return Stringify::replaceArray($replace, $subject);
 	}
 
 	/**
-	 * @access protected
+	 * Match string using regex.
+	 *
+	 * @access public
 	 * @inheritdoc
 	 */
-	protected function removeString($search, $subject) : string
-	{
-		return Stringify::remove($search, $subject);
-	}
-
-	/**
-	 * @access protected
-	 * @inheritdoc
-	 */
-	protected function matchString($regex, $string, &$matches, $flags = 0, $offset = 0) : bool
+	public function matchString($regex, string $string, &$matches, int $flags = 0, int $offset = 0) : bool
 	{
 		return Stringify::match($regex, $string, $matches, $flags, $offset);
 	}
 
 	/**
-	 * @access protected
+	 * Match all strings using regex (g).
+	 *
+	 * @access public
 	 * @inheritdoc
 	 */
-	protected function matchEveryString(string $regex, string $string, &$matches, int $flags = 0, int $offset = 0) : bool
+	public function matchEveryString(string $regex, string $string, &$matches, int $flags = 0, int $offset = 0) : bool
 	{
 		return Stringify::matchAll($regex, $string, $matches, $flags, $offset);
 	}
 
 	/**
-	 * @access protected
+	 * Parse string.
+	 *
+	 * @access public
 	 * @inheritdoc
 	 */
-	protected function splitString($string, $args = [])
+	public function parseString(string $string, &$result = []) : mixed
+	{
+		return Stringify::parse($string, $result);
+	}
+
+	/**
+	 * Split string.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 */
+	public function splitString(string $string, array $args = []) : mixed
 	{
 		return Stringify::split($string, $args);
 	}
@@ -182,66 +308,21 @@ trait TraitFormattable
 	/**
 	 * Limit string.
 	 *
-	 * @access protected
+	 * @access public
 	 * @inheritdoc
 	 */
-	protected function limitString(string $string, int $limit = 150) : string
+	public function limitString(string $string, int $limit = 150) : string
 	{
 		return Stringify::limit($string, $limit);
 	}
 
 	/**
-	 * @access protected
-	 * @inheritdoc
-	 */
-	protected function stripSpace($string, $replace = '') : string
-	{
-		return Stringify::stripSpace($string, $replace);
-	}
-
-	/**
-	 * @access protected
-	 * @inheritdoc
-	 */
-	protected function formatSpace(string $string) : string
-	{
-		return Stringify::formatSpace($string);
-	}
-
-	/**
-	 * @access protected
-	 * @inheritdoc
-	 */
-	protected function buildQuery($args, string $prefix = '', ?string $sep = '&', int $enc = 1) : string
-	{
-		return Stringify::buildQuery($args, $prefix, $sep, $enc);
-	}
-
-	/**
-	 * @access protected
-	 * @inheritdoc
-	 */
-	protected function parseUrl(string $url, int $component = -1)
-	{
-		return Stringify::parseUrl($url, $component);
-	}
-
-	/**
-	 * @access protected
-	 * @inheritdoc
-	 */
-	protected function parseString(string $string, array &$result = null)
-	{
-		return Stringify::parse($string, $result);
-	}
-
-	/**
 	 * Get basename with path format.
-	 * 
-	 * @access protected
+	 *
+	 * @access public
 	 * @inheritdoc
 	 */
-	protected function basename(string $path, string $suffix = '') : string
+	public function basename(string $path, string $suffix = '') : string
 	{
 		return Stringify::basename($path, $suffix);
 	}
@@ -258,39 +339,36 @@ trait TraitFormattable
 	}
 
 	/**
-	 * @access protected
+	 * Decode JSON.
+	 *
+	 * @access public
 	 * @inheritdoc
 	 */
-	protected function formatJson($value, $flags = 64 | 256)
-	{
-		return Json::format($value, $flags);
-	}
-
-	/**
-	 * @access protected
-	 * @inheritdoc
-	 */
-	protected function parseJson($file, $isArray = false)
-	{
-		return Json::parse($file, $isArray);
-	}
-
-	/**
-	 * @access protected
-	 * @inheritdoc
-	 */
-	protected function decodeJson($value, $isArray = false)
+	public function decodeJson(string $value, bool $isArray = false) : mixed
 	{
 		return Json::decode($value, $isArray);
 	}
 
 	/**
-	 * @access protected
+	 * Encode JSON without flags.
+	 *
+	 * @access public
 	 * @inheritdoc
 	 */
-	protected function encodeJson($value) : string
+	public function encodeJson($value) : mixed
 	{
 		return Json::encode($value);
+	}
+
+	/**
+	 * Encode JSON using flags.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 */
+	public function formatJson($value, int $flags = 64 | 256, int $depth = 512) : mixed
+	{
+		return Json::format($value, $flags, $depth);
 	}
 
 	/**
@@ -303,102 +381,135 @@ trait TraitFormattable
 	}
 
 	/**
-	 * @access protected
+	 * Parse XML string.
+	 *
+	 * @access public
 	 * @inheritdoc
 	 */
-	protected function parseXml(string $xml, int $args = 16384 | 20908)
+	public function parseXml(string $xml, int $args = 16384 | 20908) : mixed
 	{
 		return Xml::parse($xml, $args);
 	}
 
 	/**
-	 * @access protected
+	 * Parse XML file.
+	 *
+	 * @access public
 	 * @inheritdoc
 	 */
-	protected function parseXmlFile(string $path, int $args = 16384 | 20908)
+	public function parseXmlFile(string $path, int $args = 16384 | 20908) : mixed
 	{
 		return Xml::parseFile($path, $args);
 	}
 
 	/**
-	 * @access protected
+	 * Check array item.
+	 *
+	 * @access public
 	 * @inheritdoc
 	 */
-	protected function inArray($value, $array) : bool
+	public function inArray($value, array $array) : bool
 	{
 		return Arrayify::inArray($value, $array);
 	}
 
 	/**
-	 * @access protected
+	 * Merge arrays.
+	 *
+	 * @access public
 	 * @inheritdoc
 	 */
-	protected function mergeArray(array ...$arrays) : array
+	public function mergeArray(array ...$arrays) : array
 	{
 		return Arrayify::merge(...$arrays);
 	}
 
 	/**
-	 * @access protected
+	 * Filter array.
+	 *
+	 * @access public
 	 * @inheritdoc
 	 */
-	protected function filterArray(array $array, $callback = null, $mode = 0) : array
+	public function filterArray(array $array, $callback = null, $mode = 0) : array
 	{
 		return Arrayify::filter($array, $callback, $mode);
 	}
 
 	/**
-	 * @access protected
+	 * Check array key.
+	 *
+	 * @access public
 	 * @inheritdoc
 	 */
-	protected function hasArrayKey($key, array $array) : bool
+	public function hasArrayKey($key, array $array) : bool
 	{
 		return Arrayify::hasKey($key, $array);
 	}
 
 	/**
-	 * @access protected
+	 * Get array keys.
+	 *
+	 * @access public
 	 * @inheritdoc
 	 */
-	protected function arrayKeys(array $array) : array
+	public function arrayKeys(array $array, $value = null, bool $search = false) : array
 	{
-		return Arrayify::keys($array);
+		return Arrayify::keys($array, $value, $search);
 	}
 
 	/**
-	 * @access protected
+	 * Get single array key.
+	 *
+	 * @access public
 	 * @inheritdoc
 	 */
-	protected function arrayValues(array $array) : array
+	public function arrayKey(array $array) : mixed
+	{
+		return Arrayify::key($array);
+	}
+
+	/**
+	 * Get array values.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 */
+	public function arrayValues(array $array) : array
 	{
 		return Arrayify::values($array);
 	}
 
 	/**
-	 * @access protected
+	 * Shift array.
+	 *
+	 * @access public
 	 * @inheritdoc
 	 */
-	protected function arrayShift(array &$array)
+	public function shiftArray(array &$array) : array
 	{
 		return Arrayify::shift($array);
 	}
 
 	/**
-	 * @access protected
+	 * Get array diff.
+	 *
+	 * @access public
 	 * @inheritdoc
 	 */
-	protected function uniqueArray(array $array, $flags = SORT_STRING) : array
+	public function diffArray(array $array, array $arrays) : array
 	{
-		return Arrayify::unique($array, $flags);
+		return Arrayify::diff($array, $arrays);
 	}
 
 	/**
-	 * @access protected
+	 * Sort array.
+	 *
+	 * @access public
 	 * @inheritdoc
 	 */
-	protected function uniqueMultiArray(array $array) : array
+	public function sortArray(array $array, $orderby = [], $order = 'ASC', bool $preserve = false)
 	{
-		return Arrayify::uniqueMultiple($array);
+		return Arrayify::sort($array, $orderby, $order, $preserve);
 	}
 
 	/**
@@ -413,6 +524,61 @@ trait TraitFormattable
 	}
 
 	/**
+	 * Unique array.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 */
+	public function uniqueArray(array $array, $flags = 2) : array
+	{
+		return Arrayify::unique($array, $flags);
+	}
+
+	/**
+	 * Unique arrays.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 */
+	public function uniqueMultiArray(array $array) : array
+	{
+		return Arrayify::uniqueMultiple($array);
+	}
+
+	/**
+	 * Format array key case.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 */
+	public function formatKeyCase(array $array, int $case = 0) : array
+	{
+		return Arrayify::formatKeyCase($array, $case);
+	}
+
+	/**
+	 * Push array.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 */
+	public function pushArray(array &$array, ...$values) : int
+	{
+		return Arrayify::push($array, ...$values);
+	}
+
+	/**
+	 * Format array.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 */
+	public function formatArray(array $array) : array
+	{
+		return Arrayify::format($array);
+	}
+
+	/**
 	 * Check value type.
 	 *
 	 * @access public
@@ -420,98 +586,231 @@ trait TraitFormattable
 	 */
 	public function isType(string $type, $value) : bool
 	{
-		switch ($this->lowercase($type)) {
-			case 'array':
-			case '[]':
-				return TypeCheck::isArray($value);
-				break;
+		return match ($this->lowercase($type)) {
+			'array', '[]'      => TypeCheck::isArray($value),
+			'object', 'obj'    => TypeCheck::isObject($value),
+			'string', 'str'    => TypeCheck::isString($value),
+			'integer', 'int'   => TypeCheck::isInt($value),
+			'numeric', 'num'   => TypeCheck::isNumeric($value),
+			'float', 'double'  => TypeCheck::isFloat($value),
+			'bool', 'boolean'  => TypeCheck::isBool($value),
+			'false'            => TypeCheck::isFalse($value),
+			'true'             => TypeCheck::isTrue($value),
+			'null'             => TypeCheck::isNull($value),
+			'empty'            => TypeCheck::isEmpty($value),
+			'resource', 'res'  => TypeCheck::isResource($value),
+			'class'            => TypeCheck::isClass($value),
+			'interface'        => TypeCheck::isInterface($value),
+			'function', 'fun'  => TypeCheck::isFunction($value),
+			'callable', 'call' => TypeCheck::isCallable($value),
+			'email'            => Validator::isEmail($value),
+			'url'              => Validator::isUrl($value),
+			'date'             => Validator::isDate($value),
+			'ip'               => Validator::isIp($value),
+			default            => false
+		};
+	}
 
-			case 'object':
-			case 'obj':
-				return TypeCheck::isObject($value);
-				break;
+	/**
+	 * Check object.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 */
+	public function hasObject($type, $object, $item) : bool
+	{
+		return match ($this->lowercase($type)) {
+			'interface' => TypeCheck::hasInterface($object, Stringify::toInterface($item)),
+			'method'    => TypeCheck::hasMethod($object, $item),
+			'parent'    => TypeCheck::isSubClassOf($object, $item),
+			'child'     => TypeCheck::isObject($item, $object),
+			default     => false
+		};
+	}
 
-			case 'string':
-			case 'str':
-				return TypeCheck::isString($value);
-				break;
+	/**
+	 * Convert array to object.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 */
+	public function toObject(array $array, $strict = false) : object
+	{
+		return Converter::toObject($array, $strict);
+	}
 
-			case 'integer':
-			case 'int':
-				return TypeCheck::isInt($value);
-				break;
+	/**
+	 * Convert object to array.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 */
+	public function toArray(object $object) : array
+	{
+		return Converter::toArray($object);
+	}
 
-			case 'numeric':
-			case 'num':
-				return TypeCheck::isNumeric($value);
-				break;
+	/**
+	 * @access protected
+	 * @inheritdoc
+	 */
+	protected function toFloat($number, int $decimals = 0, string $dSep = '.', string $tSep = ',') : float
+	{
+		return Converter::toFloat($number, $decimals, $dSep, $tSep);
+	}
 
-			case 'float':
-			case 'double':
-				return TypeCheck::isFloat($value);
-				break;
+	/**
+	 * Convert data to key.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 */
+	public function toKey($data) : string
+	{
+		return Converter::toKey($data);
+	}
 
-			case 'bool':
-			case 'boolean':
-				return TypeCheck::isBool($value);
-				break;
+	/**
+	 * Convert dynamic types.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 */
+	public function toTypes($value)
+	{
+		return Converter::toTypes($value);
+	}
 
-			case 'false':
-				return TypeCheck::isFalse($value);
-				break;
+	/**
+	 * Escape HTML.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 * @todo
+	 */
+	public function escapeHTML(string $string) : string
+	{
+		return $string;
+	}
 
-			case 'true':
-				return TypeCheck::isTrue($value);
-				break;
+	/**
+	 * Escape HTML attribute.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 * @todo
+	 */
+	public function escapeAttr(string $string) : string
+	{
+		return $string;
+	}
 
-			case 'null':
-				return TypeCheck::isNull($value);
-				break;
+	/**
+	 * Escape textarea.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 * @todo
+	 */
+	public function escapeTextarea(string $string) : string
+	{
+		return $string;
+	}
 
-			case 'empty':
-				return TypeCheck::isEmpty($value);
-				break;
+	/**
+	 * Escape JS.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 * @todo
+	 */
+	public function escapeJS(string $string) : string
+	{
+		return $string;
+	}
 
-			case 'resource':
-			case 'res':
-				return TypeCheck::isResource($value);
-				break;
+	/**
+	 * Escape SQL.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 * @todo
+	 */
+	public function escapeSQL(string $string) : string
+	{
+		return $string;
+	}
 
-			case 'class':
-				return TypeCheck::isClass($value);
-				break;
+	/**
+	 * Escape Url.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 * @todo
+	 */
+	public function escapeUrl(string $string) : string
+	{
+		return $string;
+	}
 
-			case 'interface':
-				return TypeCheck::isInterface($value);
-				break;
+	/**
+	 * Sanitize text field.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 * @todo
+	 */
+	public function sanitizeText(string $string) : string
+	{
+		return $string;
+	}
 
-			case 'function':
-			case 'fun':
-				return TypeCheck::isFunction($value);
-				break;
+	/**
+	 * Sanitize textarea field.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 * @todo
+	 */
+	public function sanitizeTextarea(string $string) : string
+	{
+		return $string;
+	}
 
-			case 'callable':
-			case 'call':
-				return TypeCheck::isCallable($value);
-				break;
+	/**
+	 * Sanitize email.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 * @todo
+	 */
+	public function sanitizeEmail(string $string) : string
+	{
+		return $string;
+	}
 
-			case 'email':
-				return Validator::isValidEmail($value);
-				break;
+	/**
+	 * Sanitize url.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 * @todo
+	 */
+	public function sanitizeUrl(string $string) : string
+	{
+		return $string;
+	}
 
-			case 'url':
-				return Validator::isValidUrl($value);
-				break;
-
-			case 'date':
-				return Validator::isValidDate($value);
-				break;
-
-			case 'ip':
-				return Validator::isValidIp($value);
-				break;
-		}
-		return false;
+	/**
+	 * Sanitize HTML content (XSS).
+	 *
+	 * @access public
+	 * @inheritdoc
+	 * @todo
+	 */
+	public function sanitizeHTML(string $string) : string
+	{
+		return $string;
 	}
 
 	/**
@@ -524,41 +823,56 @@ trait TraitFormattable
 	}
 
 	/**
-	 * @access protected
+	 * Validate PHP module.
+	 *
+	 * @access public
 	 * @inheritdoc
 	 */
-	protected function hasItem($type, $object, $item) : bool
+	public function isModule(string $module) : bool
 	{
-		switch (Stringify::lowercase($type)) {
+		return Validator::isModule($module);
+	}
 
-			case 'interface':
-				$i = Stringify::lowercase($item);
-				if ( !Stringify::contains($i, 'interface') ) {
-					$item = Stringify::capitalize($item);
-					$item = "{$item}Interface";
-				}
-				return TypeCheck::hasInterface($object, $item);
-				break;
+	/**
+	 * Validate server module.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 */
+	public function isServerModule(string $module) : bool
+	{
+		return Validator::isServerModule($module);
+	}
 
-			case 'method':
-				return TypeCheck::hasMethod($object, $item);
-				break;
+	/**
+	 * Validate server config.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 */
+	public function isServerConfig(string $name, $value) : bool
+	{
+		return Validator::isConfig($name, $value);
+	}
 
-			case 'parent':
-				return TypeCheck::isSubClassOf($object, $item);
-				break;
-
-		}
-
-		return false;
+	/**
+	 * Validate version.
+	 *
+	 * @access public
+	 * @inheritdoc
+	 */
+	public function isVersion(string $v1, string $v2, string $operator = '==') : bool
+	{
+		return Validator::isVersion($v1, $v2, $operator);
 	}
 
 	/**
 	 * @access protected
 	 * @inheritdoc
+	 * @todo
 	 */
-	protected function toFloat($number, int $decimals = 0, string $dSep = '.', string $tSep = ',') : float
+	protected function parseUrl(string $url, int $component = -1) : mixed
 	{
-		return Converter::toFloat($number, $decimals, $dSep, $tSep);
+		return Stringify::parseUrl($url, $component);
 	}
 }
