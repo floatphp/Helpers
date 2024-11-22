@@ -28,12 +28,16 @@ class Cache
 	/**
 	 * @access protected
 	 * @var object $instance, Cache instance
+	 * @var string $group, Cache group
 	 * @var bool $validate, Validate cache value
+	 * @var bool $persist, Cache persist
 	 * @var bool $debug, Cache debug
 	 * @var object DRIVERS, Cache drivers
 	 */
 	protected static $instance;
+	protected $group = null;
 	protected $validate = false;
+	protected $persist = false;
 	protected $debug = false;
 	protected const DRIVERS = ['File', 'Redis'];
 
@@ -96,6 +100,15 @@ class Cache
 		if ( ($this->validate && !$value) || $this->debug ) {
 			return false;
 		}
+
+		if ( $this->persist ) {
+			$ttl = 0;
+		}
+
+		if ( !$group ) {
+			$group = $this->group;
+		}
+
 		$key = $this->slugify($key);
 		return self::$instance->set($key, $value, $ttl, $group);
 	}
@@ -137,6 +150,28 @@ class Cache
 	public function validate() : self
 	{
 		$this->validate = true;
+		return $this;
+	}
+
+	/**
+	 * Persist cache value.
+	 *
+	 * @inheritdoc
+	 */
+	public function persist() : self
+	{
+		$this->persist = true;
+		return $this;
+	}
+
+	/**
+	 * Set cache group.
+	 *
+	 * @inheritdoc
+	 */
+	public function setGroup(string $group) : self
+	{
+		$this->group = $group;
 		return $this;
 	}
 
