@@ -20,145 +20,230 @@ use FloatPHP\Classes\Html\{Hook, Shortcode};
 trait TraitHookable
 {
 	/**
+	 * Add filter hook.
+	 *
 	 * @access protected
 	 * @inheritdoc
 	 */
-	protected function addAction($hook, $method, $priority = 10, $args = 1) : mixed
+	protected function addFilter(string $name, $callback, int $priority = Hook::PRIORITY, int $args = Hook::COUNT) : mixed
 	{
-		return Hook::getInstance()->addAction($hook, $method, $priority, $args);
+		return Hook::getInstance()->addFilter($name, $callback, $priority, $args);
+	}
+
+	/**
+	 * Remove filter hook.
+	 *
+	 * @access protected
+	 * @inheritdoc
+	 */
+	protected function removeFilter(string $name, $callback, int $priority = Hook::PRIORITY) : bool
+	{
+		return Hook::getInstance()->removeFilter($name, $callback, $priority);
+	}
+
+	/**
+	 * Remove all filters.
+	 *
+	 * @access protected
+	 * @inheritdoc
+	 */
+	protected function removeFilters(string $name, $priority = false) : bool
+	{
+		return Hook::getInstance()->removeFilters($name, $priority);
+	}
+
+	/**
+	 * Check filter hook.
+	 *
+	 * @access protected
+	 * @inheritdoc
+	 */
+	protected function hasFilter(string $name, $callback = false) : mixed
+	{
+		return Hook::getInstance()->hasFilter($name, $callback);
+	}
+
+	/**
+	 * Apply filter hook.
+	 *
+	 * @access protected
+	 * @inheritdoc
+	 */
+	protected function applyFilter(string $name, $value, ...$args) : mixed
+	{
+		return Hook::getInstance()->applyFilter($name, $value, $args);
+	}
+
+	/**
+	 * Add action hook.
+	 *
+	 * @access protected
+	 * @inheritdoc
+	 */
+	protected function addAction(string $name, $callback, int $priority = Hook::PRIORITY, int $args = Hook::COUNT) : bool
+	{
+		return Hook::getInstance()->addAction($name, $callback, $priority, $args);
+	}
+
+	/**
+	 * Check action hook.
+	 *
+	 * @access protected
+	 * @inheritdoc
+	 */
+	protected function hasAction(string $name, $callback = false) : mixed
+	{
+		return Hook::getInstance()->hasAction($name, $callback);
+	}
+
+	/**
+	 * Remove action hook.
+	 *
+	 * @access protected
+	 * @inheritdoc
+	 */
+	protected function removeAction(string $name, $callback, int $priority = Hook::PRIORITY) : bool
+	{
+		return Hook::getInstance()->removeAction($name, $callback, $priority);
+	}
+
+	/**
+	 * Remove all actions hooks.
+	 *
+	 * @access protected
+	 * @inheritdoc
+	 */
+	protected function removeActions(string $name, $priority = false) : bool
+	{
+		return Hook::getInstance()->removeActions($name, $priority);
+	}
+
+	/**
+	 * Do action hook.
+	 *
+	 * @access protected
+	 * @inheritdoc
+	 */
+	protected function doAction(string $name, ...$args) : void
+	{
+		Hook::getInstance()->doAction($name, $args);
+	}
+
+	/**
+	 * Check fired action hook.
+	 *
+	 * @access protected
+	 * @inheritdoc
+	 */
+	protected function didAction(string $name) : int
+	{
+		return Hook::getInstance()->didAction($name);
+	}
+
+	/**
+	 * Add shortcode.
+	 *
+	 * @access protected
+	 * @inheritdoc
+	 */
+	protected function addShortcode(string $name, $callback) : bool
+	{
+		return Shortcode::getInstance()->add($name, $callback);
+	}
+
+	/**
+	 * Remove registered shortcode.
+	 *
+	 * @access protected
+	 * @inheritdoc
+	 */
+	protected function removeShortcode(string $name) : bool
+	{
+		return Shortcode::getInstance()->remove($name);
+	}
+
+	/**
+	 * Remove all registered shortcodes.
+	 *
+	 * @access protected
+	 * @inheritdoc
+	 */
+	protected function removeShortcodes() : bool
+	{
+		return Shortcode::getInstance()->removeAll();
+	}
+
+	/**
+	 * Check whether shortcode is registered.
+	 *
+	 * @access protected
+	 * @inheritdoc
+	 */
+	protected function hasShortcode(string $name) : bool
+	{
+		return Shortcode::getInstance()->has($name);
+	}
+
+	/**
+	 * Check whether content contains shortcode.
+	 *
+	 * @access protected
+	 * @inheritdoc
+	 */
+	protected function containShortcode(string $content, string $name) : bool
+	{
+		return Shortcode::getInstance()->contain($content, $name);
 	}
 
 	/**
 	 * @access protected
 	 * @inheritdoc
 	 */
-	protected function removeAction($hook, $method, $priority = 10) : mixed
+	protected function shortcodeAtts(array $default, array $atts, string $name = '') : mixed
 	{
-		return Hook::getInstance()->removeAction($hook, $method, $priority);
+		return Shortcode::getInstance()->getAtts($default, $atts, $name);
 	}
 
 	/**
-	 * @access protected
-	 * @inheritdoc
-	 */
-	protected function doAction($tag, $args = null) : mixed
-	{
-		return Hook::getInstance()->doAction($tag, $args);
-	}
-
-	/**
-	 * @access protected
-	 * @inheritdoc
-	 */
-	protected function hasAction($tag, $args = null) : mixed
-	{
-		return Hook::getInstance()->hasAction($tag, $args);
-	}
-
-	/**
-	 * @access protected
-	 * @inheritdoc
-	 */
-	protected function addFilter($hook, $method, $priority = 10, $args = 1) : mixed
-	{
-		return Hook::getInstance()->addFilter($hook, $method, $priority, $args);
-	}
-
-	/**
-	 * @access protected
-	 * @inheritdoc
-	 */
-	protected function removeFilter($hook, $method, $priority = 10) : bool
-	{
-		return Hook::getInstance()->removeFilter($hook, $method, $priority);
-	}
-
-	/**
-	 * @access protected
-	 * @inheritdoc
-	 */
-	protected function applyFilter($hook, $value, $args = null) : mixed
-	{
-		return Hook::getInstance()->applyFilter($hook, $value, $args);
-	}
-
-	/**
-	 * @access protected
-	 * @inheritdoc
-	 */
-	protected function hasFilter($hook, $method = false) : bool
-	{
-		return Hook::getInstance()->hasFilter($hook, $method);
-	}
-
-	/**
-	 * @access protected
-	 * @inheritdoc
-	 */
-	protected function addShortcode($tag, $callback) : mixed
-	{
-		return Shortcode::getInstance()->addShortcode($tag, $callback);
-	}
-
-	/**
-	 * @access protected
-	 * @inheritdoc
-	 */
-	protected function renderShortcode($content, $ignoreHTML = false) : void
-	{
-		echo $this->doShortcode($content, $ignoreHTML);
-	}
-
-	/**
-	 * @access protected
-	 * @inheritdoc
-	 */
-	protected function doShortcode($content, $ignoreHTML = false) : mixed
-	{
-		return Shortcode::getInstance()->doShortcode($content, $ignoreHTML);
-	}
-
-	/**
-	 * @access protected
-	 * @inheritdoc
-	 */
-	protected function removeShortcode($tag) : mixed
-	{
-		return Shortcode::getInstance()->removeShortcode($tag);
-	}
-
-	/**
-	 * @access protected
-	 * @inheritdoc
-	 */
-	protected function hasShortcode($content, $tag) : bool
-	{
-		return Shortcode::getInstance()->hasShortcode($content, $tag);
-	}
-
-	/**
-	 * @access protected
-	 * @inheritdoc
-	 */
-	protected function shortcodeAtts($pairs, $atts, $shortcode = '') : mixed
-	{
-		return Shortcode::getInstance()->shortcodeAtts($pairs, $atts, $shortcode);
-	}
-
-	/**
+	 * Remove all shortcodes from content.
+	 *
 	 * @access protected
 	 * @inheritdoc
 	 */
 	protected function stripShortcodes($content) : mixed
 	{
-		return Shortcode::getInstance()->stripShortcodes($content);
+		return Shortcode::getInstance()->strip($content);
 	}
 
 	/**
+	 * Do shortcode hook.
+	 *
 	 * @access protected
 	 * @inheritdoc
 	 */
-	protected function spinText($content) : string
+	protected function doShortcode(string $content, bool $escape = false) : mixed
+	{
+		return Shortcode::getInstance()->do($content, $escape);
+	}
+
+	/**
+	 * Render shortcode.
+	 *
+	 * @access protected
+	 * @inheritdoc
+	 */
+	protected function renderShortcode(string $content, bool $escape = false) : void
+	{
+		echo $this->doShortcode($content, $escape);
+	}
+
+	/**
+	 * Spin shortcode string.
+	 *
+	 * @access protected
+	 * @inheritdoc
+	 */
+	protected function spinText(string $content) : string
 	{
 		return Shortcode::spin($content);
 	}
