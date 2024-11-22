@@ -15,7 +15,7 @@ declare(strict_types=1);
 
 namespace FloatPHP\Helpers\Framework;
 
-use FloatPHP\Classes\Filesystem\TypeCheck;
+use FloatPHP\Classes\Filesystem\{Arrayify, TypeCheck};
 use FloatPHP\Exceptions\Kernel\ConfigurationException;
 use JsonSchema\Validator as JsonValidator;
 
@@ -92,18 +92,27 @@ final class Validator
 
 	/**
 	 * Check database config.
-	 * 
+	 *
 	 * @access public
-	 * @var array $access
+	 * @var array $data
 	 * @return void
 	 * @throws ConfigurationException
 	 */
-	public static function checkDatabaseConfig($access) : void
+	public static function checkDatabaseConfig(array $data, string $type = 'default') : void
 	{
-		if ( !isset($access['default']) || !isset($access['root']) ) {
-			throw new ConfigurationException(
-				ConfigurationException::invalidDatabaseConfiguration()
-			);
+		$required = ['user', 'pswd'];
+
+		if ( $type == 'default' ) {
+			$default = ['host', 'port', 'name', 'charset', 'collate'];
+			$required = Arrayify::merge($default, $required);
+		}
+
+		foreach ($required as $key => $value) {
+			if ( !isset($data[$value]) ) {
+				throw new ConfigurationException(
+					ConfigurationException::invalidDatabaseConfiguration()
+				);
+			}
 		}
 	}
 

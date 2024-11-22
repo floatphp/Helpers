@@ -16,6 +16,7 @@ declare(strict_types=1);
 namespace FloatPHP\Helpers\Framework\inc;
 
 use FloatPHP\Classes\Filesystem\{File, Json, Archive, Stringify, TypeCheck};
+use FloatPHP\Helpers\Filesystem\Yaml;
 
 /**
  * Define filesystem IO functions.
@@ -221,6 +222,17 @@ trait TraitIO
 	protected function parseIni(string $path, bool $sections = false, int $mode = 0) : mixed
 	{
 		return File::parseIni($path, $sections, $mode);
+	}
+
+	/**
+	 * Parse Yaml file.
+	 *
+	 * @access protected
+	 * @inheritdoc
+	 */
+	protected function parseYaml(string $path, ?string $section = null) : mixed
+	{
+		return Yaml::parse($path, $section);
 	}
 
 	/**
