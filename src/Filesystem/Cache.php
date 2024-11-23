@@ -105,9 +105,8 @@ class Cache
 			$ttl = 0;
 		}
 
-		if ( !$group ) {
-			$group = $this->group;
-		}
+		$group = $group ?: $this->group;
+		$group = $group ? $this->slugify($this->basename($group)) : null;
 
 		$key = $this->slugify($key);
 		return self::$instance->set($key, $value, $ttl, $group);
@@ -127,6 +126,9 @@ class Cache
 	 */
 	public function purge(?string $group = null) : bool
 	{
+		$group = $group ?: $this->group;
+		$group = $group ? $this->slugify($this->basename($group)) : null;
+
 		return self::$instance->purge($group);
 	}
 
