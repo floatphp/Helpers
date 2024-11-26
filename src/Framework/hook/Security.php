@@ -61,10 +61,10 @@ class Security extends BaseController
 	public function useLimitedAttempt(int $max = 3) : self
 	{
 		// Log failed authentication
-		$this->addAction('auth-failed', function ($username) {
-			if ( !empty($username) ) {
+		$this->addAction('auth-failed', function ($user) {
+			if ( !empty($user) ) {
 				$transient = new Transient();
-				$key = "auth-{$username}";
+				$key = "auth-{$user}";
 				if ( !($attempt = $transient->getTemp($key)) ) {
 					$transient->setTemp($key, 1, 0);
 
@@ -75,9 +75,9 @@ class Security extends BaseController
 		});
 
 		// Apply attempts limit
-		$this->addAction('authenticate', function ($username) use ($max) {
-			if ( !empty($username) ) {
-				$key = "auth-{$username}";
+		$this->addAction('authenticate', function ($user) use ($max) {
+			if ( $user && $this->isType('string', $user) ) {
+				$key = "auth-{$user}";
 				$transient = new Transient();
 				$attempt = $transient->getTemp($key);
 				if ( $attempt >= $max ) {
