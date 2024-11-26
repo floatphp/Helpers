@@ -15,38 +15,34 @@ declare(strict_types=1);
 
 namespace FloatPHP\Helpers\Http;
 
+use FloatPHP\Classes\Http\Client;
+use FloatPHP\Classes\Server\System;
+
+System::setTimeLimit(0);
+System::setMemoryLimit('-1');
+
 /**
  * Built-in crawler.
  */
-final class Crawler extends Request
+final class Crawler
 {
 	/**
 	 * @access private
-	 * @var string PATTERN
+	 * @var array $urls
 	 */
-	private const PATTERN = '*';
-
-	/**
-	 * @access private
-	 * @var string $pattern
-	 * @var array $args
-	 * @var int $status
-	 */
-	private $pattern;
-	private $args;
-	private $status = 0;
+	private $urls = [];
 
 	/**
 	 * Init crawler.
 	 *
-	 * @param string $pattern
+	 * @param array $urls
 	 */
-	public function __construct(string $pattern = self::PATTERN, array $args = [])
+	public function __construct(array $urls)
 	{
 		$this->pattern = $pattern;
 		$this->args = Arrayify::merge([
 			'method'      => self::GET,
-			'timeout'     => 3,
+			'timeout'     => 5,
 			'redirection' => 2,
 			'blocking'    => false,
 			'headers'     => ['Cache-Control' => 'max-age=0']
