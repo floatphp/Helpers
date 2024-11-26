@@ -71,7 +71,7 @@ trait TraitHookable
 	 */
 	protected function applyFilter(string $name, $value, ...$args) : mixed
 	{
-		return Hook::getInstance()->applyFilter($name, $value, $args);
+		return Hook::getInstance()->applyFilter($name, $value, ...$args);
 	}
 
 	/**
@@ -126,7 +126,7 @@ trait TraitHookable
 	 */
 	protected function doAction(string $name, ...$args) : void
 	{
-		Hook::getInstance()->doAction($name, $args);
+		Hook::getInstance()->doAction($name, ...$args);
 	}
 
 	/**
