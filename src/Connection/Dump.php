@@ -15,10 +15,8 @@ declare(strict_types=1);
 
 namespace FloatPHP\Helpers\Connection;
 
-use FloatPHP\Classes\{
-	Filesystem\Arrayify,
-	Server\System
-};
+use FloatPHP\Classes\Filesystem\Arrayify;
+use FloatPHP\Classes\Server\System;
 use \mysqli;
 
 System::setTimeLimit(0);
@@ -134,7 +132,7 @@ final class Dump
 
 		$command .= " {$this->access['name']} > {$file}";
 
-		exec($command, $output, $status);
+		System::execute($command, $output, $status);
 		return $status === 0;
 	}
 }

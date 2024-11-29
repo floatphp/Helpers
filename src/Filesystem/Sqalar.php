@@ -15,6 +15,10 @@ declare(strict_types=1);
 
 namespace FloatPHP\Helpers\Filesystem;
 
+/**
+ * Built-in Array based database.
+ * @see https://jakiboy.github.io/Sqalar/
+ */
 class Sqalar extends \ArrayObject
 {
 	/**

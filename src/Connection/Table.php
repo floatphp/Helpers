@@ -16,11 +16,8 @@ declare(strict_types=1);
 namespace FloatPHP\Helpers\Connection;
 
 use FloatPHP\Kernel\Orm;
-use FloatPHP\Helpers\{
-	Http\Catcher,
-	Filesystem\Backup,
-	Filesystem\Cache
-};
+use FloatPHP\Helpers\Http\Catcher;
+use FloatPHP\Helpers\Filesystem\{Backup, Cache};
 
 /**
  * Database table helper class.

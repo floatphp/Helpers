@@ -18,7 +18,7 @@ namespace FloatPHP\Helpers\Filesystem;
 use SleekDB\Store;
 
 /**
- * Wrapper class for file based NoSQL.
+ * Wrapper class for file based database (NoSQL).
  * @see https://sleekdb.github.io
  */
 final class Storage
