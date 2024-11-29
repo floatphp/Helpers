@@ -1,59 +1,59 @@
 {
-   "path": {
-      "base": "",
-      "view": "/App/Views/",
-      "logs": "/App/Storage/logs/",
-      "cache": "/App/Storage/cache/",
-      "upload": {
-         "admin": "/App/Storage/upload/",
-         "front": "/public/upload/"
-      },
-      "assets": "/public/assets/",
-      "migrate": "/App/Storage/migrate/",
-      "translation": "/App/Storage/translation/",
-      "modules": "/App/Modules/",
-      "db": "/App/Storage/config/db.ini",
-      "routes": "/App/Storage/config/routes.json"
-   },
-   "url": {
-      "admin": "/admin/dashboard/",
-      "login": "/admin/login/",
-      "verify": "/admin/verify/",
-      "api": "/api/"
-   },
-   "namespace": {
-      "controller": "/App/Controllers/",
-      "module": "/App/Modules/"
-   },
-   "api": {
-      "username": "{username}",
-      "password": "{password}",
-      "secret": "{secret}"
-   },
-   "options": {
-      "view": {
-         "extension": ".tpl.html"
-      },
-      "debug": true,
-      "timeout": 5000,
-      "ttl": 30
-   },
-   "access": {
-      "permissions": true,
-      "allowed": {
-         "ip": []
-      },
-      "denied": {
-         "ip": []
-      },
-      "sessionId": "{userKeyId}",
-      "secret": "{secret}",
-      "expire": 30
-   },
-   "vars": {},
-   "strings": {
-      "admin": [],
-      "front": []
-   },
-   "menu": {}
+	"path": {
+		"base": "",
+		"view": "/App/Views/",
+		"logs": "/App/Storage/logs/",
+		"cache": "/App/Storage/cache/",
+		"upload": {
+			"admin": "/App/Storage/upload/",
+			"front": "/public/upload/"
+		},
+		"assets": "/public/assets/",
+		"migrate": "/App/Storage/migrate/",
+		"translation": "/App/Storage/translation/",
+		"modules": "/App/Modules/",
+		"db": "/App/Storage/config/db.ini",
+		"routes": "/App/Storage/config/routes.json"
+	},
+	"url": {
+		"admin": "/admin/dashboard/",
+		"login": "/admin/login/",
+		"verify": "/admin/verify/",
+		"api": "/api/"
+	},
+	"namespace": {
+		"controller": "/App/Controllers/",
+		"module": "/App/Modules/"
+	},
+	"api": {
+		"username": "{username}",
+		"password": "{password}",
+		"secret": "{secret}"
+	},
+	"options": {
+		"view": {
+			"extension": ".tpl.html"
+		},
+		"debug": true,
+		"timeout": 5000,
+		"ttl": 30
+	},
+	"access": {
+		"permissions": true,
+		"allowed": {
+			"ip": []
+		},
+		"denied": {
+			"ip": []
+		},
+		"sessionId": "{userKeyId}",
+		"secret": "{secret}",
+		"expire": 30
+	},
+	"vars": {},
+	"strings": {
+		"admin": [],
+		"front": []
+	},
+	"menu": {}
 }

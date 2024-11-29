@@ -1,233 +1,233 @@
 {
-  "$id": "app.config.schema.json",
-  "type": "object",
-  "properties": {
-    "path": {
-      "type": "object",
-      "required": [
-        "base",
-        "modules",
-        "view",
-        "logs",
-        "assets",
-        "migrate",
-        "cache",
-        "upload",
-        "translation",
-        "db",
-        "routes"
-      ],
-      "properties": {
-        "base": {
-          "type": "string"
-        },
-        "modules": {
-          "type": "string"
-        },
-        "view": {
-          "type": [
-            "string",
-            "array"
-          ]
-        },
-        "logs": {
-          "type": "string"
-        },
-        "assets": {
-          "type": "string"
-        },
-        "migrate": {
-          "type": [
-            "string",
-            "boolean"
-          ]
-        },
-        "cache": {
-          "type": [
-            "string",
-            "boolean"
-          ]
-        },
-        "upload": {
-          "type": "object",
-          "required": [
-            "admin",
-            "front"
-          ],
-          "properties": {
-            "admin": {
-              "type": "string"
-            },
-            "front": {
-              "type": "string"
-            }
-          }
-        },
-        "translation": {
-          "type": "string"
-        },
-        "db": {
-          "type": "string"
-        },
-        "routes": {
-          "type": "string"
-        }
-      }
-    },
-    "url": {
-      "type": "object",
-      "required": [
-        "admin",
-        "login",
-        "verify",
-        "api"
-      ],
-      "properties": {
-        "admin": {
-          "type": "string"
-        },
-        "login": {
-          "type": "string"
-        },
-        "verify": {
-          "type": "string"
-        },
-        "api": {
-          "type": "string"
-        }
-      }
-    },
-    "namespace": {
-      "type": "object",
-      "required": [
-        "controller",
-        "module"
-      ],
-      "properties": {
-        "controller": {
-          "type": "string"
-        },
-        "module": {
-          "type": "string"
-        }
-      }
-    },
-    "api": {
-      "type": "object",
-      "required": [
-        "username",
-        "password",
-        "secret"
-      ],
-      "properties": {
-        "username": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
-        },
-        "secret": {
-          "type": "string"
-        }
-      }
-    },
-    "options": {
-      "type": "object",
-      "required": [
-        "view",
-        "debug",
-        "timeout",
-        "ttl"
-      ],
-      "properties": {
-        "view": {
-          "type": "object",
-          "required": [
-            "extension"
-          ],
-          "properties": {
-            "extension": "string"
-          }
-        },
-        "timeout": {
-          "type": "integer"
-        },
-        "ttl": {
-          "type": "integer"
-        },
-        "debug": {
-          "type": "boolean"
-        }
-      }
-    },
-    "access": {
-      "type": "object",
-      "required": [
-        "permissions",
-        "allowed",
-        "denied",
-        "sessionId",
-        "secret",
-        "expire"
-      ],
-      "properties": {
-        "permissions": {
-          "type": "boolean"
-        },
-        "allowed": {
-          "type": "object",
-          "required": [
-            "ip"
-          ],
-          "properties": {
-            "ip": "array"
-          }
-        },
-        "denied": {
-          "type": "object",
-          "required": [
-            "ip"
-          ],
-          "properties": {
-            "ip": "array"
-          }
-        },
-        "sessionId": "string",
-        "secret": "string",
-        "expire": "string"
-      }
-    },
-    "vars": {
-      "type": "object"
-    },
-    "strings": {
-      "type": "object",
-      "required": [
-        "admin",
-        "front"
-      ],
-      "properties": {
-        "admin": {
-          "type": "array"
-        },
-        "front": {
-          "type": "array"
-        }
-      }
-    },
-    "menu": {
-      "type": "object"
-    }
-  },
-  "required": [
-    "path",
-    "url",
-    "namespace",
-    "api",
-    "options",
-    "access",
-    "vars",
-    "strings",
-    "menu"
-  ]
+	"$id": "app.config.schema.json",
+	"type": "object",
+	"properties": {
+		"path": {
+			"type": "object",
+			"required": [
+				"base",
+				"modules",
+				"view",
+				"logs",
+				"assets",
+				"migrate",
+				"cache",
+				"upload",
+				"translation",
+				"db",
+				"routes"
+			],
+			"properties": {
+				"base": {
+					"type": "string"
+				},
+				"modules": {
+					"type": "string"
+				},
+				"view": {
+					"type": [
+						"string",
+						"array"
+					]
+				},
+				"logs": {
+					"type": "string"
+				},
+				"assets": {
+					"type": "string"
+				},
+				"migrate": {
+					"type": [
+						"string",
+						"boolean"
+					]
+				},
+				"cache": {
+					"type": [
+						"string",
+						"boolean"
+					]
+				},
+				"upload": {
+					"type": "object",
+					"required": [
+						"admin",
+						"front"
+					],
+					"properties": {
+						"admin": {
+							"type": "string"
+						},
+						"front": {
+							"type": "string"
+						}
+					}
+				},
+				"translation": {
+					"type": "string"
+				},
+				"db": {
+					"type": "string"
+				},
+				"routes": {
+					"type": "string"
+				}
+			}
+		},
+		"url": {
+			"type": "object",
+			"required": [
+				"admin",
+				"login",
+				"verify",
+				"api"
+			],
+			"properties": {
+				"admin": {
+					"type": "string"
+				},
+				"login": {
+					"type": "string"
+				},
+				"verify": {
+					"type": "string"
+				},
+				"api": {
+					"type": "string"
+				}
+			}
+		},
+		"namespace": {
+			"type": "object",
+			"required": [
+				"controller",
+				"module"
+			],
+			"properties": {
+				"controller": {
+					"type": "string"
+				},
+				"module": {
+					"type": "string"
+				}
+			}
+		},
+		"api": {
+			"type": "object",
+			"required": [
+				"username",
+				"password",
+				"secret"
+			],
+			"properties": {
+				"username": {
+					"type": "string"
+				},
+				"password": {
+					"type": "string"
+				},
+				"secret": {
+					"type": "string"
+				}
+			}
+		},
+		"options": {
+			"type": "object",
+			"required": [
+				"view",
+				"debug",
+				"timeout",
+				"ttl"
+			],
+			"properties": {
+				"view": {
+					"type": "object",
+					"required": [
+						"extension"
+					],
+					"properties": {
+						"extension": "string"
+					}
+				},
+				"timeout": {
+					"type": "integer"
+				},
+				"ttl": {
+					"type": "integer"
+				},
+				"debug": {
+					"type": "boolean"
+				}
+			}
+		},
+		"access": {
+			"type": "object",
+			"required": [
+				"permissions",
+				"allowed",
+				"denied",
+				"sessionId",
+				"secret",
+				"expire"
+			],
+			"properties": {
+				"permissions": {
+					"type": "boolean"
+				},
+				"allowed": {
+					"type": "object",
+					"required": [
+						"ip"
+					],
+					"properties": {
+						"ip": "array"
+					}
+				},
+				"denied": {
+					"type": "object",
+					"required": [
+						"ip"
+					],
+					"properties": {
+						"ip": "array"
+					}
+				},
+				"sessionId": "string",
+				"secret": "string",
+				"expire": "string"
+			}
+		},
+		"vars": {
+			"type": "object"
+		},
+		"strings": {
+			"type": "object",
+			"required": [
+				"admin",
+				"front"
+			],
+			"properties": {
+				"admin": {
+					"type": "array"
+				},
+				"front": {
+					"type": "array"
+				}
+			}
+		},
+		"menu": {
+			"type": "object"
+		}
+	},
+	"required": [
+		"path",
+		"url",
+		"namespace",
+		"api",
+		"options",
+		"access",
+		"vars",
+		"strings",
+		"menu"
+	]
 }

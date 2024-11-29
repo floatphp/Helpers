@@ -1,4 +1,4 @@
 {
-  "$id": "app.route.schema.json",
-  "type": "array"
+	"$id": "app.route.schema.json",
+	"type": "array"
 }
