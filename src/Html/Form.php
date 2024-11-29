@@ -23,7 +23,7 @@ use FloatPHP\Classes\Html\Form as Main;
 final class Form extends Main
 {
 	use \FloatPHP\Kernel\TraitConfiguration,
-		\FloatPHP\Helpers\Framework\inc\TraitTranslatable;
+		\FloatPHP\Helpers\Framework\tr\TraitTranslatable;
 
 	/**
 	 * @access private

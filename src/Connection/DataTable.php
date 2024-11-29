@@ -25,11 +25,11 @@ use FloatPHP\Kernel\Orm;
  */
 class DataTable extends Orm
 {
-	use \FloatPHP\Helpers\Framework\inc\TraitCacheable,
-		\FloatPHP\Helpers\Framework\inc\TraitRequestable,
-		\FloatPHP\Helpers\Framework\inc\TraitDatable,
-		\FloatPHP\Helpers\Framework\inc\TraitTranslatable,
-		\FloatPHP\Helpers\Framework\inc\TraitLoggable;
+	use \FloatPHP\Helpers\Framework\tr\TraitCacheable,
+		\FloatPHP\Helpers\Framework\tr\TraitRequestable,
+		\FloatPHP\Helpers\Framework\tr\TraitDatable,
+		\FloatPHP\Helpers\Framework\tr\TraitTranslatable,
+		\FloatPHP\Helpers\Framework\tr\TraitLoggable;
 
 	/**
 	 * @access protected

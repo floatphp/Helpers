@@ -21,8 +21,8 @@ namespace FloatPHP\Helpers\Http;
  */
 final class Catcher
 {
-	use \FloatPHP\Helpers\Framework\inc\TraitRequestable,
-		\FloatPHP\Helpers\Framework\inc\TraitFormattable;
+	use \FloatPHP\Helpers\Framework\tr\TraitRequestable,
+		\FloatPHP\Helpers\Framework\tr\TraitFormattable;
 
 	/**
 	 * @access private

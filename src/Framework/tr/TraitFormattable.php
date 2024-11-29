@@ -13,7 +13,7 @@
 
 declare(strict_types=1);
 
-namespace FloatPHP\Helpers\Framework\inc;
+namespace FloatPHP\Helpers\Framework\tr;
 
 use FloatPHP\Classes\{
 	Filesystem\TypeCheck,
@@ -591,6 +591,7 @@ trait TraitFormattable
 			'object', 'obj'    => TypeCheck::isObject($value),
 			'string', 'str'    => TypeCheck::isString($value),
 			'integer', 'int'   => TypeCheck::isInt($value),
+			'zero', '0'        => TypeCheck::isZero($value),
 			'numeric', 'num'   => TypeCheck::isNumeric($value),
 			'float', 'double'  => TypeCheck::isFloat($value),
 			'bool', 'boolean'  => TypeCheck::isBool($value),

@@ -23,10 +23,10 @@ use FloatPHP\Helpers\Filesystem\Cache;
 final class Menu
 {
 	use \FloatPHP\Kernel\TraitConfiguration,
-		\FloatPHP\Helpers\Framework\inc\TraitPermissionable,
-		\FloatPHP\Helpers\Framework\inc\TraitCacheable,
-		\FloatPHP\Helpers\Framework\inc\TraitTranslatable,
-		\FloatPHP\Helpers\Framework\inc\TraitRequestable;
+		\FloatPHP\Helpers\Framework\tr\TraitPermissionable,
+		\FloatPHP\Helpers\Framework\tr\TraitCacheable,
+		\FloatPHP\Helpers\Framework\tr\TraitTranslatable,
+		\FloatPHP\Helpers\Framework\tr\TraitRequestable;
 
 	/**
 	 * @access private

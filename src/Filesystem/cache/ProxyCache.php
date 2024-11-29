@@ -22,8 +22,8 @@ namespace FloatPHP\Helpers\Filesystem\cache;
 class ProxyCache
 {
 	use \FloatPHP\Kernel\TraitConfiguration,
-		\FloatPHP\Helpers\Framework\inc\TraitThrowable,
-		\FloatPHP\Helpers\Framework\inc\TraitLoggable;
+		\FloatPHP\Helpers\Framework\tr\TraitThrowable,
+		\FloatPHP\Helpers\Framework\tr\TraitLoggable;
 
 	/**
 	 * @access protected

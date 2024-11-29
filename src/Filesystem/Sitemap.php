@@ -23,7 +23,7 @@ System::setMemoryLimit('-1');
 class Sitemap
 {
 	use \FloatPHP\Kernel\TraitConfiguration,
-		\FloatPHP\Helpers\Framework\inc\TraitDatable;
+		\FloatPHP\Helpers\Framework\tr\TraitDatable;
 
 	/**
 	 * @access protected
@@ -217,6 +217,7 @@ class Sitemap
 		$url = $this->formatPath($url);
 
 		$this->write($file, "User-Agent: *");
+		$this->write($file, "Disallow: /api/");
 		$this->write($file, "Sitemap: {$url}", true);
 
 		return true;

@@ -13,7 +13,7 @@
 
 declare(strict_types=1);
 
-namespace FloatPHP\Helpers\Framework\hook;
+namespace FloatPHP\Helpers\Framework;
 
 use FloatPHP\Kernel\BaseController;
 use FloatPHP\Classes\Filesystem\Arrayify;

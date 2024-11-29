@@ -23,8 +23,8 @@ use FloatPHP\Classes\Filesystem\Logger as Main;
 final class Logger extends Main
 {
     use \FloatPHP\Kernel\TraitConfiguration,
-        \FloatPHP\Helpers\Framework\inc\TraitFormattable,
-        \FloatPHP\Helpers\Framework\inc\TraitIO;
+        \FloatPHP\Helpers\Framework\tr\TraitFormattable,
+        \FloatPHP\Helpers\Framework\tr\TraitIO;
 
     /**
      * @access private

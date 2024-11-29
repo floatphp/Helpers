@@ -24,7 +24,7 @@ use FloatPHP\Helpers\Connection\{Transient, Role};
 final class Installer
 {
 	use \FloatPHP\Kernel\TraitConfiguration,
-		\FloatPHP\Helpers\Framework\inc\TraitRequestable;
+		\FloatPHP\Helpers\Framework\tr\TraitRequestable;
 
 	/**
 	 * Setup application.

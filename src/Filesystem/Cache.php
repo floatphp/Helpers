@@ -23,7 +23,7 @@ use FloatPHP\Helpers\Filesystem\cache\{FileCache, RedisCache};
  */
 class Cache
 {
-	use \FloatPHP\Helpers\Framework\inc\TraitFormattable;
+	use \FloatPHP\Kernel\TraitConfiguration;
 
 	/**
 	 * @access protected
@@ -187,34 +187,46 @@ class Cache
 	 */
 	public function getKey(string $item = '--temp', array $args = []) : string
 	{
-		$key = $item;
+		$parts = [$item];
 
 		foreach ($args as $name => $value) {
 
-			if (
-				$this->isType('array', $value)
-				|| $this->isType('null', $value)
-				|| $this->isType('empty', $value)
-			) {
+			if ( $this->isType('array', $value) ) {
+				$nested = $this->getKey((string)$name, $value);
+				$parts[] = $nested;
 				continue;
 			}
 
-			if ( $value === 0 ) {
-				$value = '0';
+			// Convert all types to string
+			$value = match (true) {
+				$this->isType('zero', $value)  => '0',
+				$this->isType('false', $value) => 'false',
+				$this->isType('true', $value)  => 'true',
+				$this->isType('null', $value)  => null, // Skip
+				$this->isType('empty', $value) => null, // Skip
+				default                        => (string)$value
+			};
 
-			} elseif ( $this->isType('false', $value) ) {
-				$value = 'false';
-
-			} elseif ( $this->isType('true', $value) ) {
-				$value = 'true';
+			if ( !$this->isType('null', $value) ) {
+				$parts[] = $name !== 0 ? "{$name}-{$value}" : $value;
 			}
-
-			if ( $name !== 0 ) {
-				$key .= "-{$name}";
-			}
-			$key .= "-{$value}";
 		}
 
-		return $this->slugify($key);
+		// Slugify parts
+		return $this->slugify(implode('-', $parts));
+	}
+
+	/**
+	 * Clear cache (force remove files).
+	 *
+	 * @access public
+	 * @return bool
+	 */
+	public function clear() : bool
+	{
+		$this->initConfig();
+		return $this->clearDir(
+			$this->getCachePath()
+		);
 	}
 }

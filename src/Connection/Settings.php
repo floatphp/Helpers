@@ -20,8 +20,8 @@ namespace FloatPHP\Helpers\Connection;
  */
 final class Settings
 {
-	use \FloatPHP\Helpers\Framework\inc\TraitConfigurable,
-		\FloatPHP\Helpers\Framework\inc\TraitFormattable;
+	use \FloatPHP\Helpers\Framework\tr\TraitConfigurable,
+		\FloatPHP\Helpers\Framework\tr\TraitFormattable;
 
 	/**
 	 * @access private

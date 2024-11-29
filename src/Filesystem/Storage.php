@@ -24,8 +24,8 @@ use SleekDB\Store;
 final class Storage
 {
 	use \FloatPHP\Kernel\TraitConfiguration,
-		\FloatPHP\Helpers\Framework\inc\TraitThrowable,
-		\FloatPHP\Helpers\Framework\inc\TraitLoggable;
+		\FloatPHP\Helpers\Framework\tr\TraitThrowable,
+		\FloatPHP\Helpers\Framework\tr\TraitLoggable;
 
 	/**
 	 * @access private

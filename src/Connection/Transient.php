@@ -23,10 +23,10 @@ use FloatPHP\Helpers\Filesystem\Cache;
  */
 final class Transient
 {
-	use \FloatPHP\Helpers\Framework\inc\TraitConfigurable,
-		\FloatPHP\Helpers\Framework\inc\TraitCacheable,
-		\FloatPHP\Helpers\Framework\inc\TraitFormattable,
-		\FloatPHP\Helpers\Framework\inc\TraitDatable;
+	use \FloatPHP\Helpers\Framework\tr\TraitConfigurable,
+		\FloatPHP\Helpers\Framework\tr\TraitCacheable,
+		\FloatPHP\Helpers\Framework\tr\TraitFormattable,
+		\FloatPHP\Helpers\Framework\tr\TraitDatable;
 
 	/**
 	 * @access private

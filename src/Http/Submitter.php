@@ -22,7 +22,7 @@ namespace FloatPHP\Helpers\Http;
 final class Submitter
 {
 	use \FloatPHP\Kernel\TraitConfiguration,
-		\FloatPHP\Helpers\Framework\inc\TraitRequestable;
+		\FloatPHP\Helpers\Framework\tr\TraitRequestable;
 
 	/**
 	 * @access private

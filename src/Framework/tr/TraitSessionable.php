@@ -13,7 +13,7 @@
 
 declare(strict_types=1);
 
-namespace FloatPHP\Helpers\Framework\inc;
+namespace FloatPHP\Helpers\Framework\tr;
 
 use FloatPHP\Classes\{
 	Http\Session,

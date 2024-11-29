@@ -13,7 +13,7 @@
 
 declare(strict_types=1);
 
-namespace FloatPHP\Helpers\Framework\inc;
+namespace FloatPHP\Helpers\Framework\tr;
 
 use FloatPHP\Classes\Filesystem\{File, Json, Archive, Stringify, TypeCheck};
 use FloatPHP\Helpers\Filesystem\Yaml;
@@ -301,14 +301,15 @@ trait TraitIO
 	 *
 	 * @access protected
 	 * @param string $path
-	 * @param mixed $secure
+	 * @param mixed $from
 	 * @return bool
 	 */
-	protected function secureRemove(string $path, $secure = []) : bool
+	protected function secureRemove(string $path, $from = []) : bool
 	{
-		if ( $secure && !TypeCheck::isArray($secure) ) {
-			$secure = (string)$secure;
-			$secure = [$secure];
+		$secure = [];
+		if ( $from && !TypeCheck::isArray($from) ) {
+			$from = (string)$from;
+			$secure = [$from];
 		}
 
 		$secure = $secure ?: static::IOSTORAGE;
