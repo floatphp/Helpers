@@ -672,17 +672,6 @@ trait TraitFormattable
 	}
 
 	/**
-	 * Convert dynamic types.
-	 *
-	 * @access public
-	 * @inheritdoc
-	 */
-	public function toTypes($value)
-	{
-		return Converter::toTypes($value);
-	}
-
-	/**
 	 * Escape HTML.
 	 *
 	 * @access public

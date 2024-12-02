@@ -15,6 +15,7 @@ declare(strict_types=1);
 
 namespace FloatPHP\Helpers\Http;
 
+use FloatPHP\Classes\Filesystem\Arrayify;
 use FloatPHP\Classes\Http\Client;
 use FloatPHP\Classes\Server\System;
 
@@ -22,31 +23,88 @@ System::setTimeLimit(0);
 System::setMemoryLimit('-1');
 
 /**
- * Built-in crawler.
+ * Built-in HTTP crawler.
  */
 final class Crawler
 {
 	/**
 	 * @access private
 	 * @var array $urls
+	 * @var array $options
+	 * @var int $limit
+	 * @var bool $bypass, resources
+	 * @var array $resources
 	 */
 	private $urls = [];
+	private $options = [];
+	private $limit = 10000;
+	private $bypass = false;
+	private $resources = [
+		'cpu'    => 2,
+		'memory' => 4
+	];
 
 	/**
 	 * Init crawler.
 	 *
+	 * @access public
 	 * @param array $urls
+	 * @param array $options
 	 */
-	public function __construct(array $urls)
+	public function __construct(array $urls = [], array $options = [])
 	{
-		$this->pattern = $pattern;
-		$this->args = Arrayify::merge([
-			'method'      => self::GET,
-			'timeout'     => 5,
+		$this->setUrls($urls);
+		$this->options = Arrayify::merge([
+			'method'      => 'GET',
+			'timeout'     => 10,
 			'redirection' => 2,
-			'blocking'    => false,
-			'headers'     => ['Cache-Control' => 'max-age=0']
-		], $args);
+			'headers'     => [
+				'Cache-Control' => 'no-cache',
+				'User-Agent'    => 'FloatPHPCrawler/1.0'
+			]
+		], $options);
+	}
+
+	/**
+	 * Set URLs limit.
+	 *
+	 * @access public
+	 * @param int $limit
+	 * @return object
+	 */
+	public function setLimit(int $limit) : self
+	{
+		$this->limit = $limit;
+		return $this;
+	}
+
+	/**
+	 * Set resources.
+	 *
+	 * @access public
+	 * @param int $cpu
+	 * @param int $memory
+	 * @return object
+	 */
+	public function setResources(int $cpu, int $memory) : self
+	{
+		$this->resources = [
+			'cpu'    => $cpu,
+			'memory' => $memory
+		];
+		return $this;
+	}
+
+	/**
+	 * Bypass resources check.
+	 *
+	 * @access public
+	 * @return object
+	 */
+	public function bypass() : self
+	{
+		$this->bypass = true;
+		return $this;
 	}
 
 	/**
@@ -58,15 +116,15 @@ final class Crawler
 	 */
 	public function start(int $try = 2) : bool
 	{
-		if ( self::canStart() ) {
-			$try = ($try <= 5) ? $try : 2;
-			foreach (Post::all() as $post) {
-				if ( $this->pattern == '*' || $this->match($post['content']) ) {
-					$this->ping($post['link'], $try);
-				}
-			}
-		}
-		return (bool)$this->status;
+		// if ( self::hasResources() ) {
+		// 	$try = ($try <= 5) ? $try : 2;
+		// 	foreach (Post::all() as $post) {
+		// 		if ( $this->pattern == '*' || $this->match($post['content']) ) {
+		// 			$this->ping($post['link'], $try);
+		// 		}
+		// 	}
+		// }
+		// return (bool)$this->status;
 	}
 
 	/**
@@ -79,37 +137,43 @@ final class Crawler
 	 */
 	private function ping(string $url, int $try = 2)
 	{
-		$i = 1;
-		while ($i <= $try) {
-			$response = self::do($url, $this->args);
-			if ( self::getStatusCode($response) == 200 ) {
-				$this->status += 1;
-			}
-			$i++;
-			sleep(1);
+		// $i = 1;
+		// while ($i <= $try) {
+		// 	$response = self::do($url, $this->args);
+		// 	if ( self::getStatusCode($response) == 200 ) {
+		// 		$this->status += 1;
+		// 	}
+		// 	$i++;
+		// 	sleep(1);
+		// }
+	}
+
+	/**
+	 * Check server resources.
+	 *
+	 * @access private
+	 * @return bool
+	 */
+	private function hasResources() : bool
+	{
+		$memory = System::getSystemMemoryUsage();
+		$cpu = System::getCpuUsage();
+		$outOfMemory = $this->resources['memory'] > $memory;
+		return System::getCpuCores() >= 2;
+	}
+
+	/**
+	 * Set crawler URLs.
+	 *
+	 * @access private
+	 * @param array $urls
+	 * @return void
+	 */
+	private function setUrls(array $urls) : void
+	{
+		if ( count($urls) > $this->limit ) {
+			$urls = Arrayify::chunk($urls, $this->limit);
 		}
-	}
-
-	/**
-	 * Check server capacity.
-	 *
-	 * @access private
-	 * @return bool
-	 */
-	private function canStart() : bool
-	{
-		return (System::getCpuCores() >= 2) ?? false;
-	}
-
-	/**
-	 * Match crawling post using content.
-	 *
-	 * @access private
-	 * @param string $content
-	 * @return bool
-	 */
-	private function match(string $content) : bool
-	{
-		return Stringify::match($this->pattern, $content);
+		$this->urls = $urls;
 	}
 }

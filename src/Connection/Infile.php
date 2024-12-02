@@ -97,8 +97,7 @@ class Infile
             }
 
         } catch (PDOException $e) {
-            echo $e->getMessage();
-            die();
+            exit($e->getMessage());
         }
     }
 
