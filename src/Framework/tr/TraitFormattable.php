@@ -140,7 +140,7 @@ trait TraitFormattable
 	 * @access public
 	 * @inheritdoc
 	 */
-	public function undash(string $string, bool $isGlobal = false) : string
+	public function undash(mixed $string, bool $isGlobal = false) : mixed
 	{
 		return Stringify::undash($string, $isGlobal);
 	}
