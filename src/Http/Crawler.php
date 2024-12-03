@@ -15,9 +15,11 @@ declare(strict_types=1);
 
 namespace FloatPHP\Helpers\Http;
 
-use FloatPHP\Classes\Filesystem\Arrayify;
+use FloatPHP\Classes\Filesystem\{Arrayify, File, Stringify};
 use FloatPHP\Classes\Http\Client;
+use FloatPHP\Classes\Http\Curl;
 use FloatPHP\Classes\Server\System;
+use FloatPHP\Exceptions\Helpers\CrawlerException;
 
 System::setTimeLimit(0);
 System::setMemoryLimit('-1');
@@ -29,69 +31,134 @@ final class Crawler
 {
 	/**
 	 * @access private
-	 * @var array $urls
-	 * @var array $options
-	 * @var int $limit
-	 * @var bool $bypass, resources
-	 * @var array $resources
 	 */
 	private $urls = [];
-	private $options = [];
+	private $params = [];
 	private $limit = 10000;
 	private $bypass = false;
-	private $resources = [
-		'cpu'    => 2,
-		'memory' => 4
-	];
+	private $save = false;
+	private $resources = 2;
 
 	/**
 	 * Init crawler.
 	 *
 	 * @access public
 	 * @param array $urls
-	 * @param array $options
+	 * @param array $params
 	 */
-	public function __construct(array $urls = [], array $options = [])
+	public function __construct(array $urls = [], array $params = [])
 	{
+		// Limit URLs
 		$this->setUrls($urls);
-		$this->options = Arrayify::merge([
-			'method'      => 'GET',
-			'timeout'     => 10,
-			'redirection' => 2,
-			'headers'     => [
-				'Cache-Control' => 'no-cache',
-				'User-Agent'    => 'FloatPHPCrawler/1.0'
+
+		// Set Http client params
+		$ua = Stringify::formatPath(self::class);
+		$this->params = Arrayify::merge([
+			'method'   => Client::HEAD,
+			'timeout'  => 3,
+			'redirect' => 2,
+			'follow'   => true,
+			'ua'       => "{$ua}/1.0",
+			'header'   => [
+				'Cache-Control' => 'no-cache'
 			]
-		], $options);
+		], $params);
 	}
 
 	/**
-	 * Set URLs limit.
+	 * Run crawler.
 	 *
 	 * @access public
-	 * @param int $limit
+	 * @return bool
+	 * @throws CrawlerException
+	 */
+	public function run() : bool
+	{
+		if ( !$this->bypass && !$this->hasResources() ) {
+			throw new CrawlerException(
+				CrawlerException::insufficientResources(
+					$this->resources
+				)
+			);
+		}
+
+		// Set multiple handles
+		$multiple = Curl::initMultiple();
+		$handles = [];
+
+		// Extract params
+		$params = Client::getParams($this->params);
+		extract($params);
+
+		foreach ($this->urls as $url) {
+
+			// Init
+			$handle = Curl::init($url);
+
+			// Set options
+			Curl::setOptions($handle, [
+				Curl::RETURNTRANSFER => $return,
+				Curl::FOLLOWLOCATION => $follow,
+				Curl::MAXREDIRS      => $redirect,
+				Curl::TIMEOUT        => $timeout,
+				Curl::HTTPHEADER     => $header,
+				Curl::CUSTOMREQUEST  => $method,
+				Curl::VERIFYHOST     => $ssl == true ? 2 : false,
+				Curl::VERIFYPEER     => $ssl,
+				Curl::USERAGENT      => $ua
+			]);
+
+			Curl::addHandle($multiple, $handle);
+			$handles[$url] = $handle;
+		}
+
+		Curl::executeMultiple($multiple);
+
+		foreach ($handles as $url => $h) {
+			if ( !$this->save === false ) {
+				$name = Stringify::slugify(
+					Client::parseUrl($url)
+				);
+				$path = Stringify::formatPath("{$this->save}{$name}.bak");
+				$content = Curl::getMultipleContent($h);
+				File::w($path, $content);
+			}
+			Curl::removeHandle($multiple, $h);
+			Curl::close($h);
+		}
+
+		Curl::closeMultiple($multiple);
+
+		return false;
+	}
+
+	/**
+	 * Save crawled target response.
+	 *
+	 * @access public
+	 * @param ?string $path
 	 * @return object
 	 */
-	public function setLimit(int $limit) : self
+	public function save(?string $path = null) : self
 	{
-		$this->limit = $limit;
+		$this->params = Arrayify::merge($this->params, [
+			'method' => Client::GET,
+			'return' => true
+		]);
+		$this->save = (string)$path;
 		return $this;
 	}
 
 	/**
-	 * Set resources.
+	 * Set minimum CPU cores.
 	 *
 	 * @access public
-	 * @param int $cpu
-	 * @param int $memory
+	 * @param int $cores
 	 * @return object
 	 */
-	public function setResources(int $cpu, int $memory) : self
+	public function setResources(int $cores) : self
 	{
-		$this->resources = [
-			'cpu'    => $cpu,
-			'memory' => $memory
-		];
+		$this->resources = $cores;
 		return $this;
 	}
 
@@ -108,47 +175,6 @@ final class Crawler
 	}
 
 	/**
-	 * Start crawler.
-	 *
-	 * @access public
-	 * @param int $try
-	 * @return bool
-	 */
-	public function start(int $try = 2) : bool
-	{
-		// if ( self::hasResources() ) {
-		// 	$try = ($try <= 5) ? $try : 2;
-		// 	foreach (Post::all() as $post) {
-		// 		if ( $this->pattern == '*' || $this->match($post['content']) ) {
-		// 			$this->ping($post['link'], $try);
-		// 		}
-		// 	}
-		// }
-		// return (bool)$this->status;
-	}
-
-	/**
-	 * Ping url.
-	 *
-	 * @access private
-	 * @param string $url
-	 * @param int $try
-	 * @return void
-	 */
-	private function ping(string $url, int $try = 2)
-	{
-		// $i = 1;
-		// while ($i <= $try) {
-		// 	$response = self::do($url, $this->args);
-		// 	if ( self::getStatusCode($response) == 200 ) {
-		// 		$this->status += 1;
-		// 	}
-		// 	$i++;
-		// 	sleep(1);
-		// }
-	}
-
-	/**
 	 * Check server resources.
 	 *
 	 * @access private
@@ -156,10 +182,9 @@ final class Crawler
 	 */
 	private function hasResources() : bool
 	{
-		$memory = System::getSystemMemoryUsage();
-		$cpu = System::getCpuUsage();
-		$outOfMemory = $this->resources['memory'] > $memory;
-		return System::getCpuCores() >= 2;
+		$outOfMemory = System::isMemoryOut();
+		$outOfCpu = System::getCpuCores() < $this->resources;
+		return !$outOfMemory && !$outOfCpu;
 	}
 
 	/**
