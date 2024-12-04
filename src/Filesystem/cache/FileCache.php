@@ -26,6 +26,12 @@ use Phpfastcache\Drivers\Files\Config;
 final class FileCache extends ProxyCache implements CacheInterface
 {
 	/**
+	 * @access public
+	 * @var string KEY, Cache folder name
+	 */
+	public const KEY = 'private';
+
+	/**
 	 * @access private
 	 * @var bool $initialized
 	 */
@@ -47,7 +53,7 @@ final class FileCache extends ProxyCache implements CacheInterface
 				'cacheSlamsTimeout'  => 3,
 				'defaultChmod'       => 0777,
 				'defaultTtl'         => $this->getCacheTTL(),
-				'securityKey'        => 'private',
+				'securityKey'        => self::KEY,
 				'cacheFileExtension' => 'txt'
 			], $config);
 

@@ -225,8 +225,16 @@ class Cache
 	public function clear() : bool
 	{
 		$this->initConfig();
-		return $this->clearDir(
-			$this->getCachePath()
-		);
+		$path = $this->getCachePath();
+		$this->resetConfig();
+
+		if ( $this->clearDir($path) ) {
+			$key = FileCache::KEY;
+			$this->addDir("{$path}/temp/{$key}/Files", 0777);
+			$this->addDir("{$path}/view", 0777);
+			return true;
+		}
+
+		return false;
 	}
 }
