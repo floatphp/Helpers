@@ -36,11 +36,11 @@ final class Crawler
 	private $params = [];
 	private $bypass = false;
 	private $resources = 4;
-	private $limit = 10; // 10000
 	private $save = false;
 	private $path = 'public/cache';
 	private $signature = true;
 	private $ua;
+	private static $limit = 1000;
 
 	/**
 	 * Init crawler.
@@ -101,12 +101,11 @@ final class Crawler
 	 *
 	 * @access public
 	 * @param int $limit
-	 * @return object
+	 * @return void
 	 */
-	public function setLimit(int $limit) : self
+	public static function limit(int $limit) : void
 	{
-		$this->limit = $limit;
-		return $this;
+		self::$limit = $limit;
 	}
 
 	/**
@@ -193,8 +192,8 @@ final class Crawler
 	 */
 	private function setUrls(array $urls) : void
 	{
-		if ( count($urls) > $this->limit ) {
-			$urls = Arrayify::slice($urls, 0, $this->limit);
+		if ( count($urls) > self::$limit ) {
+			$urls = Arrayify::slice($urls, 0, self::$limit);
 		}
 		$this->urls = $urls;
 	}
