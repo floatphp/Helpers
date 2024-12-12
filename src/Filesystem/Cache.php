@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Filesystem Component
- * @version    : 1.3.x
+ * @version    : 1.4.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -224,9 +224,7 @@ class Cache
 	 */
 	public function clear() : bool
 	{
-		$this->initConfig();
 		$path = $this->getCachePath();
-		$this->resetConfig();
 
 		if ( $this->clearDir($path) ) {
 			$key = FileCache::KEY;

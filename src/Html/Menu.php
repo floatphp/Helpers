@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Html Component
- * @version    : 1.3.x
+ * @version    : 1.4.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -24,7 +24,6 @@ final class Menu
 {
 	use \FloatPHP\Kernel\TraitConfiguration,
 		\FloatPHP\Helpers\Framework\tr\TraitPermissionable,
-		\FloatPHP\Helpers\Framework\tr\TraitCacheable,
 		\FloatPHP\Helpers\Framework\tr\TraitTranslatable,
 		\FloatPHP\Helpers\Framework\tr\TraitRequestable;
 
@@ -76,9 +75,6 @@ final class Menu
 	 */
 	function __construct(?int $user = null, ?string $lang = null)
 	{
-		// Init configuration
-		$this->initConfig();
-
 		$this->debug = $this->isDebug();
 		$this->user = $user;
 		$this->lang = $lang;
@@ -86,9 +82,6 @@ final class Menu
 		$this->setCSS();
 
 		$this->getTranslatorObject($this->lang);
-
-		// Reset configuration
-		$this->resetConfig();
 	}
 
 	/**
@@ -122,7 +115,7 @@ final class Menu
 	 */
 	public function prepare() : Menu
 	{
-		if ( $this->useCache && !$this->debug ) {
+		if ( !$this->debug ) {
 
 			$cache = new Cache();
 			$key = $cache->getKey('menu', [
@@ -155,18 +148,6 @@ final class Menu
 	{
 		$item = $this->build($item);
 		$this->menu = $this->mergeArray($this->menu, $item);
-		return $this;
-	}
-
-	/**
-	 * Disable cache.
-	 *
-	 * @access public
-	 * @return object
-	 */
-	public function noCache() : self
-	{
-		$this->useCache = false;
 		return $this;
 	}
 

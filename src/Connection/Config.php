@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Connection Component
- * @version    : 1.3.x
+ * @version    : 1.4.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -59,9 +59,6 @@ class Config extends Orm
 		$this->valueColumn = $value;
 		$this->key = $id;
 		$this->table = $table;
-
-		// Reset config
-		$this->resetConfig();
 	}
 
 	/**

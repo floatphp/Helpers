@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Filesystem Component
- * @version    : 1.3.x
+ * @version    : 1.4.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -44,8 +44,6 @@ final class Storage
 	{
 		if ( !static::$initialized ) {
 
-			$this->initConfig();
-
 			$config = $this->mergeArray([
 				'dir'   => 'db',
 				'table' => 'sys',
@@ -54,7 +52,7 @@ final class Storage
 
 			try {
 
-				$dir = $this->getAdminUploadPath($config['dir']);
+				$dir = $this->getUploadPath(sub: $config['dir']);
 				if ( !$this->isDir($dir) ) {
 					$this->addDir($dir);
 				}
@@ -78,8 +76,6 @@ final class Storage
 				}
 
 			}
-
-			$this->resetConfig();
 
 		}
 	}

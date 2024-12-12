@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Connection Component
- * @version    : 1.3.x
+ * @version    : 1.4.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -34,7 +34,6 @@ final class Table extends Orm
 	 * Init database.
 	 *
 	 * @param string $table
-	 * @uses resetConfig()
 	 */
 	public function __construct(?string $table = null)
 	{
@@ -46,9 +45,6 @@ final class Table extends Orm
 
 		// Set key
 		$this->key = "{$this->table}Id";
-
-		// Reset config
-		$this->resetConfig();
 	}
 
 	/**

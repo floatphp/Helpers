@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Filesystem Component
- * @version    : 1.3.x
+ * @version    : 1.4.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -29,9 +29,6 @@ final class Translator extends Translation
      */
     public function __construct(?string $locale = null)
     {
-        // Init configuration
-        $this->initConfig();
-
         // Override
         parent::__construct($locale, $this->getTranslatePath());
 
@@ -40,8 +37,5 @@ final class Translator extends Translation
             $logger = new Logger('core');
             $logger->warning("Invalid language locale [{$locale}]");
         }
-
-        // Reset configuration
-        $this->resetConfig();
     }
 }

@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Connection Component
- * @version    : 1.3.x
+ * @version    : 1.4.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -24,7 +24,6 @@ use FloatPHP\Helpers\Filesystem\Cache;
 final class Transient
 {
 	use \FloatPHP\Helpers\Framework\tr\TraitConfigurable,
-		\FloatPHP\Helpers\Framework\tr\TraitCacheable,
 		\FloatPHP\Helpers\Framework\tr\TraitFormattable,
 		\FloatPHP\Helpers\Framework\tr\TraitDatable;
 
@@ -32,17 +31,23 @@ final class Transient
 	 * @access private
 	 * @var string $row, Temp row name
 	 * @var string $cache, Cache object
+	 */
+	private $row;
+	private $cache;
+
+	/**
+	 * @access public
 	 * @var string ROW
 	 * @var string DRIVER
 	 * @var string TTL
 	 */
-	private $row;
-	private $cache;
-	private const ROW    = '--temp';
-	private const DRIVER = 'File';
-	private const TTL    = 300;
+	public const ROW    = '--temp';
+	public const DRIVER = 'File';
+	public const TTL    = 300;
 
 	/**
+	 * Init transient.
+	 *
 	 * @access public
 	 * @param string $row
 	 * @param string $driver
@@ -56,21 +61,7 @@ final class Transient
 		$this->getConfigObject();
 
 		// Init cache
-		if ( $this->useCache ) {
-			$this->cache = new Cache($driver);
-		}
-	}
-
-	/**
-	 * Disable cache.
-	 *
-	 * @access public
-	 * @return object
-	 */
-	public function noCache() : self
-	{
-		$this->useCache = false;
-		return $this;
+		$this->cache = new Cache($driver);
 	}
 
 	/**
@@ -134,9 +125,6 @@ final class Transient
 	 */
 	public function getTemp(string $key) : mixed
 	{
-		if ( !$this->useCache ) {
-			return null;
-		}
 		return $this->cache->get($key);
 	}
 
@@ -151,9 +139,6 @@ final class Transient
 	 */
 	public function setTemp(string $key, $value = true, int $ttl = self::TTL) : bool
 	{
-		if ( !$this->useCache ) {
-			return false;
-		}
 		return $this->cache->set($key, $value, $ttl, $this->row);
 	}
 
@@ -166,9 +151,6 @@ final class Transient
 	 */
 	public function deleteTemp(string $key) : bool
 	{
-		if ( !$this->useCache ) {
-			return false;
-		}
 		return $this->cache->delete($key);
 	}
 

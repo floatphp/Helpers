@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Framework Component
- * @version    : 1.3.x
+ * @version    : 1.4.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -15,23 +15,107 @@ declare(strict_types=1);
 
 namespace FloatPHP\Helpers\Framework\tr;
 
+use FloatPHP\Helpers\Connection\Transient;
+use FloatPHP\Helpers\Filesystem\Cache;
+
 trait TraitCacheable
 {
     /**
-     * @access protected
-     * @var bool $useCache, Cache status
+     * Get cache value.
+     *
+     * @access public
+     * @inheritdoc
      */
-    protected $useCache = true;
+    public function getCache(string $key, ?bool &$status = null) : mixed
+    {
+        return (new Cache)->get($key, $status);
+    }
 
     /**
-     * Disable cache.
+     * Set cache value.
      *
-     * @access protected
-     * @return object
+     * @access public
+     * @inheritdoc
      */
-    protected function noCache() : object
+    public function setCache(string $key, $value, ?int $ttl = null, ?string $group = null) : bool
     {
-        $this->useCache = false;
-        return $this;
+        return (new Cache)->set($key, $value, $ttl, $group);
+    }
+
+    /**
+     * Check cache status.
+     *
+     * @access public
+     * @inheritdoc
+     */
+    public function hasCache(string $key) : bool
+    {
+        return (new Cache)->has($key);
+    }
+
+    /**
+     * Delete cache.
+     *
+     * @access public
+     * @inheritdoc
+     */
+    public function deleteCache(string $key) : bool
+    {
+        return (new Cache)->delete($key);
+    }
+
+    /**
+     * Purge cache.
+     *
+     * @access public
+     * @inheritdoc
+     */
+    public function purgeCache(?string $group = null) : bool
+    {
+        return (new Cache)->purge($group);
+    }
+
+    /**
+     * Purge cache.
+     *
+     * @access public
+     * @inheritdoc
+     */
+    public function getCacheKey(string $item, array $args = []) : string
+    {
+        return (new Cache)->getKey($item, $args);
+    }
+
+    /**
+     * Get transient.
+     *
+     * @access public
+     * @inheritdoc
+     */
+    public function getTransient(string $key, $default = null) : mixed
+    {
+        return (new Transient)->get($key, $default);
+    }
+
+    /**
+     * Set transient.
+     *
+     * @access public
+     * @inheritdoc
+     */
+    public function setTransient(string $key, $value = true, int $ttl = Transient::TTL) : bool
+    {
+        return (new Transient)->set($key, $value, $ttl);
+    }
+
+    /**
+     * Delete transient.
+     * 
+     * @access public
+     * @inheritdoc
+     */
+    public function deleteTransient(string $key) : bool
+    {
+        return (new Transient)->delete($key);
     }
 }

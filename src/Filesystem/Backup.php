@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Filesystem Component
- * @version    : 1.3.x
+ * @version    : 1.4.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -47,16 +47,11 @@ final class Backup
 	 *
 	 * @param string $path
 	 * @param string $pattern
-	 * @uses initConfig()
-	 * @uses resetConfig()
 	 */
 	public function __construct(string $path = '/backups', ?string $pattern = null)
 	{
-		// Init configuration
-		$this->initConfig();
-
 		// Set path
-		$this->path = $this->getAdminUploadPath($path);
+		$this->path = $this->getUploadPath(sub: $path);
 
 		// Set pattern
 		$this->pattern = $pattern;
@@ -68,9 +63,6 @@ final class Backup
 		if ( !$this->isDir($this->path) ) {
 			$this->addDir($this->path);
 		}
-
-		// Reset config
-		$this->resetConfig();
 	}
 
 	/**

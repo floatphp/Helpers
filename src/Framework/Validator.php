@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Framework Component
- * @version    : 1.3.x
+ * @version    : 1.4.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace FloatPHP\Helpers\Framework;
 
 use FloatPHP\Classes\Filesystem\{Arrayify, TypeCheck};
-use FloatPHP\Exceptions\Kernel\ConfigurationException;
+use FloatPHP\Exceptions\Kernel\ConfigException;
 use JsonSchema\Validator as JsonValidator;
 
 final class Validator
@@ -27,19 +27,19 @@ final class Validator
 	 * @access public
 	 * @var object $config
 	 * @return void
-	 * @throws ConfigurationException
+	 * @throws ConfigException
 	 */
 	public static function checkConfig($config) : void
 	{
 		$error = self::isValidConfig($config);
 		if ( TypeCheck::isString($error) ) {
-			throw new ConfigurationException(
-				ConfigurationException::invalidApplicationConfiguration($error)
+			throw new ConfigException(
+				ConfigException::invalidApplicationConfiguration($error)
 			);
 
 		} elseif ( $error === false ) {
-			throw new ConfigurationException(
-				ConfigurationException::invalidApplicationConfigurationFile()
+			throw new ConfigException(
+				ConfigException::invalidApplicationConfigurationFile()
 			);
 		}
 	}
@@ -50,19 +50,19 @@ final class Validator
 	 * @access public
 	 * @var object $config
 	 * @return void
-	 * @throws ConfigurationException
+	 * @throws ConfigException
 	 */
 	public static function checkModuleConfig($config) : void
 	{
 		$error = self::isValidConfig($config, 'module.schema.json');
 		if ( TypeCheck::isString($error) ) {
-			throw new ConfigurationException(
-				ConfigurationException::invalidModuleConfiguration($error)
+			throw new ConfigException(
+				ConfigException::invalidModuleConfiguration($error)
 			);
 
 		} elseif ( $error === false ) {
-			throw new ConfigurationException(
-				ConfigurationException::invalidModuleConfigurationFile()
+			throw new ConfigException(
+				ConfigException::invalidModuleConfigurationFile()
 			);
 		}
 	}
@@ -73,19 +73,19 @@ final class Validator
 	 * @access public
 	 * @var object $config
 	 * @return void
-	 * @throws ConfigurationException
+	 * @throws ConfigException
 	 */
 	public static function checkRouteConfig($config) : void
 	{
 		$error = self::isValidConfig($config, 'route.schema.json');
 		if ( TypeCheck::isString($error) ) {
-			throw new ConfigurationException(
-				ConfigurationException::invalidRouteConfiguration($error)
+			throw new ConfigException(
+				ConfigException::invalidRouteConfiguration($error)
 			);
 
 		} elseif ( $error === false ) {
-			throw new ConfigurationException(
-				ConfigurationException::invalidRouteConfigurationFile()
+			throw new ConfigException(
+				ConfigException::invalidRouteConfigurationFile()
 			);
 		}
 	}
@@ -96,7 +96,7 @@ final class Validator
 	 * @access public
 	 * @var array $data
 	 * @return void
-	 * @throws ConfigurationException
+	 * @throws ConfigException
 	 */
 	public static function checkDatabaseConfig(array $data, string $type = 'default') : void
 	{
@@ -109,8 +109,8 @@ final class Validator
 
 		foreach ($required as $key => $value) {
 			if ( !isset($data[$value]) ) {
-				throw new ConfigurationException(
-					ConfigurationException::invalidDatabaseConfiguration()
+				throw new ConfigException(
+					ConfigException::invalidDatabaseConfiguration()
 				);
 			}
 		}

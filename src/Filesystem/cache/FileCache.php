@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Filesystem Component
- * @version    : 1.3.x
+ * @version    : 1.4.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -43,8 +43,6 @@ final class FileCache extends ProxyCache implements CacheInterface
 	public function __construct(array $config = [])
 	{
 		if ( !static::$initialized ) {
-
-			$this->initConfig();
 
 			$config = $this->mergeArray([
 				'path'               => "{$this->getCachePath('temp')}/temp",

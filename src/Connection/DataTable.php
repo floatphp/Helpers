@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Connection Component
- * @version    : 1.3.x
+ * @version    : 1.4.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -25,8 +25,7 @@ use FloatPHP\Kernel\Orm;
  */
 class DataTable extends Orm
 {
-	use \FloatPHP\Helpers\Framework\tr\TraitCacheable,
-		\FloatPHP\Helpers\Framework\tr\TraitRequestable,
+	use \FloatPHP\Helpers\Framework\tr\TraitRequestable,
 		\FloatPHP\Helpers\Framework\tr\TraitDatable,
 		\FloatPHP\Helpers\Framework\tr\TraitTranslatable,
 		\FloatPHP\Helpers\Framework\tr\TraitLoggable;
@@ -76,15 +75,6 @@ class DataTable extends Orm
 	}
 
 	/**
-	 * @inheritdoc
-	 */
-	public function noCache() : self
-	{
-		$this->useCache = false;
-		return $this;
-	}
-
-	/**
 	 * Build datatable response.
 	 *
 	 * @access protected
@@ -95,9 +85,6 @@ class DataTable extends Orm
 	 */
 	protected function build(?string $table = null, ?string $key = null, array $columns = []) : string
 	{
-		// Init ORM
-		parent::__construct();
-
 		// Set table
 		$this->table = $table ? $table : (new Catcher())->key;
 		$this->key = $key ?: "{$this->table}Id";
@@ -369,28 +356,23 @@ class DataTable extends Orm
 		// Set filtered data outside cache
 		$this->setSearchCount();
 
-		if ( $this->useCache ) {
+		$cache = new Cache();
+		$key = $cache->getKey($this->table, [
+			'start'    => $this->getStart(),
+			'length'   => $this->getLength(),
+			'orderby'  => $this->getOrderBy(),
+			'order'    => $this->getOrder(),
+			'search'   => $this->getSearch(),
+			'total'    => $this->total,
+			'filtered' => $this->filtered
+		]);
 
-			$cache = new Cache();
-			$key = $cache->getKey($this->table, [
-				'start'    => $this->getStart(),
-				'length'   => $this->getLength(),
-				'orderby'  => $this->getOrderBy(),
-				'order'    => $this->getOrder(),
-				'search'   => $this->getSearch(),
-				'total'    => $this->total,
-				'filtered' => $this->filtered
-			]);
-
-			$data = $cache->get($key, $status);
-			if ( !$status ) {
-				$data = $this->prepare();
-				$cache->validate()->set($key, $data, 0, $this->table);
-			}
-			return $data;
+		$data = $cache->get($key, $status);
+		if ( !$status ) {
+			$data = $this->prepare();
+			$cache->validate()->set($key, $data, 0, $this->table);
 		}
-
-		return $this->prepare();
+		return $data;
 	}
 
 	/**

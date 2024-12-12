@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Framework Component
- * @version    : 1.3.x
+ * @version    : 1.4.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -43,7 +43,7 @@ final class Installer
 
 		// Setup database
 		if ( $db ) {
-			if ( $this->getDatabaseFile() && $this->getMigratePath() ) {
+			if ( $this->getDbFile() && $this->getMigratePath() ) {
 				$this->setTables();
 				$this->migrate();
 				$this->importRoles();
@@ -77,7 +77,8 @@ final class Installer
 		}
 
 		// Create database
-		(new Orm())->noConnect()->setup();
+		Orm::noConnect();
+		(new Orm())->setup();
 
 		// Import tables
 		$tables = glob(pattern: "{$path}/*.{sql}", flags: GLOB_BRACE);

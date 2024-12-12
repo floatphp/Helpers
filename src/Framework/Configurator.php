@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Framework Component
- * @version    : 1.3.x
+ * @version    : 1.4.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -20,31 +20,12 @@ final class Configurator
 	use \FloatPHP\Kernel\TraitConfiguration;
 
 	/**
-	 * Init configuration.
-	 */
-	public function __construct()
-	{
-		$this->initConfig();
-	}
-
-	/**
 	 * @access public
+	 * @param ?string $key
 	 * @return object
 	 */
-	public function reflect() : object
+	public function reflect(?string $key = null) : object
 	{
-		return $this->getConfig();
-	}
-
-	/**
-	 * @access public
-	 * @param string $path
-	 * @return string
-	 */
-	public function getRoot(string $path = '') : string
-	{
-		global $appDir;
-		$root = dirname($appDir);
-		return $this->formatPath("{$root}/{$path}", true);
+		return $this->getConfig($key);
 	}
 }

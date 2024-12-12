@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Filesystem Component
- * @version    : 1.3.x
+ * @version    : 1.4.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -22,9 +22,7 @@ use FloatPHP\Classes\Filesystem\Logger as Main;
  */
 final class Logger extends Main
 {
-    use \FloatPHP\Kernel\TraitConfiguration,
-        \FloatPHP\Helpers\Framework\tr\TraitFormattable,
-        \FloatPHP\Helpers\Framework\tr\TraitIO;
+    use \FloatPHP\Kernel\TraitConfiguration;
 
     /**
      * @access private
@@ -38,21 +36,13 @@ final class Logger extends Main
 
     /**
      * @inheritdoc
-     * @uses initConfig()
-     * @uses resetConfig()
      */
     public function __construct(?string $path = null, string $file = 'debug', string $ext = 'log')
     {
-        // Init configuration
-        $this->initConfig();
-
         // Override
         $path = "{$this->getLoggerPath()}/{$path}";
         $path = $this->formatPath($path, true);
         parent::__construct($path, $file, $ext);
-
-        // Reset configuration
-        $this->resetConfig();
     }
 
     /**

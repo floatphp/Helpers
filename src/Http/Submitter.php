@@ -3,7 +3,7 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Http Component
- * @version    : 1.3.x
+ * @version    : 1.4.x
  * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
@@ -40,15 +40,9 @@ final class Submitter
 	 */
 	public function __construct(?string $group = null)
 	{
-		// Init configuration
-		$this->initConfig();
-
 		// Set input
 		$this->group = (new Catcher(request: ['--key' => $group]))->key;
 		$this->vars = $this->getVars();
-
-		// Reset configuration
-		$this->resetConfig();
 	}
 
 	/**
