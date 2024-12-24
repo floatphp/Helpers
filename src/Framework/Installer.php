@@ -67,10 +67,10 @@ final class Installer
 	 * Migrate application database.
 	 *
 	 * @access public
-	 * @param string $path
+	 * @param ?string $path
 	 * @return void
 	 */
-	public function migrate(string $path = null) : void
+	public function migrate(?string $path = null) : void
 	{
 		if ( !$path ) {
 			$path = $this->getMigratePath();
