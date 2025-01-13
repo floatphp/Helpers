@@ -49,7 +49,7 @@ class Sqalar extends \ArrayObject
 	public $count;
 
 	/**
-	 * Init arrat db.
+	 * Init array db.
 	 *
 	 * @access public
 	 * @param array $entry
