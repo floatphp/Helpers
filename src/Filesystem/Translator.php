@@ -33,7 +33,7 @@ final class Translator extends Translation
         parent::__construct($locale, $this->getTranslatePath());
 
         // Check
-        if ( !$this->canTranslate && $this->isDebug() ) {
+        if ( !$this->canTranslate && $this->isDebug() && $this->isEnv('dev') ) {
             $logger = new Logger('core');
             $logger->warning("Invalid language locale [{$locale}]");
         }
