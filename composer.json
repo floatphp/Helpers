@@ -1,6 +1,6 @@
 {
   "name": "floatphp/helpers",
-  "version" : "1.4.1",
+  "version" : "1.4.2",
   "type": "library",
   "description": "FloatPHP Helpers Components",
   "keywords": ["floatphp","micro-framework","framework","PSR","ORM","jakiboy"],
