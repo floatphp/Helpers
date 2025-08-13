@@ -105,8 +105,8 @@ final class Installer
 	{
 		return $this->mergeArray([
 			'--enable-maintenance' => false,
-			'--disable-setup'      => false,
-			'--disable-database'   => false,
+			'--enable-setup'       => false,
+			'--enable-database'    => false,
 			'--disable-powered-by' => false,
 			'--disable-session'    => false,
 			'--default-lang'       => 'en',
@@ -169,7 +169,7 @@ final class Installer
 		];
 		foreach ($tables as $sql) {
 			if ( !$this->isFile("{$path}/{$sql}") ) {
-				$this->copyFile(dirname(__FILE__) . "/bin/{$sql}.default", "{$path}/{$sql}");
+				$this->copyFile(dirname(__FILE__) . "/bin/db/{$sql}.default", "{$path}/{$sql}");
 			}
 		}
 	}
@@ -182,7 +182,7 @@ final class Installer
 	 */
 	private function importRoles() : void
 	{
-		$path = dirname(__FILE__) . '/bin/role.default.json';
+		$path = dirname(__FILE__) . '/bin/data/role.default.json';
 		$roles = $this->decodeJson($this->readFile($path), true);
 		$r = new Role();
 		$r->clear();
