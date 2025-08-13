@@ -153,6 +153,7 @@ class Sqalar extends \ArrayObject
 	public function distinct(string $column) : self
 	{
 		// ...
+		return $this;
 	}
 
 	/**
@@ -247,7 +248,7 @@ class Sqalar extends \ArrayObject
 
 			foreach ($this->db as $key => $row) {
 
-				if ( empty($row) ) return;
+				if ( empty($row) ) return false;
 
 				foreach ($this->where as $where) {
 
