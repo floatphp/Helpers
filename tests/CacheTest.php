@@ -3,8 +3,8 @@
  * @author     : Jakiboy
  * @package    : FloatPHP
  * @subpackage : Helpers Filesystem Component
- * @version    : 1.4.x
- * @copyright  : (c) 2018 - 2024 Jihad Sinnaour <mail@jihadsinnaour.com>
+ * @version    : 1.5.x
+ * @copyright  : (c) 2018 - 2025 Jihad Sinnaour <me@jihadsinnaour.com>
  * @link       : https://floatphp.com
  * @license    : MIT
  *
@@ -166,7 +166,7 @@ final class CacheTest extends TestCase
         $cache->get('test');
         $cache->set(123, 'tag', 30);
         $this->assertSame($cache->getCache()->getTtl(), 30);
-        
+
         $cache->delete('test');
         $cache->get('test');
         $cache->set(123, 'tag');
