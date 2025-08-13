@@ -122,6 +122,9 @@ final class Installer
 	 */
 	public static function isInstalled() : bool
 	{
+		if ( !(new Orm())->hasTable('config') ) {
+			return false;
+		}
 		return (bool)(new Transient())
 			->get(key: '--installed', default: false);
 	}
