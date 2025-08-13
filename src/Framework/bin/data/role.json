@@ -1,0 +1,30 @@
+[
+	{
+		"name": "Administrator",
+		"slug": "administrator",
+		"capability": [
+			"read",
+			"create",
+			"write",
+			"delete"
+		]
+	},
+	{
+		"name": "Developer",
+		"slug": "developer",
+		"capability": [
+			"read",
+			"create",
+			"write"
+		]
+	},
+	{
+		"name": "Editor",
+		"slug": "editor",
+		"capability": [
+			"read",
+			"create",
+			"write"
+		]
+	}
+]

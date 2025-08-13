@@ -167,9 +167,9 @@ final class Installer
 			'user.sql',
 			'role.sql'
 		];
-		foreach ($tables as $sql) {
-			if ( !$this->isFile("{$path}/{$sql}") ) {
-				$this->copyFile(dirname(__FILE__) . "/bin/db/{$sql}.default", "{$path}/{$sql}");
+		foreach ($tables as $table) {
+			if ( !$this->isFile("{$path}/{$table}") ) {
+				$this->copyFile(dirname(__FILE__) . "/bin/db/{$table}", "{$path}/{$table}");
 			}
 		}
 	}
@@ -182,7 +182,7 @@ final class Installer
 	 */
 	private function importRoles() : void
 	{
-		$path = dirname(__FILE__) . '/bin/data/role.default.json';
+		$path = dirname(__FILE__) . '/bin/data/role.json';
 		$roles = $this->decodeJson($this->readFile($path), true);
 		$r = new Role();
 		$r->clear();
@@ -203,7 +203,7 @@ final class Installer
 	 */
 	private function rewrite() : void
 	{
-		$htaccess = $this->readFile(dirname(__FILE__) . '/bin/.htaccess');
+		$htaccess = $this->readFile(dirname(__FILE__) . '/bin/server/.htaccess');
 
 		// Set base
 		$base = $this->getBaseRoute(false);

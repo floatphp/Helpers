@@ -54,7 +54,7 @@ final class Validator
 	 */
 	public static function checkModuleConfig($config) : void
 	{
-		$error = self::isValidConfig($config, 'module.schema.json');
+		$error = self::isValidConfig($config, 'module.json');
 		if ( TypeCheck::isString($error) ) {
 			throw new ConfigException(
 				ConfigException::invalidModuleConfiguration($error)
@@ -77,7 +77,7 @@ final class Validator
 	 */
 	public static function checkRouteConfig($config) : void
 	{
-		$error = self::isValidConfig($config, 'route.schema.json');
+		$error = self::isValidConfig($config, 'route.json');
 		if ( TypeCheck::isString($error) ) {
 			throw new ConfigException(
 				ConfigException::invalidRouteConfiguration($error)
@@ -124,11 +124,11 @@ final class Validator
 	 * @var string $schema
 	 * @return mixed
 	 */
-	private static function isValidConfig($config, $schema = 'config.schema.json') : mixed
+	private static function isValidConfig($config, $schema = 'config.json') : mixed
 	{
 		$validator = new JsonValidator;
 		$validator->validate(value: $config, schema: (object)[
-			'$ref' => 'file://' . dirname(__FILE__) . '/bin/' . $schema
+			'$ref' => 'file://' . dirname(__FILE__) . '/bin/schema/' . $schema
 		]);
 
 		if ( $validator->isValid() ) {
