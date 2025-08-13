@@ -15,7 +15,7 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteCond %{HTTP_REFERER} !^$
-    RewriteCond %{HTTP_REFERER} !^https?://(www\.)?__DOMAIN__/ [NC]
+    RewriteCond %{HTTP_REFERER} !^https?://.*__DOMAIN__/ [NC]
     RewriteRule \.(jpg|jpeg|png|gif)$ - [F,NC,L]
 </IfModule>
 
