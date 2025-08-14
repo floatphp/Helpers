@@ -25,6 +25,7 @@ use FloatPHP\Classes\{
 	Http\Xml,
 	Server\System
 };
+use PharIo\Manifest\Type;
 
 /**
  * Define formatting functions.
@@ -206,9 +207,12 @@ trait TraitFormattable
 	 * @access public
 	 * @inheritdoc
 	 */
-	public function hasString($string, $search) : bool
+	public function hasString($value, $search) : bool
 	{
-		return Stringify::contains($string, $search);
+		if ( TypeCheck::isArray($value) ) {
+			return Arrayify::inArray($search, $value);
+		}
+		return Stringify::contains($value, $search);
 	}
 
 	/**
