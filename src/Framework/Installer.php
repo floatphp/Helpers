@@ -16,7 +16,8 @@ declare(strict_types=1);
 namespace FloatPHP\Helpers\Framework;
 
 use FloatPHP\Kernel\Orm;
-use FloatPHP\Helpers\Connection\{Transient, Role};
+use FloatPHP\Helpers\Connection\{Transient, Role, User};
+use FloatPHP\Classes\Security\Password;
 
 /**
  * Framwork application installer.
@@ -47,6 +48,7 @@ final class Installer
 				$this->setTables();
 				$this->migrate();
 				$this->importRoles();
+				$this->importUsers();
 			}
 		}
 
@@ -192,6 +194,27 @@ final class Installer
 			$r->slug = $role['slug'];
 			$r->capability = $this->encodeJson($role['capability']);
 			$r->create();
+		}
+	}
+
+	/**
+	 * Import built-in users.
+	 *
+	 * @access private
+	 * @return void
+	 */
+	private function importUsers() : void
+	{
+		$path = dirname(__FILE__) . '/bin/data/user.json';
+		$users = $this->decodeJson($this->readFile($path), true);
+		$u = new User();
+		foreach ($users as $user) {
+			$u->username = $user['username'];
+			$u->email = $user['email'];
+			$u->name = $user['name'];
+			$u->password = Password::hash($user['password']);
+			$u->roleId = $user['roleId'];
+			$u->create();
 		}
 	}
 
