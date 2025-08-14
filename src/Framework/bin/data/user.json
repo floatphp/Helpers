@@ -1,0 +1,9 @@
+[
+    {
+        "username": "admin",
+        "email": "admin@floatphp.com",
+        "name": "Administrator",
+        "password": "password",
+        "roleId": 1
+    }
+]
