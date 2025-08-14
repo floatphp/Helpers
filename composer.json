@@ -22,8 +22,6 @@
   ],
   "require": {
     "php": ">=8.2",
-    "phpfastcache/phpfastcache": "^9.2.3",
-    "rakibtg/sleekdb": "^2.15",
     "floatphp/classes": "^1.5.0",
     "floatphp/interfaces": "^1.5.0",
     "floatphp/exceptions": "^1.5.0",
