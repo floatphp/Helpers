@@ -224,7 +224,7 @@ final class Geotargeting
 	 */
 	private function getVisitorId() : string
 	{
-		if ( Cookie::isSetted(self::$visitorKey) ) {
+		if ( Cookie::isSet(self::$visitorKey) ) {
 			return Cookie::get(self::$visitorKey);
 		}
 

@@ -34,7 +34,7 @@ trait TraitRequestable
 	 */
 	protected function hasRequest($key = null) : bool
 	{
-		return Request::isSetted($key);
+		return Request::isSet($key);
 	}
 
 	/**

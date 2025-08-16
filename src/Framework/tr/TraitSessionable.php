@@ -55,7 +55,7 @@ trait TraitSessionable
 	 */
 	protected function hasSession($key = null) : bool
 	{
-		return Session::isSetted($key);
+		return Session::isSet($key);
 	}
 
 	/**
@@ -127,7 +127,7 @@ trait TraitSessionable
 	 */
 	protected function hasCookie(?string $key = null) : bool
 	{
-		return Cookie::isSetted($key);
+		return Cookie::isSet($key);
 	}
 
 	/**
